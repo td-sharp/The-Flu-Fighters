@@ -16,6 +16,7 @@ all: asteroids
 
 asteroids: asteroids.cpp log.cpp timers.cpp
 	g++ $(CFLAGS) asteroids.cpp log.cpp timers.cpp \
+	kyleW.cpp haleyH.cpp reneeR.cpp tylerS.cpp \
 	libggfonts.a -Wall $(LFLAGS) -o asteroids
 
 clean:
