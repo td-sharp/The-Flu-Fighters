@@ -59,6 +59,12 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 extern void shipDraw();
 //-----------------------------------------------------------------------------
 
+
+//-----------------------------------------------------------------------------
+// Add Renee CPP
+extern void printReneeFile();
+//-----------------------------------------------------------------------------
+
 struct Shape {
 	float width, height;
 	float radius;
@@ -367,6 +373,7 @@ int main()
 	logOpen();
 	init_opengl();
 	srand(time(NULL));
+	printReneeFile;
 	x11.set_mouse_position(100, 100);
 	int done=0;
 	while (!done) {
