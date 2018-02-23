@@ -5,8 +5,8 @@ using namespace std;
 
 class G_coli {
 public: 
-	Vec pos;
-	Vec vel;
+	float pos[3];
+	float vel[3];
 	int health;
 };
 
@@ -16,20 +16,21 @@ void buildG_coli()
 {
 
 	float vfactor = rand() % 5 + 3;
-	float xpos = (float)rand() % gl.xres/2 - 300;
-	float ypos = (float)rand() % gl.yres/2 + 150;
+	float xpos = (float)(rand() % 600/2 - 300);
+	float ypos = (float)(rand() % 900/2 + 150);
 	
 	cout << "Building G_coli enemies from haleyH.cpp" << endl;	
 
-	for (int i = 0; i < 10; i++)
+	int i;
+	for (i = 0; i < 10; i++)
 	{
-		gc[i].pos[0] = xpos;
-		gc[i].pos[1] = ypos;
-		gc[i].pos[2] = 0.00;
+		gcoli[i].pos[0] = xpos;
+		gcoli[i].pos[1] = ypos;
+		gcoli[i].pos[2] = 0.00;
 
-		gc[i].vel[0] = factor;
-		gc[i].vel[1] = -factor / 1.5;
-		gc[i].vel[2] = 0.00;
+		gcoli[i].vel[0] = vfactor;
+		gcoli[i].vel[1] = -vfactor / 1.5;
+		gcoli[i].vel[2] = 0.00;
 	}
 	
 	cout << i << " enemies built" << endl;
@@ -39,15 +40,15 @@ void moveG_coli()
 {	 	
 	for (int i = 0; i < 10; i++)
 	{
-		gc[i].pos[0] += gc->vel[0];
-		gc[i].pos[1] += gc->vel[1];
+		gcoli[i].pos[0] += gcoli[i].vel[0];
+		gcoli[i].pos[1] += gcoli[i].vel[1];
 
-		cout << "G-Coli Enemy " i << " New Position: x - " << gc[i].pos[0] <<
-			" y - " << gc[i].pos[1] << endl; 		
+		cout << "G-Coli Enemy " << i << " New Position: x - " << gcoli[i].pos[0] <<
+			" y - " << gcoli[i].pos[1] << endl; 		
 
-		if ((gc[i].pos[0] < -gl.xres/2 && gc[i].vel[0] < 0) || 
-	    		(gc[i].pos[0] > gl.xres/2 && gc[i].vel[0] > 0))
-				gc->vel[0] = -gc->vel[0]; 
+		if ((gcoli[i].pos[0] < -600/2 && gcoli[i].vel[0] < 0) || 
+	    		(gcoli[i].pos[0] > 600/2 && gcoli[i].vel[0] > 0))
+				gcoli->vel[0] = -gcoli->vel[0]; 
 	}
 
 }

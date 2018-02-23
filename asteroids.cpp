@@ -64,7 +64,11 @@ extern void shipDraw();
 // Add Renee CPP
 extern void printReneeFile();
 //-----------------------------------------------------------------------------
-
+//-----------------------------------------------------------------------------
+// Create enemies from haleyH.cpp
+extern void buildG_coli();
+extern void moveG_coli();
+ 
 struct Shape {
 	float width, height;
 	float radius;
@@ -374,6 +378,8 @@ int main()
 	init_opengl();
 	srand(time(NULL));
 	printReneeFile;
+	buildG_coli();
+	moveG_coli();
 	x11.set_mouse_position(100, 100);
 	int done=0;
 	while (!done) {
