@@ -5,13 +5,12 @@
 #ifndef AMMO_H
 #define AMMO_H
 
-
-class ActiveAmmo
-{
+class BulletAmmo {
 public:
-    ActiveAmmo();
-    ~ActiveAmmo();
-
+    
+    BulletAmmo();
+    ~BulletAmmo();
+    
     void init(float p[3], float v[3], float d);
     inline void updatePos()
     {
@@ -26,9 +25,8 @@ public:
 
     ActiveAmmo *next;
     ActiveAmmo *prev;
-
 private:
     static int ammoCount;
 };
-
 #endif //AMMO_H
+
