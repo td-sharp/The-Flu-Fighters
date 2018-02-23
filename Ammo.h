@@ -2,6 +2,7 @@
  * Date: 2/23/2018
  * Flu Fighters Power up and ammo file 
  */ 
+
 #ifndef AMMO_H
 #define AMMO_H
 
@@ -23,10 +24,14 @@ public:
     float vel[3];
     float damage;
 
-    ActiveAmmo *next;
-    ActiveAmmo *prev;
+    BulletAmmo *next;
+    BulletAmmo *prev;
+    
+public:
+    Bullet() { }
+
 private:
-    static int ammoCount;
+    static int bulletammoCount;
 };
 #endif //AMMO_H
 
