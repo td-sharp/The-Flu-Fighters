@@ -1,3 +1,4 @@
+#include <stdlib.h>
 
 class G_coli {
 public: 
@@ -6,26 +7,38 @@ public:
 	int health;
 };
 
-void buildG_coli(G_coli *gc)
+void buildG_coli(G_coli gc[])
 {
-	float factor = rand() % 5 + 3;
+	int loops = sizeof gc / sizeof gc[0]; 
+	float vfactor = rand() % 5 + 3;
+	float xpos = (float)rand() % gl.xres/2 - 300;
+	float ypos = (float)rand() % gl.yres/2 + 150;
+	
+	for (int i = 0; i < loops; i++)
+	{
+		gc[i].pos[0] = xpos;
+		gc[i].pos[1] = ypos;
+		gc[i].pos[2] = 0.00;
 
-	gc->pos[0] = (float)rand() % gl.xres/2 - 300;
-	gc->pos[1] = (float)rand() % gl.yres/2 + 150;
-	gc->pos[2] = 0.00;
-
-	gc->vel[0] = factor;
-	gc->vel[1] = -factor / 1.5;
-	gc->vel[2] = 0.00;
+		gc[i].vel[0] = factor;
+		gc[i].vel[1] = -factor / 1.5;
+		gc[i].vel[2] = 0.00;
+	}
 
 }
 
-void moveG_coli(G_coli *gc)
+void moveG_coli(G_coli gc[])
 {
-	gc->pos[0] += gc->vel[0];
-	gc->pos[1] += gc->vel[1];
+	int loops = sizeof gc / sizeof gc[0]; 
+	
+	for (int i = 0; i < loops; i++)
+	{
+		gc->pos[0] += gc->vel[0];
+		gc->pos[1] += gc->vel[1];
 
-	if ((gc->pos[0] < -600/2 && gc->vel[0] < 0) || 
-	    (gc->pos[0] > 600/2 && gc->vel[0] > 0))
-		gc->vel[0] = -gc->vel[0]; 
+		if ((gc->pos[0] < -gl.xres/2 && gc->vel[0] < 0) || 
+	    		(gc->pos[0] > gl.xres/2 && gc->vel[0] > 0))
+				gc->vel[0] = -gc->vel[0]; 
+	}
+
 }
