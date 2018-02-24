@@ -14,30 +14,26 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 
-int BulletAmmo::bulletammoCount = 0;
-
-BulletAmmo::BulletAmmo()
+void displayBox()
 {
-	next = 0;
-	prev = 0;
-	bulletammoCount++;
-}
+	Rect r;
+	glColor3f(0.0, 0.0, 0.0);
+	glPushMatrix();
+	glTranslatef(-206.0, 512.0, 0.0);
+	glBegin(GL_QUADS); 
 
-BulletAmmo::~BulletAmmo()
-{
-	bulletammoCount--;
-}
+	glVertex2i(412, -50);
+	glVertex2i(412,  50);
+	glVertex2i(512,  50);
+	glVertex2i(512, -50);
 
-void BulletAmmo::init(float p[3], float v[3], float d)
-{
-	pos[0] = p[0];
-	pos[1] = p[1];
-	pos[2] = p[2];
-	vel[0] = v[0];
-	vel[1] = v[1];
-	vel[2] = v[2];
+	glEnd();
+	glPopMatrix();
 
-	damage = d;
-	next = 0;
-	prev = 0;
+	r.bot = 620;
+	r.left = 215;
+	r.center = 0;
+	ggprint8b(&r, 16, 0x00ff0000, "Kyle's Box");
+	glEnd();
+
 }

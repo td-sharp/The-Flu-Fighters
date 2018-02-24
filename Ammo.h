@@ -1,37 +1,16 @@
 /* Aurthor: Kyle Werts
  * Date: 2/23/2018
+ *
+ * Comments:
  * Flu Fighters Power up and ammo file 
+ * For now the file will only render a square object to the screen
+ * to meet the lab requirments.
  */ 
 
 #ifndef AMMO_H
 #define AMMO_H
 
-class BulletAmmo {
-public:
-    
-    BulletAmmo();
-    ~BulletAmmo();
-    
-    void init(float p[3], float v[3], float d);
-    inline void updatePos()
-    {
-        pos[0] += vel[0];
-        pos[1] += vel[1];
-        pos[2] += vel[2];
-    }
+void displayBox();
 
-    float pos[3];
-    float vel[3];
-    float damage;
 
-    BulletAmmo *next;
-    BulletAmmo *prev;
-    
-public:
-    Bullet() { }
-
-private:
-    static int bulletammoCount;
-};
-#endif //AMMO_H
 
