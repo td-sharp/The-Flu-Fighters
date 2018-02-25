@@ -7,6 +7,6 @@
 
 void displayText()
 {
-	cout << "kyleW standing by!"
+	cout << "kyleW standing by!" << endl;
 
 }
