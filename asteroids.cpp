@@ -56,7 +56,6 @@ const double OOBILLION = 1.0 / 1e9;
 extern struct timespec timeStart, timeCurrent;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
-extern void shipDraw();
 //-----------------------------------------------------------------------------
 
 
@@ -64,6 +63,8 @@ extern void shipDraw();
 // Add Renee CPP
 extern void printReneeFile();
 //-----------------------------------------------------------------------------
+//Add Tyler CPP----------------------------------------------------------------
+extern void sayHello();
 //-----------------------------------------------------------------------------
 // Create enemies from haleyH.cpp
 extern void buildG_coli();
@@ -600,7 +601,7 @@ void deleteAsteroid(Game *g, Asteroid *node)
 		}
 	}
 	delete node;
-	//cout << "Hello!";
+	sayHello();
 
 	node = NULL;
 }
