@@ -17,6 +17,7 @@
 #include <GL/glx.h>
 #include "fonts.h"
 #include "log.h"
+#include <iostream>
 
 using namespace std;
 
