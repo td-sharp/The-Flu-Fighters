@@ -710,7 +710,6 @@ void physics()
 		}
 		a->angle += a->rotate;
 		a = a->next;
-		displayText();
 	}
 	//
 	//Asteroid collision with bullets?
@@ -943,5 +942,6 @@ void render()
 			glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 		glEnd();
 		++b;
+		displayText();
 	}
 }
