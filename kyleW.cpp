@@ -14,5 +14,5 @@ void displayText()
 	r.bot = yres - 100;
 	r.left = 10;
 	r.center = 0;
-	ggprint8b(&r, 16, 0xFF00FF00, "kwerts");
+	ggprint8b(&r, 16, 0xFF00FF00, "kyleW");
 }
