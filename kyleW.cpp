@@ -4,6 +4,7 @@
  */ 
 #include "Ammo.h"
 
+using namespace std;
 
 void displayText()
 {
