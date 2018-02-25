@@ -6,11 +6,21 @@
  * For now the file will only render a square object to the screen
  * to meet the lab requirments.
  */ 
+#ifndef AMMO
+#define AMMO
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <math.h>
+#include <X11/Xlib.h>
+#include <X11/keysym.h>
+#include <GL/glx.h>
+#include "fonts.h"
+#include "log.h"
 
-#ifndef AMMO_H
-#define AMMO_H
+using namespace std;
 
-void displayBox();
+void displayText();
 
-
+#endif
 
