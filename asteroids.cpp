@@ -66,6 +66,10 @@ extern void printReneeFile();
 //Add Tyler CPP----------------------------------------------------------------
 extern void sayHello();
 //-----------------------------------------------------------------------------
+// Add Kyle CPP
+// Will take care of AMMO/Powerups in the future
+extern void displayText();
+//-----------------------------------------------------------------------------
 // Create enemies from haleyH.cpp
 extern void buildG_coli();
 extern void moveG_coli();
@@ -706,6 +710,7 @@ void physics()
 		}
 		a->angle += a->rotate;
 		a = a->next;
+		displayText();
 	}
 	//
 	//Asteroid collision with bullets?
