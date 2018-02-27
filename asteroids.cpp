@@ -73,13 +73,14 @@ extern void displayText();
 // Create enemies from haleyH.cpp
 extern void buildG_coli();
 extern void moveG_coli();
- 
+
 struct Shape {
 	float width, height;
 	float radius;
-	//float center;
+	Vec center;
 };
 
+Shape s;
 
 class Image {
 public:
@@ -132,15 +133,17 @@ public:
 	}
 };
 //PLACE IMAGES HERE, UPDATE LIST LENGTH-------------------------------------
-Image img[1] = {
-	"./ship.png"
+Image img[2] = {
+	"./ship.png", "./GBola.png"
 };
 
 //DECLARE TEXTURE
 GLuint shipTexture;
+GLuint GBolaTexture;
 
 //DECLARE IMAGE
 Image *shipImage = NULL;
+Image *GBolaImage = NULL;
 
 class Global {
 public:
@@ -171,6 +174,7 @@ public:
 		pos[2] = 0.0f;
 		VecZero(vel);
 		angle = 0.0;
+		//OPACITY
 		color[0] = color[1] = color[2] = 1.0;
 	}
 };
@@ -382,7 +386,7 @@ int main()
 	logOpen();
 	init_opengl();
 	srand(time(NULL));
-	printReneeFile;
+	printReneeFile();
 	buildG_coli();
 	moveG_coli();
 	x11.set_mouse_position(100, 100);
@@ -423,18 +427,34 @@ void init_opengl()
 	//Do this to allow fonts
 	glEnable(GL_TEXTURE_2D);
 	initialize_fonts();
+	//IMAGE STUFF-----------------------------------------------------
+	//SHIP STUFF------------------------------------------------------
+	shipImage = &img[0];
 
+	int sw = img[0].iWidth;
+	int sh = img[0].iHeight;
 	glGenTextures(1, &shipTexture);
-
-	int w = img[0].iWidth;
-	int h = img[0].iHeight;
 
 	glBindTexture(GL_TEXTURE_2D, shipTexture);
 
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, sw, sh, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
+
+	//G_BOLA STUFF------------------------------------------------------
+	GBolaImage = &img[1];
+	int gw = img[1].iWidth;
+	int gh = img[1].iWidth;
+	glGenTextures(1, &GBolaTexture);
+
+	glBindTexture(GL_TEXTURE_2D, GBolaTexture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, gw, gh, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
+
 }
 
 void normalize2d(Vec v)
@@ -605,8 +625,6 @@ void deleteAsteroid(Game *g, Asteroid *node)
 		}
 	}
 	delete node;
-	sayHello();
-
 	node = NULL;
 }
 
@@ -856,6 +874,17 @@ void render()
 	displayText();
 	//
 	//-------------
+	/*DRAW STUFF WITH THIS:
+	glBindTexture(GL_TEXTURE_2D, shipTexture);
+	glBegin(GL_QUADS);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f( 30.0f,  30.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f( 30.0f, -30.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(-30.0f, -30.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(-30.0f,  30.0f);
+	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glPopMatrix();
+	*/
 	//Draw the ship
 
 	glColor3fv(g.ship.color);
@@ -864,10 +893,10 @@ void render()
 	glBindTexture(GL_TEXTURE_2D, shipTexture);
 	glRotatef(g.ship.angle, 0.0f, 0.0f, 1.0f);
 	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f); glVertex2f( 30.0f,  30.0f);
-		glTexCoord2f(1.0f, 0.0f); glVertex2f( -30.0f,  30.0f);
-		glTexCoord2f(0.0f, 1.0f); glVertex2f( -30.0f, -30.0f);
-		glTexCoord2f(1.0f, 1.0f); glVertex2f(  30.0f, -30.0f);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f( 30.0f,  30.0f);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f( 30.0f, -30.0f);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(-30.0f, -30.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(-30.0f,  30.0f);
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glPopMatrix();
@@ -910,17 +939,27 @@ void render()
 			glPushMatrix();
 			glTranslatef(a->pos[0], a->pos[1], a->pos[2]);
 			glRotatef(a->angle, 0.0f, 0.0f, 1.0f);
-			glBegin(GL_LINE_LOOP);
+
+			/*glBegin(GL_LINE_LOOP);
 				//Log("%i verts\n",a->nverts);
 				for (int j=0; j<a->nverts; j++) {
 					glVertex2f(a->vert[j][0], a->vert[j][1]);
 				}
+			*/
+			glBindTexture(GL_TEXTURE_2D, GBolaTexture);
+			glBegin(GL_QUADS);
+				glTexCoord2f(1.0f, 0.0f); glVertex2f( 80.0f,  80.0f);
+				glTexCoord2f(1.0f, 1.0f); glVertex2f( 80.0f, -80.0f);
+				glTexCoord2f(0.0f, 1.0f); glVertex2f(-80.0f, -80.0f);
+				glTexCoord2f(0.0f, 0.0f); glVertex2f(-80.0f,  80.0f);
+			glBindTexture(GL_TEXTURE_2D, 0);
+				//glPopMatrix();
 			glEnd();
 			glPopMatrix();
-			glColor3f(1.0f, 0.0f, 0.0f);
-			glBegin(GL_POINTS);
-				glVertex2f(a->pos[0], a->pos[1]);
-			glEnd();
+			//glColor3f(1.0f, 0.0f, 0.0f);
+			//glBegin(GL_POINTS);
+			//	glVertex2f(a->pos[0], a->pos[1]);
+			//glEnd();
 			a = a->next;
 		}
 	}
