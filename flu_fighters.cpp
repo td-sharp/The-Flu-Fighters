@@ -675,16 +675,16 @@ void physics()
 	g.ship.pos[1] += g.ship.vel[1];
 	//Check for collision with window edges
 	if (g.ship.pos[0] < 0.0) {
-		g.ship.pos[0] += (float)gl.xres;
+		g.ship.pos[0] += 4.0;
 	}
 	else if (g.ship.pos[0] > (float)gl.xres) {
-		g.ship.pos[0] -= (float)gl.xres;
+		g.ship.pos[0] -= 4.0;
 	}
 	else if (g.ship.pos[1] < 0.0) {
-		g.ship.pos[1] += (float)gl.yres;
+		g.ship.pos[1] += 4.0;
 	}
 	else if (g.ship.pos[1] > (float)gl.yres) {
-		g.ship.pos[1] -= (float)gl.yres;
+		g.ship.pos[1] -= 4.0;
 	}
 	//
 	//Update bullet positions
@@ -802,17 +802,21 @@ void physics()
 	}
 	//---------------------------------------------------
 	//check keys pressed now
-	if (gl.keys[XK_Left]) {
-		g.ship.pos[0] -= 4.0;
+	if (gl.keys[XK_Left] && gameState == 1) {
+		if (g.ship.pos[0] < 0) {
+			g.ship.pos[0] += 5.0;
+		} else {
+			g.ship.pos[0] -= 4.0;
+		}
 		//if (g.ship.angle >= 360.0f)
 		//	g.ship.angle -= 360.0f;
 	}
-	if (gl.keys[XK_Right]) {
+	if (gl.keys[XK_Right] && gameState == 1) {
 		g.ship.pos[0] += 4.0;
 		//if (g.ship.angle < 0.0f)
 		//	g.ship.angle += 360.0f;
 	}
-	if (gl.keys[XK_Up]) {
+	if (gl.keys[XK_Up] && gameState == 1) {
 		g.ship.pos[1] += 4.0;
 		//apply thrust
 		//convert ship angle to radians
@@ -832,10 +836,10 @@ void physics()
 			g.ship.vel[1] *= speed;
 			*/
 	}
-	if (gl.keys[XK_Down]) {
+	if (gl.keys[XK_Down] && gameState == 1) {
 		g.ship.pos[1] -= 4.0;
 	}
-	
+
 	if (gl.keys[XK_space]) {
 		//a little time between each bullet
 		struct timespec bt;
