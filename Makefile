@@ -12,14 +12,13 @@ CFLAGS = -I ./include
 #LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm
 LFLAGS = -lrt -lX11 -lGL
 
-all: asteroids
+all: flu_fighters
 
-asteroids: asteroids.cpp log.cpp timers.cpp
-	g++ $(CFLAGS) asteroids.cpp log.cpp timers.cpp \
+flu_fighters: flu_fighters.cpp log.cpp timers.cpp tylerS.cpp
+	g++ $(CFLAGS) flu_fighters.cpp log.cpp timers.cpp \
 	kyleW.cpp haleyH.cpp reneeR.cpp tylerS.cpp \
-	libggfonts.a -Wall $(LFLAGS) -o asteroids
+	libggfonts.a -Wall $(LFLAGS) -o flu_fighters
 
 clean:
-	rm -f asteroids
+	rm -f flu_fighters
 	rm -f *.o
-
