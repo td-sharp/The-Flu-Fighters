@@ -2,8 +2,9 @@
 //
 //
 //
-//program: asteroids.cpp
-//author:  Gordon Griesel
+//program: flu fighters
+//authors:
+//Tyler Sharp, Kyle Werts, Haley Hamer, Renee Romero
 //date:    2014 - 2018
 //mod spring 2015: added constructors
 //mod spring 2018: X11 wrapper class
@@ -63,9 +64,19 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 // Add Renee CPP
 extern void printReneeFile();
 //-----------------------------------------------------------------------------
-//Add Tyler CPP----------------------------------------------------------------
+//Add tylerS.cpp functions
 int gameState = 1;
-extern void StartMenu();
+int lives = 3;
+extern void startMenu(int, int, int);
+extern void drawShip(float, float, float, int);
+extern void drawGBola(int);
+extern void drawOverlay(int, int, int, int);
+extern void drawWave1();
+extern void drawWave2();
+extern void drawWave3();
+extern void drawWave4();
+extern void drawWave5();
+extern void drawTheBoss();
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
 // Will take care of AMMO/Powerups in the future
@@ -142,6 +153,7 @@ Image img[3] = {
 GLuint shipTexture;
 GLuint GBolaTexture;
 GLuint TitleScreenTexture;
+
 //DECLARE IMAGE
 Image *shipImage = NULL;
 Image *GBolaImage = NULL;
@@ -886,87 +898,14 @@ void render()
 {
 	//TEXT IN THE TOP CORNER
 	if (gameState == 0) {
-		glBindTexture(GL_TEXTURE_2D, TitleScreenTexture);
-    	glBegin(GL_QUADS);
-        	glTexCoord2f(1.0f, 0.0f); glVertex2f( gl.xres, gl.yres);
-        	glTexCoord2f(1.0f, 1.0f); glVertex2f( gl.xres, 0.0f);
-        	glTexCoord2f(0.0f, 1.0f); glVertex2f( 0.0f,    0.0f);
-        	glTexCoord2f(0.0f, 0.0f); glVertex2f( 0.0f,    gl.yres);
-    	glEnd();
-    	glBindTexture(GL_TEXTURE_2D, 0);
-    	glPopMatrix();
+		startMenu(gl.xres, gl.yres, TitleScreenTexture);
 	}
-	if (gameState == 1) {
-		Rect r;
+	else if (gameState == 1) {
 		glClear(GL_COLOR_BUFFER_BIT);
-		//
-		r.bot = gl.yres - 20;
-		r.left = 10;
-		r.center = 0;
-		ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
-		ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
-		ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
-		ggprint8b(&r, 16, 0x00ffff00, "n asteroids destroyed: ");
-		//displayText();
-		//
-		//-------------
-		/*DRAW STUFF WITH THIS:
-		glBindTexture(GL_TEXTURE_2D, shipTexture);
-		glBegin(GL_QUADS);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f( 30.0f,  30.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f( 30.0f, -30.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(-30.0f, -30.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(-30.0f,  30.0f);
-		glEnd();
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glPopMatrix();
-		*/
 		//Draw the ship
+		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
 
-		glColor3fv(g.ship.color);
-		glPushMatrix();
-		glTranslatef(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2]);
-		glBindTexture(GL_TEXTURE_2D, shipTexture);
-		glRotatef(g.ship.angle, 0.0f, 0.0f, 1.0f);
-		glBegin(GL_QUADS);
-			glTexCoord2f(1.0f, 0.0f); glVertex2f( 30.0f,  30.0f);
-			glTexCoord2f(1.0f, 1.0f); glVertex2f( 30.0f, -30.0f);
-			glTexCoord2f(0.0f, 1.0f); glVertex2f(-30.0f, -30.0f);
-			glTexCoord2f(0.0f, 0.0f); glVertex2f(-30.0f,  30.0f);
-		glEnd();
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glPopMatrix();
-		//glColor3f(1.0f, 0.0f, 0.0f);
-		//glBegin(GL_POINTS);
-		//	glVertex2f(0.0f, 0.0f);
-		//glEnd();
-
-	/*
-
-		if (gl.keys[XK_Up] || g.mouseThrustOn) {
-			int i;
-			//draw thrust
-			Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
-			//convert angle to a vector
-			Flt xdir = cos(rad);
-			Flt ydir = sin(rad);
-			Flt xs,ys,xe,ye,r;
-			glBegin(GL_LINES);
-				for (i=0; i<16; i++) {
-					xs = -xdir * 11.0f + rnd() * 4.0 - 2.0;
-					ys = -ydir * 11.0f + rnd() * 4.0 - 2.0;
-					r = rnd()*40.0+40.0;
-					xe = -xdir * r + rnd() * 18.0 - 9.0;
-					ye = -ydir * r + rnd() * 18.0 - 9.0;
-					glColor3f(rnd()*.3+.7, rnd()*.3+.7, 0);
-					glVertex2f(g.ship.pos[0]+xs,g.ship.pos[1]+ys);
-					glVertex2f(g.ship.pos[0]+xe,g.ship.pos[1]+ye);
-				}
-			glEnd();
-		}
-		*/
-		//------------------
-		//Draw the asteroids
+		//Draw the enemies
 		{
 			Asteroid *a = g.ahead;
 			while (a) {
@@ -975,27 +914,9 @@ void render()
 				glPushMatrix();
 				glTranslatef(a->pos[0], a->pos[1], a->pos[2]);
 				glRotatef(a->angle, 0.0f, 0.0f, 1.0f);
+				//draw GBola
+				drawGBola(GBolaTexture);
 
-				/*glBegin(GL_LINE_LOOP);
-					//Log("%i verts\n",a->nverts);
-					for (int j=0; j<a->nverts; j++) {
-						glVertex2f(a->vert[j][0], a->vert[j][1]);
-					}
-				*/
-				glBindTexture(GL_TEXTURE_2D, GBolaTexture);
-				glBegin(GL_QUADS);
-					glTexCoord2f(1.0f, 0.0f); glVertex2f( 80.0f,  80.0f);
-					glTexCoord2f(1.0f, 1.0f); glVertex2f( 80.0f, -80.0f);
-					glTexCoord2f(0.0f, 1.0f); glVertex2f(-80.0f, -80.0f);
-					glTexCoord2f(0.0f, 0.0f); glVertex2f(-80.0f,  80.0f);
-				glBindTexture(GL_TEXTURE_2D, 0);
-					//glPopMatrix();
-				glEnd();
-				glPopMatrix();
-				//glColor3f(1.0f, 0.0f, 0.0f);
-				//glBegin(GL_POINTS);
-				//	glVertex2f(a->pos[0], a->pos[1]);
-				//glEnd();
 				a = a->next;
 			}
 		}
@@ -1019,5 +940,7 @@ void render()
 			glEnd();
 			++b;
 		}
+
+		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
 	}
 }
