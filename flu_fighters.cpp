@@ -68,9 +68,9 @@ extern void printReneeFile();
 int gameState = 1;
 int lives = 3;
 extern void startMenu(int, int, int);
-extern void drawShip(float, float, float, int);
+extern double drawShip(float, float, float, int);
 extern void drawGBola(int);
-extern void drawOverlay(int, int, int, int);
+extern void drawOverlay(int, int, int, int, int);
 extern void drawWave1();
 extern void drawWave2();
 extern void drawWave3();
@@ -145,19 +145,23 @@ public:
 	}
 };
 //PLACE IMAGES HERE, UPDATE LIST LENGTH-------------------------------------
-Image img[3] = {
-	"./ship.png", "./GBola.png", "./TitleScreen.png"
+Image img[5] = {
+	"./ship.png", "./GBola.png", "./TitleScreen.png", "salmonella.png",
+	"overlaid.png"
 };
 
 //DECLARE TEXTURE
 GLuint shipTexture;
 GLuint GBolaTexture;
 GLuint TitleScreenTexture;
-
+GLuint salmonellaTexture;
+GLuint overlaidTexture;
 //DECLARE IMAGE
 Image *shipImage = NULL;
 Image *GBolaImage = NULL;
 Image *TitleScreenImage = NULL;
+Image *salmonellaImage = NULL;
+Image *overlaidImage = NULL;
 
 class Global {
 public:
@@ -480,6 +484,30 @@ void init_opengl()
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, tw, th, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
+	//SALMONELLA STUFF------------------------------------------------------
+	salmonellaImage = &img[3];
+	int saw = img[3].iWidth;
+	int sah = img[3].iWidth;
+	glGenTextures(1, &salmonellaTexture);
+
+	glBindTexture(GL_TEXTURE_2D, salmonellaTexture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, saw, sah, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[3].data);
+	//overlaid STUFF------------------------------------------------------
+	overlaidImage = &img[4];
+	int ow = img[4].iWidth;
+	int oh = img[4].iWidth;
+	glGenTextures(1, &overlaidTexture);
+
+	glBindTexture(GL_TEXTURE_2D, overlaidTexture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, ow, oh, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[4].data);
 
 }
 
@@ -903,7 +931,13 @@ void render()
 	else if (gameState == 1) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		//Draw the ship
-		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
+		Rect thy;
+		thy.bot = 200;
+	    thy.left = 20;
+	    thy.center = 0;
+	    ggprint16(&thy, 16, 0xFB6AD0, "Tyler Sharp: %f", drawShip(g.ship.pos[0],
+									g.ship.pos[1], g.ship.pos[2], shipTexture));
+
 
 		//Draw the enemies
 		{
@@ -941,6 +975,6 @@ void render()
 			++b;
 		}
 
-		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
+		drawOverlay(gl.xres, gl.yres, lives, overlaidTexture, shipTexture);
 	}
 }
