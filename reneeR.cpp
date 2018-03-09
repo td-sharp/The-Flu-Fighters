@@ -21,15 +21,15 @@ void printReneeFile()
 }
 double ReneeTime()
 {
+	int array[10];
 	static double t = 0; 
 	timespec timeStart;
 	timespec timeEnd;
 	clock_gettime(CLOCK_REALTIME,&timeStart);
-	int a = 200, b = 300, c = 400;
 	for (int i = 0; i<10;i++)
 	{
-		b = (a&15) - (b&7) - (c&3);
-		c = (b&31) - (a&7) - (c&3);
+		array[i] = i;
+			
 	}	
 	clock_gettime(CLOCK_REALTIME,&timeEnd);
 	t += timeDiff(&timeStart, &timeEnd);
