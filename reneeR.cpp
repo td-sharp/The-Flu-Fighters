@@ -22,13 +22,16 @@ void printReneeFile()
 double ReneeTime()
 {
 	int array[10];
-	static double t = 0; 
+	static double t = 0;
+	int trash; 
 	timespec timeStart;
 	timespec timeEnd;
 	clock_gettime(CLOCK_REALTIME,&timeStart);
 	for (int i = 0; i<10;i++)
 	{
-		array[i] = i;
+		trash = i * i;	
+		array[i] = trash ;
+		
 			
 	}	
 	clock_gettime(CLOCK_REALTIME,&timeEnd);
