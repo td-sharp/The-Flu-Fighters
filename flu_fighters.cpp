@@ -63,6 +63,8 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 // Add Renee CPP
 extern void printReneeFile();
+extern void draw_ReneeTime();
+extern void level_one();
 //-----------------------------------------------------------------------------
 //Add tylerS.cpp functions
 int gameState = 1;
@@ -406,6 +408,7 @@ int main()
 	srand(time(NULL));
 	buildG_coli();
 	moveG_coli();
+	level_one();
 	x11.set_mouse_position(100, 100);
 	int done=0;
 	while (!done) {
@@ -928,7 +931,7 @@ void render()
 	if (gameState == 0) {
 		startMenu(gl.xres, gl.yres, TitleScreenTexture);
 	}
-	else if (gameState == 1) {
+	else if (gameState == 1){
 		glClear(GL_COLOR_BUFFER_BIT);
 		//Draw the ship
 		Rect thy;
@@ -959,7 +962,7 @@ void render()
 		Bullet *b = &g.barr[0];
 		for (int i=0; i<g.nbullets; i++) {
 			//Log("draw bullet...\n");
-			glColor3f(1.0, 1.0, 1.0);
+			glColor3f(0.0, 0.0, 0.0);
 			glBegin(GL_POINTS);
 				glVertex2f(b->pos[0],      b->pos[1]);
 				glVertex2f(b->pos[0]-1.0f, b->pos[1]);
@@ -975,6 +978,8 @@ void render()
 			++b;
 		}
 
-		drawOverlay(gl.xres, gl.yres, lives, overlaidTexture, shipTexture);
+		draw_ReneeTime();
+		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
+
 	}
 }
