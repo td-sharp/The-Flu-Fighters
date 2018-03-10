@@ -68,7 +68,7 @@ double drawShip(float posA, float posB, float posC, int shipTexture)
     glPushMatrix();
     glTranslatef(posA, posB, posC);
     glRotatef(angle, 0.0f, 0.0f, 1.0f);
-    glTranslatef(50, 50, 0);
+    //glTranslatef(50, 50, 0);
     angle = angle + 2.5;
     glBindTexture(GL_TEXTURE_2D, shipTexture);
     //glRotatef(g.ship.angle, 0.0f, 0.0f, 1.0f);
