@@ -127,7 +127,7 @@ void drawGBola(int GBolaTexture)
     glPopMatrix();
 }
 
-void drawSalmonella(int salmonellaTexture)
+/*void drawSalmonella(int salmonellaTexture)
 {
     glBindTexture(GL_TEXTURE_2D, salmonellaTexture);
     glBegin(GL_QUADS);
@@ -138,7 +138,7 @@ void drawSalmonella(int salmonellaTexture)
     glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
     glPopMatrix();
-}
+}*/
 void drawWave1()
 {
 }
