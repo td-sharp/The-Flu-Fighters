@@ -17,7 +17,7 @@ using namespace std;
 #include <cstdlib>
 #include "fonts.h"
 #include "log.h"
-include "haleyH.h"
+#include "haleyH.h"
 #include <ctime>
 #include <cstring>
 #include <cmath>
