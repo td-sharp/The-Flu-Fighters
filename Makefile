@@ -14,7 +14,8 @@ LFLAGS = -lrt -lX11 -lGL
 
 all: flu_fighters
 
-flu_fighters: flu_fighters.cpp log.cpp timers.cpp tylerS.cpp
+flu_fighters: flu_fighters.cpp log.cpp timers.cpp tylerS.cpp \
+	reneeR.cpp haleyH.cpp kyleW.cpp
 	g++ $(CFLAGS) flu_fighters.cpp log.cpp timers.cpp \
 	kyleW.cpp haleyH.cpp reneeR.cpp tylerS.cpp \
 	libggfonts.a -Wall $(LFLAGS) -o flu_fighters
