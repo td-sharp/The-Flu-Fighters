@@ -17,6 +17,7 @@ using namespace std;
 #include <cstdlib>
 #include "fonts.h"
 #include "log.h"
+include "haleyH.h"
 #include <ctime>
 #include <cstring>
 #include <cmath>
@@ -88,8 +89,8 @@ extern void drawTheBoss();
 extern void displayText();
 //-----------------------------------------------------------------------------
 // Create enemies from haleyH.cpp
-extern void buildG_coli();
-extern void moveG_coli();
+extern void drawHaleyTimer();
+extern void moveGbola(int);
 
 struct Shape {
 	float width, height;
@@ -966,5 +967,6 @@ void render()
 		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
 		drawSalmonella(salmonellaTexture);
 		drawSalmonellaMathy(salmonellaTexture);
+		drawHaleyTimer();
 	}
 }
