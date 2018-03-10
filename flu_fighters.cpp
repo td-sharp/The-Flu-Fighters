@@ -17,7 +17,6 @@ using namespace std;
 #include <cstdlib>
 #include "fonts.h"
 #include "log.h"
-#include "haleyH.h"
 #include <ctime>
 #include <cstring>
 #include <cmath>
@@ -71,6 +70,8 @@ int lives = 3;
 extern void startMenu(int, int, int);
 extern void drawShip(float, float, float, int);
 extern void drawGBola(int);
+extern double drawSalmonella(int);
+extern double drawSalmonellaMathy(int);
 extern void drawOverlay(int, int, int, int);
 extern void drawWave1();
 extern void drawWave2();
@@ -84,8 +85,8 @@ extern void drawTheBoss();
 extern void displayText();
 //-----------------------------------------------------------------------------
 // Create enemies from haleyH.cpp
-extern void drawHaleyTimer();
-extern void moveGbola(int);
+extern void buildG_coli();
+extern void moveG_coli();
 
 struct Shape {
 	float width, height;
@@ -146,18 +147,20 @@ public:
 	}
 };
 //PLACE IMAGES HERE, UPDATE LIST LENGTH-------------------------------------
-Image img[3] = {
-	"./ship.png", "./GBola.png", "./TitleScreen.png"
+Image img[4] = {
+	"./ship.png", "./GBola.png", "./salmonella.png", "./TitleScreen.png"
 };
 
 //DECLARE TEXTURE
 GLuint shipTexture;
 GLuint GBolaTexture;
+GLuint salmonellaTexture;
 GLuint TitleScreenTexture;
 
 //DECLARE IMAGE
 Image *shipImage = NULL;
 Image *GBolaImage = NULL;
+Image *salmonellaImage = NULL;
 Image *TitleScreenImage = NULL;
 
 class Global {
@@ -401,6 +404,8 @@ int main()
 	logOpen();
 	init_opengl();
 	srand(time(NULL));
+	buildG_coli();
+	moveG_coli();
 	x11.set_mouse_position(100, 100);
 	int done=0;
 	while (!done) {
@@ -468,7 +473,21 @@ void init_opengl()
 		GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
 
 	//TITLE SCREEN STUFF-----------------------------------------------
-	TitleScreenImage = &img[2];
+	//Salmonella STUFF------------------------------------------------------
+	salmonellaImage = &img[2];
+	int saw = img[1].iWidth;
+	int sah = img[1].iWidth;
+	glGenTextures(1, &salmonellaTexture);
+
+	glBindTexture(GL_TEXTURE_2D, salmonellaTexture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, saw, sah, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
+
+	//TITLE SCREEN STUFF-----------------------------------------------
+	TitleScreenImage = &img[3];
 	int tw = img[2].iWidth;
 	int th = img[2].iWidth;
 	glGenTextures(1, &TitleScreenTexture);
@@ -478,7 +497,7 @@ void init_opengl()
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, tw, th, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
+		GL_RGB, GL_UNSIGNED_BYTE, img[3].data);
 
 }
 
@@ -732,7 +751,7 @@ void physics()
 		}
 		i++;
 	}
-	//Update asteroid positions
+	//
 	//Update asteroid positions
 	Asteroid *a = g.ahead;
 	while (a) {
@@ -903,7 +922,7 @@ void render()
 		glClear(GL_COLOR_BUFFER_BIT);
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
-		
+
 		//Draw the enemies
 		{
 			Asteroid *a = g.ahead;
@@ -918,7 +937,7 @@ void render()
 
 				a = a->next;
 			}
-		}	
+		}
 		//----------------
 		//Draw the bullets
 		Bullet *b = &g.barr[0];
@@ -938,9 +957,10 @@ void render()
 				glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 			glEnd();
 			++b;
-		}	
+		}
 
-		drawOverlay(gl.xres, gl.yres, lives, shipTexture);	
-		drawHaleyTimer();
+		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
+		drawSalmonella(salmonellaTexture);
+		drawSalmonellaMathy(salmonellaTexture);
 	}
 }

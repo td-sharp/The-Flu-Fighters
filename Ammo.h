@@ -15,6 +15,7 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include <ctime>
 #include "fonts.h"
 #include "log.h"
 #include <iostream>
@@ -22,6 +23,7 @@
 using namespace std;
 
 void displayText();
+void drawSalmonella();
 
 #endif
 
