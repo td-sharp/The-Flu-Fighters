@@ -77,7 +77,7 @@ extern double drawShipOPTIMIZED(float, float, float, int);
 extern void drawGBola(int);
 extern double drawSalmonella(int);
 extern double drawSalmonellaMathy(int);
-extern void drawOverlay(int, int, int, int);
+//extern void drawOverlay(int, int, int, int);
 extern void drawWave1();
 extern void drawWave2();
 extern void drawWave3();
