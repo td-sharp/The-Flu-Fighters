@@ -77,7 +77,7 @@ void drawGBola(int GBolaTexture)
     glEnd();
     glPopMatrix();
 }
-
+/*
 void drawSalmonella(int salmonellaTexture)
 {
     glBindTexture(GL_TEXTURE_2D, salmonellaTexture);
@@ -90,6 +90,7 @@ void drawSalmonella(int salmonellaTexture)
     glEnd();
     glPopMatrix();
 }
+*/
 void drawWave1()
 {
 }
