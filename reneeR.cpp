@@ -33,10 +33,10 @@ using namespace std;
 const float GBOLA_TOTAL = 30;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 
-void printReneeFile()
-{
-	cout<<"Renee's CPP file is present!" << endl;	
-}
+//void printReneeFile()
+//{
+//	cout<<"Renee's CPP file is present!" << endl;	
+//}
 double ReneeTime()
 {
 	static double t = 0; 
@@ -67,7 +67,7 @@ void level_one()
 void draw_ReneeTime()
 {
 	Rect r;
-	r.bot = 150;
+	r.bot = 350;
 	r.left = 15;
 	r.center = 0;
 	ggprint16(&r, 16, 0x00ffff00, "Renee Time: %f", ReneeTime());
