@@ -62,7 +62,10 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 
 //-----------------------------------------------------------------------------
 // Add Renee CPP
+//extern void printReneeFile();
 extern void printReneeFile();
+extern void draw_ReneeTime();
+extern void level_one();
 //-----------------------------------------------------------------------------
 //Add tylerS.cpp functions
 int gameState = 1;
@@ -406,6 +409,7 @@ int main()
 	srand(time(NULL));
 	buildG_coli();
 	moveG_coli();
+	level_one();
 	x11.set_mouse_position(100, 100);
 	int done=0;
 	while (!done) {
@@ -958,7 +962,7 @@ void render()
 			glEnd();
 			++b;
 		}
-
+		draw_ReneeTime();
 		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
 		drawSalmonella(salmonellaTexture);
 		drawSalmonellaMathy(salmonellaTexture);
