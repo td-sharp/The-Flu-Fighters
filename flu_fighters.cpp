@@ -978,7 +978,7 @@ void render()
 			++b;
 		}
 		draw_ReneeTime();
-		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
+		//drawOverlay(gl.xres, gl.yres, lives, shipTexture);
 		drawSalmonella(salmonellaTexture);
 		drawSalmonellaMathy(salmonellaTexture);
 		drawHaleyTimer();
