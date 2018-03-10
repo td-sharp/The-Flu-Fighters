@@ -408,8 +408,8 @@ int main()
 	logOpen();
 	init_opengl();
 	srand(time(NULL));
-	buildG_coli();
-	moveG_coli();
+	//buildG_coli();
+	//moveG_coli();
 	level_one();
 	x11.set_mouse_position(100, 100);
 	int done=0;
