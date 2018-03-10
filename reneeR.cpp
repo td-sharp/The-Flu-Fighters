@@ -11,11 +11,11 @@ using namespace std;
 #include <stdio.h>
 #include "fonts.h"
 
-void printReneeFile()
-{
-	cout<<"Renee's CPP file is present!" << endl;	
+//void printReneeFile()
+//{
+//	cout<<"Renee's CPP file is present!" << endl;	
 //	return 0;	
-}
+//}
 /* 
    Renee Romero
    CMPS 3350
