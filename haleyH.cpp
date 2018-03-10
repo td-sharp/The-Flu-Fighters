@@ -1,54 +1,102 @@
 #include <stdlib.h>
 #include <iostream>
+#include <GL/glx.h>
+#include <ctime>
+#include "fonts.h"
+#include "haleyH.h"
+
+#define GBOLA_HEALTH  50;
+#define SALMONELLA_HEALTH 100;
+#define CHOLERA_HEALTH 150;
+
+extern struct timespec timeStart, timeCurrent;
+extern double timeDiff(struct timespec *start, struct timespec *end);
 
 using namespace std;
 
-class G_coli {
-public: 
-	float pos[3];
-	float vel[3];
-	int health;
-};
-
-G_coli gcoli[10];
-
-void buildG_coli()
+Gbola::Gbola(float xpos, float ypos) 
 {
-
-	float vfactor = rand() % 5 + 3;
-	float xpos = (float)(rand() % 600/2 - 300);
-	float ypos = (float)(rand() % 900/2 + 150);
+	pos[0] = xpos;
+	pos[1] = ypos;
+	pos[2] = 0.0;
+	health = GBOLA_HEALTH;		
+}		
 	
-	cout << "Building G_coli enemies from haleyH.cpp" << endl;	
 
-	int i;
-	for (i = 0; i < 10; i++)
-	{
-		gcoli[i].pos[0] = xpos;
-		gcoli[i].pos[1] = ypos;
-		gcoli[i].pos[2] = 0.00;
-
-		gcoli[i].vel[0] = vfactor;
-		gcoli[i].vel[1] = -vfactor / 1.5;
-		gcoli[i].vel[2] = 0.00;
-	}
-	
-	cout << i << " enemies built" << endl;
+Salmonella::Salmonella(float xpos, float ypos, float rotation)
+{
+	pos[0] = xpos;
+	pos[1] = ypos;
+	pos[2] = 0.0f;
+	angle = 0.0;
+	rotate = rotation;
+	health = SALMONELLA_HEALTH;
 }
 
-void moveG_coli()
-{	 	
+Cholera::Cholera(float xpos, float ypos, float rotation, float acceleration)
+{
+	pos[0] = xpos;
+	pos[1] = ypos;
+	pos[2] = 0.0f;
+	angle = 0.0;
+	rotate = rotation;
+	accelerate = acceleration;
+	health = CHOLERA_HEALTH;
+}
+
+double testHaleyFunc()
+{
+	float data;
+	float arr[10];
+	static double t = 0.0;
+	struct timespec ftimeStart, ftimeEnd;
+	clock_gettime(CLOCK_REALTIME, &ftimeStart);
 	for (int i = 0; i < 10; i++)
 	{
-		gcoli[i].pos[0] += gcoli[i].vel[0];
-		gcoli[i].pos[1] += gcoli[i].vel[1];
-
-		cout << "G-Coli Enemy " << i << " New Position: x - " << gcoli[i].pos[0] <<
-			" y - " << gcoli[i].pos[1] << endl; 		
-
-		if ((gcoli[i].pos[0] < -600/2 && gcoli[i].vel[0] < 0) || 
-	    		(gcoli[i].pos[0] > 600/2 && gcoli[i].vel[0] > 0))
-				gcoli->vel[0] = -gcoli->vel[0]; 
+		data = 0.0325363456235326+i;
+		arr[i] = data;
 	}
+	clock_gettime(CLOCK_REALTIME, &ftimeEnd);
+	t += timeDiff(&ftimeStart, &ftimeEnd);
+	return t;
+}
 
+
+double testHaleyFunc2()
+{
+	int data;
+	int arr[10];
+	static double t = 0.0;
+	struct timespec ftimeStart, ftimeEnd;
+	clock_gettime(CLOCK_REALTIME, &ftimeStart);
+	for (int i = 0; i < 10; i++)
+	{
+		data = 0 + i;
+		arr[i] = data;
+	}
+	clock_gettime(CLOCK_REALTIME, &ftimeEnd);
+	t += timeDiff(&ftimeStart, &ftimeEnd);
+	return t;
+}
+
+void drawHaleyTimer()
+{
+	Rect r;
+	r.bot = 880;
+	r.left = 400;
+	r.center = 0;
+	ggprint16(&r, 16, 0x00ff0000, "Haley's Timer");
+	ggprint16(&r, 16, 0x00ff0000, "Option 1: %f", testHaleyFunc());
+	ggprint16(&r, 16, 0x00ff0000, "Option 2: %f", testHaleyFunc2());
+}
+
+
+
+
+void moveGbola(int Gbolacount)
+{	 	
+	for (int i = 0; i < Gbolacount; i++)
+	{
+		// make them hover
+	}
 }
