@@ -17,10 +17,10 @@ void startMenu(int xres, int yres, int TitleScreenTexture)
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 }
-void drawOverlay(int xres, int yres, int lives, int overlaidTexture,
+/*void drawOverlay(int xres, int yres, int lives, int overlaidTexture,
                                                     int shipTexture)
 {
-    /*glBindTexture(GL_TEXTURE_2D, overlaidTexture);
+    glBindTexture(GL_TEXTURE_2D, overlaidTexture);
     static float angle = 0.0;
     glRotatef(angle, 0.0f, 0.0f, 1.0f);
 
@@ -34,7 +34,7 @@ void drawOverlay(int xres, int yres, int lives, int overlaidTexture,
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
-    */
+    
     Rect r;
     r.bot = 20;
     r.left = 20;
@@ -56,7 +56,7 @@ void drawOverlay(int xres, int yres, int lives, int overlaidTexture,
         glBindTexture(GL_TEXTURE_2D, 0);
         glPopMatrix();
     }
-}
+} */
 
 double drawShip(float posA, float posB, float posC, int shipTexture)
 {
