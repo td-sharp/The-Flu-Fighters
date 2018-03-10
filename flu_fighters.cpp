@@ -69,6 +69,7 @@ int gameState = 1;
 int lives = 3;
 extern void startMenu(int, int, int);
 extern double drawShip(float, float, float, int);
+extern double drawShipOPTIMIZED(float, float, float, int);
 extern void drawGBola(int);
 extern void drawOverlay(int, int, int, int, int);
 extern void drawWave1();
@@ -935,7 +936,15 @@ void render()
 		thy.bot = 200;
 	    thy.left = 20;
 	    thy.center = 0;
-	    ggprint16(&thy, 16, 0xFB6AD0, "Tyler Sharp: %f", drawShip(g.ship.pos[0],
+	    ggprint16(&thy, 16, 0xFB6AD0, "Tyler Sharp Rotating: %f",
+														 drawShip(g.ship.pos[0],
+									g.ship.pos[1], g.ship.pos[2], shipTexture));
+		Rect thym;
+		thym.bot = 180;
+	    thym.left = 20;
+	    thym.center = 0;
+	    ggprint16(&thym, 16, 0xFB6AD0, "Tyler Sharp Static: %f",
+												drawShipOPTIMIZED(g.ship.pos[0],
 									g.ship.pos[1], g.ship.pos[2], shipTexture));
 
 
