@@ -69,15 +69,27 @@ extern void draw_ReneeTime();
 extern void level_one();
 //-----------------------------------------------------------------------------
 //Add tylerS.cpp functions
-int gameState = 1;
+
 int lives = 3;
 extern void startMenu(int, int, int);
-extern double drawShip(float, float, float, int);
-extern double drawShipOPTIMIZED(float, float, float, int);
+extern void drawShip(float, float, float, int);
 extern void drawGBola(int);
-extern double drawSalmonella(int);
-extern double drawSalmonellaMathy(int);
-//extern void drawOverlay(int, int, int, int);
+extern void drawOverlay(int, int, int, int);
+extern void drawSalmonella(int);
+enum states {
+	STARTMENU,
+	WAVE1,
+	CUT1,
+	WAVE2,
+	CUT2,
+	WAVE3,
+	CUT3,
+	WAVE4,
+	CUT4,
+	WAVE5,
+	CUT5
+};
+int gameState = WAVE1;
 extern void drawWave1();
 extern void drawWave2();
 extern void drawWave3();
@@ -384,7 +396,8 @@ public:
 		blank = XCreateBitmapFromData (dpy, win, data, 1, 1);
 		if (blank == None)
 			std::cout << "error: out of memory." << std::endl;
-		cursor = XCreatePixmapCursor(dpy, blank, blank, &dummy, &dummy, 0, 0);
+			cursor = XCreatePixmapCursor(dpy, blank, blank, &dummy,
+				 										&dummy, 0, 0);
 		XFreePixmap(dpy, blank);
 		//this makes you the cursor. then set it using this function
 		XDefineCursor(dpy, win, cursor);
@@ -569,7 +582,7 @@ void check_mouse(XEvent *e)
 			//Right button is down
 		}
 	}
-	if (e->type == MotionNotify) {
+	if (e->type == MotionNotify) {/*
 		if (savex != e->xbutton.x || savey != e->xbutton.y) {
 			//Mouse moved
 			int xdiff = savex - e->xbutton.x;
@@ -607,11 +620,12 @@ void check_mouse(XEvent *e)
 				}
 				g.mouseThrustOn = true;
 				clock_gettime(CLOCK_REALTIME, &g.mouseThrustTimer);
+
 			}
 			x11.set_mouse_position(100, 100);
 			savex = savey = 100;
 		}
-	}
+	*/}
 }
 
 int check_keys(XEvent *e)
@@ -838,7 +852,9 @@ void physics()
 	}
 	//---------------------------------------------------
 	//check keys pressed now
-	if (gl.keys[XK_Left] && gameState == 1) {
+	if (gl.keys[XK_Left] && (gameState == WAVE1 || gameState == WAVE2
+						 || gameState == WAVE3 || gameState == WAVE4
+					 	 					   || gameState == WAVE5)) {
 		if (g.ship.pos[0] < 0) {
 			g.ship.pos[0] += 5.0;
 		} else {
@@ -847,12 +863,16 @@ void physics()
 		//if (g.ship.angle >= 360.0f)
 		//	g.ship.angle -= 360.0f;
 	}
-	if (gl.keys[XK_Right] && gameState == 1) {
+	if (gl.keys[XK_Right] && (gameState == WAVE1 || gameState == WAVE2
+						  || gameState == WAVE3 || gameState == WAVE4
+					 	 					    || gameState == WAVE5)) {
 		g.ship.pos[0] += 4.0;
 		//if (g.ship.angle < 0.0f)
 		//	g.ship.angle += 360.0f;
 	}
-	if (gl.keys[XK_Up] && gameState == 1) {
+	if (gl.keys[XK_Up] && (gameState == WAVE1 || gameState == WAVE2
+					   || gameState == WAVE3 || gameState == WAVE4
+					 	 					 || gameState == WAVE5)) {
 		g.ship.pos[1] += 4.0;
 		//apply thrust
 		//convert ship angle to radians
@@ -872,11 +892,15 @@ void physics()
 			g.ship.vel[1] *= speed;
 			*/
 	}
-	if (gl.keys[XK_Down] && gameState == 1) {
+	if (gl.keys[XK_Down] && (gameState == WAVE1 || gameState == WAVE2
+						 || gameState == WAVE3 || gameState == WAVE4
+					 	 					   || gameState == WAVE5)) {
 		g.ship.pos[1] -= 4.0;
 	}
 
-	if (gl.keys[XK_space]) {
+	if (gl.keys[XK_space] && (gameState == WAVE1 || gameState == WAVE2
+						  || gameState == WAVE3 || gameState == WAVE4
+					 	 					    || gameState == WAVE5)) {
 		//a little time between each bullet
 		struct timespec bt;
 		clock_gettime(CLOCK_REALTIME, &bt);
@@ -908,6 +932,7 @@ void physics()
 			}
 		}
 	}
+	/*
 	if (g.mouseThrustOn) {
 		//should thrust be turned off
 		struct timespec mtt;
@@ -915,33 +940,21 @@ void physics()
 		double tdif = timeDiff(&mtt, &g.mouseThrustTimer);
 		if (tdif < -0.3)
 			g.mouseThrustOn = false;
-	}
+	} */
 }
 
 void render()
 {
 	//TEXT IN THE TOP CORNER
-	if (gameState == 0) {
+	if (gameState == STARTMENU) {
 		startMenu(gl.xres, gl.yres, TitleScreenTexture);
 	}
-	else if (gameState == 1) {
+	else if (gameState == WAVE1 || gameState == WAVE2
+					   || gameState == WAVE3 || gameState == WAVE4
+					 	 					 || gameState == WAVE5) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		//Draw the ship
-		Rect thy;
-		thy.bot = 200;
-	    thy.left = 20;
-	    thy.center = 0;
-	    ggprint16(&thy, 16, 0xFB6AD0, "Tyler Sharp Rotating: %f",
-						drawShip(g.ship.pos[0],
-				g.ship.pos[1], g.ship.pos[2], shipTexture));
-		Rect thym;
-		thym.bot = 180;
-	    thym.left = 20;
-	    thym.center = 0;
-	    ggprint16(&thym, 16, 0xFB6AD0, "Tyler Sharp Static: %f",
-					drawShipOPTIMIZED(g.ship.pos[0],
-				g.ship.pos[1], g.ship.pos[2], shipTexture));
-
+		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
 		//Draw the enemies
 		{
 			Asteroid *a = g.ahead;
@@ -953,7 +966,6 @@ void render()
 				glRotatef(a->angle, 0.0f, 0.0f, 1.0f);
 				//draw GBola
 				drawGBola(GBolaTexture);
-
 				a = a->next;
 			}
 		}
@@ -962,25 +974,26 @@ void render()
 		Bullet *b = &g.barr[0];
 		for (int i=0; i<g.nbullets; i++) {
 			//Log("draw bullet...\n");
-			glColor3f(1.0, 1.0, 1.0);
+			glColor3f(0.6, 0.6, 0.6);
 			glBegin(GL_POINTS);
 				glVertex2f(b->pos[0],      b->pos[1]);
 				glVertex2f(b->pos[0]-1.0f, b->pos[1]);
 				glVertex2f(b->pos[0]+1.0f, b->pos[1]);
 				glVertex2f(b->pos[0],      b->pos[1]-1.0f);
 				glVertex2f(b->pos[0],      b->pos[1]+1.0f);
-				glColor3f(0.8, 0.8, 0.8);
+				glColor3f(0.6, 0.6, 0.6);
 				glVertex2f(b->pos[0]-1.0f, b->pos[1]-1.0f);
 				glVertex2f(b->pos[0]-1.0f, b->pos[1]+1.0f);
 				glVertex2f(b->pos[0]+1.0f, b->pos[1]-1.0f);
 				glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 			glEnd();
+			glPushMatrix();
 			++b;
 		}
-		draw_ReneeTime();
-		//drawOverlay(gl.xres, gl.yres, lives, shipTexture);
-		drawSalmonella(salmonellaTexture);
-		drawSalmonellaMathy(salmonellaTexture);
-		drawHaleyTimer();
+		//draw_ReneeTime();
+		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
+		//drawSalmonella(salmonellaTexture);
+		//drawSalmonellaMathy(salmonellaTexture);
+		//drawHaleyTimer();
 	}
 }
