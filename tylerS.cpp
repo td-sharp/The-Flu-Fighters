@@ -17,14 +17,9 @@ void startMenu(int xres, int yres, int TitleScreenTexture)
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 }
-/*void drawOverlay(int xres, int yres, int lives, int overlaidTexture,
-                                                    int shipTexture)
+void drawOverlay(int xres, int yres, int lives, int shipTexture)
 {
-    glBindTexture(GL_TEXTURE_2D, overlaidTexture);
-    static float angle = 0.0;
-    glRotatef(angle, 0.0f, 0.0f, 1.0f);
-
-    angle = angle + 2.5;
+    /*glBindTexture(GL_TEXTURE_2D, overlaidTexture);
 
     glBegin(GL_QUADS);
         glTexCoord2f(1.0f, 0.0f); glVertex2f( xres, 60.0f);
@@ -34,7 +29,23 @@ void startMenu(int xres, int yres, int TitleScreenTexture)
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
-    
+    */
+
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glColor3ub(77, 166, 255);
+	glPushMatrix();
+	//glTranslatef( 50, 50, 0);
+	//glRotatef(angle, 0.0f, 0.0f, 1.0f);
+    //glTranslatef(-50, -50, 0);
+    //angle = angle + 2.5;
+	glBegin(GL_QUADS);
+		glVertex2i(0  , 0);
+        glVertex2i(xres, 0);
+        glVertex2i(xres, 60);
+        glVertex2i(0  , 60);
+    glPopMatrix();
+	glEnd();
+
     Rect r;
     r.bot = 20;
     r.left = 20;
@@ -56,22 +67,14 @@ void startMenu(int xres, int yres, int TitleScreenTexture)
         glBindTexture(GL_TEXTURE_2D, 0);
         glPopMatrix();
     }
-} */
+}
 
-double drawShip(float posA, float posB, float posC, int shipTexture)
+void drawShip(float posA, float posB, float posC, int shipTexture)
 {
-    static float angle = 0.0;
-    static double thyme = 0.0;
-    struct timespec fthymeStart, fthymeEnd;
-    clock_gettime(CLOCK_REALTIME, &fthymeStart);
     glColor3f(1.0f, 1.0f, 1.0f);
     glPushMatrix();
     glTranslatef(posA, posB, posC);
-    glRotatef(angle, 0.0f, 0.0f, 1.0f);
-    //glTranslatef(50, 50, 0);
-    angle = angle + 2.5;
     glBindTexture(GL_TEXTURE_2D, shipTexture);
-    //glRotatef(g.ship.angle, 0.0f, 0.0f, 1.0f);
     glBegin(GL_QUADS);
         glTexCoord2f(1.0f, 0.0f); glVertex2f( 30.0f,  30.0f);
         glTexCoord2f(1.0f, 1.0f); glVertex2f( 30.0f, -30.0f);
@@ -80,38 +83,6 @@ double drawShip(float posA, float posB, float posC, int shipTexture)
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
-
-    clock_gettime(CLOCK_REALTIME, &fthymeEnd);
-    thyme += timeDiff(&fthymeStart, &fthymeEnd);
-    return thyme;
-}
-
-double drawShipOPTIMIZED(float posA, float posB, float posC, int shipTexture)
-{
-    //static float move = 0.0;
-    static double thyme = 0.0;
-    struct timespec fthymeStart, fthymeEnd;
-    clock_gettime(CLOCK_REALTIME, &fthymeStart);
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glPushMatrix();
-    glTranslatef(posA+60, posB, posC);
-    //glRotatef(angle, 0.0f, 0.0f, 1.0f);
-
-    //angle = angle + 2.5;
-    glBindTexture(GL_TEXTURE_2D, shipTexture);
-    //glRotatef(g.ship.angle, 0.0f, 0.0f, 1.0f);
-    glBegin(GL_QUADS);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f( 30.0f,  30.0f);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f( 30.0f, -30.0f);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(-30.0f, -30.0f);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(-30.0f,  30.0f);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
-
-    clock_gettime(CLOCK_REALTIME, &fthymeEnd);
-    thyme += timeDiff(&fthymeStart, &fthymeEnd);
-    return thyme;
 }
 
 void drawGBola(int GBolaTexture)
@@ -122,12 +93,12 @@ void drawGBola(int GBolaTexture)
         glTexCoord2f(1.0f, 1.0f); glVertex2f( 80.0f, -80.0f);
         glTexCoord2f(0.0f, 1.0f); glVertex2f(-80.0f, -80.0f);
         glTexCoord2f(0.0f, 0.0f); glVertex2f(-80.0f,  80.0f);
-    glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 }
 
-/*void drawSalmonella(int salmonellaTexture)
+void drawSalmonella(int salmonellaTexture)
 {
     glBindTexture(GL_TEXTURE_2D, salmonellaTexture);
     glBegin(GL_QUADS);
@@ -138,7 +109,8 @@ void drawGBola(int GBolaTexture)
     glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
     glPopMatrix();
-}*/
+}
+
 void drawWave1()
 {
 }
