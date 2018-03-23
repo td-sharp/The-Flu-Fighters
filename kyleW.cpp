@@ -1,7 +1,7 @@
 /* Aurthor: Kyle Werts
  * Date: 2/23/2018
- * Flu Fighters Power up and ammo file 
- */ 
+ * Flu Fighters Power up and ammo file
+ */
 #include "Ammo.h"
 #include <time.h>
 #include <ctime>
@@ -20,7 +20,7 @@ void displayText()
 	r.center = 0;
 	ggprint8b(&r, 16, 0xFF00FF00, "kyleW");
 }
-
+/*
 double drawSalmonella(int salmonellaTexture)
 {
     static double sec = 0.0;
@@ -35,7 +35,7 @@ double drawSalmonella(int salmonellaTexture)
         glTexCoord2f(0.0f, 0.0f); glVertex2f(-80.0f,  80.0f);
     glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
-    glPopMatrix();  
+    glPopMatrix();
 
     clock_gettime(CLOCK_REALTIME, &ftimeStart);
     for (int i=0; i<10000; i++) {
@@ -48,7 +48,7 @@ double drawSalmonella(int salmonellaTexture)
     rec.left = 10;
     rec.center = 0;
     ggprint8b(&rec, 16, 0xFF00FF00, "kyleW Timer: %lf", sec);
-    sec += timeDiff(&ftimeStart, &ftimeEnd);  
+    sec += timeDiff(&ftimeStart, &ftimeEnd);
     return sec;
 }
 double drawSalmonellaMathy(int salmonellaTexture)
@@ -65,7 +65,7 @@ double drawSalmonellaMathy(int salmonellaTexture)
         glTexCoord2f(0.0f, 0.0f); glVertex2f( 30.0f,  180.0f);
     glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
-    glPopMatrix();  
+    glPopMatrix();
 
     clock_gettime(CLOCK_REALTIME, &ftimeStart);
     for (int i=3; i<10000; i++) {
@@ -80,12 +80,8 @@ double drawSalmonellaMathy(int salmonellaTexture)
     rec.left = 10;
     rec.center = 0;
     ggprint8b(&rec, 16, 0xFF00FF00, "kyleW Optimize Timer: %lf", sec);
-    sec += timeDiff(&ftimeStart, &ftimeEnd);  
+    sec += timeDiff(&ftimeStart, &ftimeEnd);
     return sec;
 }
 
-
-
-
-
-
+*/
