@@ -3,7 +3,7 @@ using namespace std;
 #include <GL/glx.h>
 #include <ctime>
 
-extern double timeDiff(struct timespec *start, struct timespec *end);
+//extern double timeDiff(struct timespec *start, struct timespec *end);
 
 void startMenu(int xres, int yres, int TitleScreenTexture)
 {
@@ -56,6 +56,8 @@ void drawOverlay(int xres, int yres, int lives, int shipTexture)
         glPushMatrix();
 
         glTranslatef(70*(i+2), 30, 0.0f);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
 
         glBindTexture(GL_TEXTURE_2D, shipTexture);
         glBegin(GL_QUADS);
@@ -68,11 +70,28 @@ void drawOverlay(int xres, int yres, int lives, int shipTexture)
         glPopMatrix();
     }
 }
-
+void drawBullet(float posA, float posB, int bulletTexture)
+{
+    glPushMatrix();
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glTranslatef(posA, posB, 0);
+    glBindTexture(GL_TEXTURE_2D, bulletTexture);
+    glBegin(GL_QUADS);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f( 10.0f,  10.0f);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f( 10.0f, -10.0f);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(-10.0f, -10.0f);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(-10.0f,  10.0f);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glPopMatrix();
+}
 void drawShip(float posA, float posB, float posC, int shipTexture)
 {
-    glColor3f(1.0f, 1.0f, 1.0f);
+    //glColor3f(1.0f, 1.0f, 1.0f);
     glPushMatrix();
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
     glTranslatef(posA, posB, posC);
     glBindTexture(GL_TEXTURE_2D, shipTexture);
     glBegin(GL_QUADS);
@@ -87,7 +106,12 @@ void drawShip(float posA, float posB, float posC, int shipTexture)
 
 void drawGBola(int GBolaTexture)
 {
+    //glBindTexture(GL_TEXTURE_2D, silhouetteTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
     glBindTexture(GL_TEXTURE_2D, GBolaTexture);
+    //glColor4ub(0,0,0,0);
+
     glBegin(GL_QUADS);
         glTexCoord2f(1.0f, 0.0f); glVertex2f( 80.0f,  80.0f);
         glTexCoord2f(1.0f, 1.0f); glVertex2f( 80.0f, -80.0f);
