@@ -3,9 +3,10 @@ using namespace std;
 #include <GL/glx.h>
 #include <ctime>
 
-//extern double timeDiff(struct timespec *start, struct timespec *end);
+extern double timeDiff(struct timespec *start, struct timespec *end);
 
-void startMenu(int xres, int yres, int TitleScreenTexture)
+void startMenu(int xres, int yres, int TitleScreenTexture, int Cursor,
+                                                                int cursorPos)
 {
     glBindTexture(GL_TEXTURE_2D, TitleScreenTexture);
     glBegin(GL_QUADS);
@@ -16,21 +17,49 @@ void startMenu(int xres, int yres, int TitleScreenTexture)
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
-}
-void drawOverlay(int xres, int yres, int lives, int shipTexture)
-{
-    /*glBindTexture(GL_TEXTURE_2D, overlaidTexture);
+    //CURSOR
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glPushMatrix();
+    if (cursorPos == 1) {
+        glTranslatef(350, 440, 0.0f);
+    } else if (cursorPos == 2) {
+        glTranslatef(350, 380, 0.0f);
+    } else {
+        glTranslatef(350, 300, 0.0f);
+    }
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
 
+    glBindTexture(GL_TEXTURE_2D, Cursor);
     glBegin(GL_QUADS);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f( xres, 60.0f);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f( xres, 0.0f);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f( 0.0f, 0.0f);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f( 0.0f, 60.0f);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f( 35.0f,  35.0f);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f( 35.0f, -35.0f);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(-35.0f, -35.0f);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(-35.0f,  35.0f);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
-    */
 
+}
+void drawPre()
+{
+    static double thyme = 0.0;
+    struct timespec fthymeStart, fthymeEnd;
+    glClear(GL_COLOR_BUFFER_BIT);
+    while (thyme < 3) {
+        clock_gettime(CLOCK_REALTIME, &fthymeStart);
+		//drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
+        Rect r;
+        r.bot = 800;
+        r.left = 300;
+        r.center = 0;
+        ggprint16(&r, 16, 0xFB6AD0, "LET'S GET A PHYSICAL");
+        clock_gettime(CLOCK_REALTIME, &fthymeEnd);
+        thyme += timeDiff(&fthymeStart, &fthymeEnd);
+    }
+}
+void drawOverlay(int xres, int yres, int lives, int shipTexture)
+{
     glColor3f(1.0f, 1.0f, 1.0f);
     glColor3ub(77, 166, 255);
 	glPushMatrix();

@@ -69,7 +69,8 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //Add tylerS.cpp functions
 
 int lives = 3;
-extern void startMenu(int, int, int);
+extern void startMenu(int, int, int, int, int);
+extern void drawPre();
 extern void drawShip(float, float, float, int);
 extern void drawBullet(float, float, int);
 extern void drawGBola(int);
@@ -83,6 +84,7 @@ extern void drawTheBoss();
 extern void drawSalmonella(int);
 enum states {
 	STARTMENU,
+	CUT0,
 	WAVE1,
 	CUT1,
 	WAVE2,
@@ -94,7 +96,8 @@ enum states {
 	WAVE5,
 	CUT5
 };
-int gameState = WAVE1;
+int gameState = STARTMENU;
+int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
 // Will take care of AMMO/Powerups in the future
@@ -359,6 +362,7 @@ Game::Game()
 		++nGbola;
 	}
 	clock_gettime(CLOCK_REALTIME, &bulletTimer);
+
 }
 
 Game::~Game() {
@@ -992,11 +996,27 @@ void physics()
 					   || gameState == WAVE3 || gameState == WAVE4
 					 	 					 || gameState == WAVE5)) {
 		g.ship.pos[1] += 4.0;
+	} else if (gl.keys[XK_Up] && gameState == STARTMENU) {
+		if (cursorPos > 1) {
+			cursorPos--;
+			sleep(1);
+		} else {
+			cursorPos = 3;
+			sleep(1);
+		}
 	}
 	if (gl.keys[XK_Down] && (gameState == WAVE1 || gameState == WAVE2
 						 || gameState == WAVE3 || gameState == WAVE4
 					 	 					   || gameState == WAVE5)) {
 		g.ship.pos[1] -= 4.0;
+	} else if (gl.keys[XK_Down] && gameState == STARTMENU) {
+		if (cursorPos <= 2) {
+			cursorPos++;
+			sleep(1);
+		} else {
+			cursorPos = 1;
+			sleep(1);
+		}
 	}
 
 	if (gl.keys[XK_space] && (gameState == WAVE1 || gameState == WAVE2
@@ -1032,6 +1052,10 @@ void physics()
 				g.nbullets++;
 			}
 		}
+	} else if (gl.keys[XK_space] && gameState == STARTMENU) {
+		if (cursorPos == 1) {
+			gameState = WAVE1;
+		}
 	}
 	/*
 	if (g.mouseThrustOn) {
@@ -1049,15 +1073,16 @@ void render()
 {
 	//TEXT IN THE TOP CORNER
 	if (gameState == STARTMENU) {
-		startMenu(gl.xres, gl.yres, TitleScreenTexture);
-	}
-	else if (gameState == WAVE1 || gameState == WAVE2
+		startMenu(gl.xres, gl.yres, TitleScreenTexture, GBolaTexture,
+																	cursorPos);
+	} else if (gameState == WAVE1 || gameState == WAVE2
 					   || gameState == WAVE3 || gameState == WAVE4
 					 	 					 || gameState == WAVE5) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
 
+		drawPre();
 		//Draw the enemies
 		{
 			Asteroid *a = g.ahead;
