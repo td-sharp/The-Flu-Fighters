@@ -1082,7 +1082,7 @@ void render()
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
 
-		drawPre();
+		//drawPre();
 		//Draw the enemies
 		{
 			Asteroid *a = g.ahead;
