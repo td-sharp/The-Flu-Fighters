@@ -96,7 +96,7 @@ enum states {
 	WAVE5,
 	CUT5
 };
-int gameState = STARTMENU;
+int gameState = WAVE1;
 int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
