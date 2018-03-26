@@ -96,7 +96,7 @@ enum states {
 	WAVE5,
 	CUT5
 };
-int gameState = WAVE1;
+int gameState = STARTMENU;
 int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
@@ -999,10 +999,10 @@ void physics()
 	} else if (gl.keys[XK_Up] && gameState == STARTMENU) {
 		if (cursorPos > 1) {
 			cursorPos--;
-			sleep(1);
+			usleep(200000);
 		} else {
 			cursorPos = 3;
-			sleep(1);
+			usleep(200000);
 		}
 	}
 	if (gl.keys[XK_Down] && (gameState == WAVE1 || gameState == WAVE2
@@ -1012,10 +1012,10 @@ void physics()
 	} else if (gl.keys[XK_Down] && gameState == STARTMENU) {
 		if (cursorPos <= 2) {
 			cursorPos++;
-			sleep(1);
+			usleep(200000);
 		} else {
 			cursorPos = 1;
-			sleep(1);
+			usleep(200000);
 		}
 	}
 
@@ -1056,7 +1056,7 @@ void physics()
 		if (cursorPos == 1) {
 			gameState = WAVE1;
 		} else if (cursorPos == 2) {
-			
+
 		} else {
 			exit(0);
 		}
