@@ -1055,6 +1055,10 @@ void physics()
 	} else if (gl.keys[XK_space] && gameState == STARTMENU) {
 		if (cursorPos == 1) {
 			gameState = WAVE1;
+		} else if (cursorPos == 2) {
+			
+		} else {
+			exit(0);
 		}
 	}
 	/*
