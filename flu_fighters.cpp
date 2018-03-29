@@ -1132,10 +1132,12 @@ void render()
 																	cursorPos);
 	}
 	if (gameState == WAVEMENU) {
-		//NOT READY YET
-		//drawPre();
 		waveMenu(gl.xres, gl.yres, WaveScreenTexture, GBolaTexture,
 																	cursorPos);
+	}
+	if (gameState == CUT0) {
+		//NOT READY YET
+		gameState = WAVE1;
 	}
 	if (gameState == WAVE1 || gameState == WAVE2
 					   || gameState == WAVE3 || gameState == WAVE4
@@ -1143,16 +1145,11 @@ void render()
 
 
 		glViewport(0, 0, gl.xres, gl.yres);
-	 	//clear color buffer
-	 	glClearColor(0.053f, .174f, .227f, 0);
-	 	glClear(GL_COLOR_BUFFER_BIT);
-		glViewport(0, 0, gl.xres, gl.yres);
 		//clear color buffer
 		glClearColor(0.053f, .174f, .227f, 0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
-
 		//drawPre();
 		//Draw the enemies
 		{

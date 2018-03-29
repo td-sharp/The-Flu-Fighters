@@ -87,13 +87,6 @@ void waveMenu(int xres, int yres, int WaveScreenTexture, int Cursor,
 
 void drawPre()
 {
-    int timer = 0;
-    while (timer < 100000) {
-        glViewport(0, 0, 600, 900);
-        //clear color buffer
-        glClearColor(0.053f, .174f, .227f, 0);
-        glClear(GL_COLOR_BUFFER_BIT);
-
         //Draw the ship
         //drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
         Rect r;
@@ -101,10 +94,7 @@ void drawPre()
         r.left = 250;
         r.center = 0;
         ggprint16(&r, 16, 0xFB6AD0, "LET'S GET A PHYSICAL");
-        glEnd();
-        glPopMatrix();
-        timer++;
-    }
+    
     //sleep(1);
     //return 1;
 }
