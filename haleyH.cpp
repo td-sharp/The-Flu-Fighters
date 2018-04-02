@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <iostream>
 #include <GL/glx.h>
 #include <ctime>
@@ -73,54 +75,6 @@ Cholera::Cholera(float xpos, float ypos, float rotation, float acceleration)
 	health = CHOLERA_HEALTH;
 }
 
-double testHaleyFunc()
-{
-	float data;
-	float arr[10];
-	static double t = 0.0;
-	struct timespec ftimeStart, ftimeEnd;
-	clock_gettime(CLOCK_REALTIME, &ftimeStart);
-	for (int i = 0; i < 10; i++)
-	{
-		data = 0.0325363456235326+i;
-		arr[i] = data;
-	}
-	clock_gettime(CLOCK_REALTIME, &ftimeEnd);
-	t += timeDiff(&ftimeStart, &ftimeEnd);
-	return t;
-}
-
-
-double testHaleyFunc2()
-{
-	int data;
-	int arr[10];
-	static double t = 0.0;
-	struct timespec ftimeStart, ftimeEnd;
-	clock_gettime(CLOCK_REALTIME, &ftimeStart);
-	for (int i = 0; i < 10; i++)
-	{
-		data = 0 + i;
-		arr[i] = data;
-	}
-	clock_gettime(CLOCK_REALTIME, &ftimeEnd);
-	t += timeDiff(&ftimeStart, &ftimeEnd);
-	return t;
-}
-
-void drawHaleyTimer()
-{
-	Rect r;
-	r.bot = 880;
-	r.left = 400;
-	r.center = 0;
-	ggprint16(&r, 16, 0x00ff0000, "Haley's Timer");
-	ggprint16(&r, 16, 0x00ff0000, "Option 1: %f", testHaleyFunc());
-	ggprint16(&r, 16, 0x00ff0000, "Option 2: %f", testHaleyFunc2());
-}
-
-
-
 
 void moveGbola(Gbola *g)
 {
@@ -159,43 +113,18 @@ void moveGbola(Gbola *g)
 
 		g = g->next;				 
 	}
-}
-
-/*void checkGbolaCollision(Game game, int bullets, Bullet barray[], int nGbola)
-{
-	while(game.g)
-	{
-		int i = 0;
-		while (i < bullets)
-		{
-			Bullet *b = &barray[i];
-			float d0 = b->pos[0] - game.g->pos[0];
-			float d1 = b->pos[1] - game.g->pos[1];
-			float dist = (d0 * d0 + d1 * d1);
-			if (dist < (g->radius * g->radius)
-			{
-				g->color[0] = 1.0;
-				g->color[1] = 0.1;
-				g->color[2] = 0.1;
-				Gbola *saveg = g->next;
-				deleteGbola(game,g);
-				g = saveg;
-				nGbola--;
-			}
-		}
-	}
 } 
 
-void deleteGbola(Game game, Gbola *g)
+void deleteGbola(Game *game, Gbola *g)
 {
 	if (g->prev == NULL)
 	{
 		if (g->next == NULL)
-			game.gbhead = NULL;
+			game->gbhead = NULL;
 		else
 		{
 			g->next->prev = NULL;
-			game.gbhead = g->next;
+			game->gbhead = g->next;
 		}
 	}
 	else
@@ -211,4 +140,44 @@ void deleteGbola(Game game, Gbola *g)
 
 	delete g;
 	g = NULL;
-}*/	
+}
+
+	
+void checkGbolaCollision(Game *game)
+{
+	Gbola *g;
+	g = game->gbhead;
+	float d0, d1, dist;
+
+	while(g)
+	{
+		int i = 0;
+		while (i < game->nbullets)
+		{
+			Bullet *b = &(game->barr[i]);
+			d0 = b->pos[0] - g->pos[0];
+			d1 = b->pos[1] - g->pos[1];
+			dist = (d0 * d0 + d1 * d1);
+			if (dist < (g->radius * g->radius))
+			{
+				g->color[0] = 1.0;
+				g->color[1] = 0.1;
+				g->color[2] = 0.1;
+				Gbola *saveg = g->next;
+				deleteGbola(game,g);
+				g = saveg;
+				game->nGbola--;
+				
+				memcpy(&(game->barr[i]), &(game->barr[game->nbullets-1]),
+					sizeof(Bullet));
+				game->nbullets--;
+				if (g == NULL)
+					break;
+			}
+			i++;
+		}
+		if (g == NULL)
+			break;
+		g = g->next;
+	}
+} 

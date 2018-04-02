@@ -104,10 +104,9 @@ int cursorPos = 1;
 extern void displayText();
 //-----------------------------------------------------------------------------
 // Create enemies from haleyH.cpp
-extern void drawHaleyTimer();
 extern void moveGbola(Gbola *);
-extern void checkGbolaCollision(struct Game, int, struct Bullet[], int);
-extern void deleteGbola(struct Game, Gbola *);
+extern void checkGbolaCollision(struct Game *);
+extern void deleteGbola(struct Game *, Gbola *);
 
 struct Shape {
 	float width, height;
@@ -900,6 +899,8 @@ void physics()
 	//Update asteroid positions
 	//Update asteroid positions
 	Asteroid *a = g.ahead;
+	Gbola *gb = g.gbhead;
+	moveGbola(gb);
 	while (a) {
 		a->pos[0] += a->vel[0];
 		a->pos[1] += a->vel[1];
@@ -926,6 +927,7 @@ void physics()
 	//   2. break the asteroid into pieces
 	//      if asteroid small, delete it
 	a = g.ahead;
+	checkGbolaCollision(&g);
 	while (a) {
 		//is there a bullet within its radius?
 		int i=0;
