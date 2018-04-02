@@ -70,7 +70,8 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 
 int lives = 3;
 extern void startMenu(int, int, int, int, int);
-extern void drawPre();
+extern void waveMenu(int, int, int, int, int);
+extern int drawPre();
 extern void drawShip(float, float, float, int);
 extern void drawBullet(float, float, int);
 extern void drawGBola(int);
@@ -84,6 +85,7 @@ extern void drawTheBoss();
 extern void drawSalmonella(int);
 enum states {
 	STARTMENU,
+	WAVEMENU,
 	CUT0,
 	WAVE1,
 	CUT1,
@@ -167,9 +169,9 @@ public:
 	}
 };
 //PLACE IMAGES HERE, UPDATE LIST LENGTH-------------------------------------
-Image img[5] = {
+Image img[6] = {
 	"./ship.png", "./GBola.png", "./salmonella.png", "./TitleScreen.png",
-																"bullet.png"
+	"./bullet.png", "./WaveScreen.png"
 };
 
 //DECLARE TEXTURE
@@ -179,6 +181,7 @@ GLuint salmonellaTexture;
 GLuint TitleScreenTexture;
 GLuint silhouetteTexture;
 GLuint bulletTexture;
+GLuint WaveScreenTexture;
 
 //DECLARE IMAGE
 Image *shipImage = NULL;
@@ -186,6 +189,7 @@ Image *GBolaImage = NULL;
 Image *salmonellaImage = NULL;
 Image *TitleScreenImage = NULL;
 Image *bulletImage = NULL;
+Image *WaveScreenImage = NULL;
 
 class Global {
 public:
@@ -644,6 +648,19 @@ void init_opengl()
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, tw, th, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[3].data);
 
+	//WAVE SCREEN STUFF---------------------------------------------------
+	WaveScreenImage = &img[5];
+	int ww = img[5].iWidth;
+	int wh = img[5].iHeight;
+	glGenTextures(1, &WaveScreenTexture);
+
+	glBindTexture(GL_TEXTURE_2D, WaveScreenTexture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, ww, wh, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[5].data);
+
 }
 
 void normalize2d(Vec v)
@@ -999,11 +1016,19 @@ void physics()
 					 	 					 || gameState == WAVE5)) {
 		g.ship.pos[1] += 4.0;
 	} else if (gl.keys[XK_Up] && gameState == STARTMENU) {
-		if (cursorPos > 1) {
+		if (cursorPos >= 2) {
 			cursorPos--;
 			usleep(200000);
 		} else {
 			cursorPos = 3;
+			usleep(200000);
+		}
+	} else if (gl.keys[XK_Up] && gameState == WAVEMENU) {
+		if (cursorPos >= 2) {
+			cursorPos--;
+			usleep(200000);
+		} else {
+			cursorPos = 6;
 			usleep(200000);
 		}
 	}
@@ -1013,6 +1038,14 @@ void physics()
 		g.ship.pos[1] -= 4.0;
 	} else if (gl.keys[XK_Down] && gameState == STARTMENU) {
 		if (cursorPos <= 2) {
+			cursorPos++;
+			usleep(200000);
+		} else {
+			cursorPos = 1;
+			usleep(200000);
+		}
+	} else if (gl.keys[XK_Down] && gameState == WAVEMENU) {
+		if (cursorPos <= 5) {
 			cursorPos++;
 			usleep(200000);
 		} else {
@@ -1056,11 +1089,29 @@ void physics()
 		}
 	} else if (gl.keys[XK_space] && gameState == STARTMENU) {
 		if (cursorPos == 1) {
+			gameState = CUT0;
+		} else if (cursorPos == 2) {
+			usleep(500000);
+			cursorPos = 1;
+			gameState = WAVEMENU;
+		} else if (cursorPos == 3) {
+			exit(0);
+		}
+	} else if (gl.keys[XK_space] && gameState == WAVEMENU) {
+		if (cursorPos == 1) {
 			gameState = WAVE1;
 		} else if (cursorPos == 2) {
-
+			gameState = WAVE2;
+		} else if (cursorPos == 3) {
+			gameState = WAVE3;
+		} else if (cursorPos == 4) {
+			gameState = WAVE4;
+		} else if (cursorPos == 5) {
+			gameState = WAVE5;
 		} else {
-			exit(0);
+			usleep(500000);
+			cursorPos = 2;
+			gameState = STARTMENU;
 		}
 	}
 	/*
@@ -1081,15 +1132,32 @@ void render()
 	if (gameState == STARTMENU) {
 		startMenu(gl.xres, gl.yres, TitleScreenTexture, GBolaTexture,
 																	cursorPos);
-	} else if (gameState == WAVE1 || gameState == WAVE2
+	}
+	if (gameState == WAVEMENU) {
+		waveMenu(gl.xres, gl.yres, WaveScreenTexture, GBolaTexture,
+																	cursorPos);
+	}
+	if (gameState == CUT0) {
+		//NOT READY YET
+		gameState = WAVE1;
+	}
+	if (gameState == WAVE1 || gameState == WAVE2
 					   || gameState == WAVE3 || gameState == WAVE4
 					 	 					 || gameState == WAVE5) {
+
+		static double thyme = 0.0;
+ 	    struct timespec fthymeStart, fthymeEnd;
+		clock_gettime(CLOCK_REALTIME, &fthymeStart);
 		glViewport(0, 0, gl.xres, gl.yres);
 		//clear color buffer
 		glClearColor(0.053f, .174f, .227f, 0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
+
+		if (thyme < 3.0) {
+			drawPre();
+		}
 
 		//drawPre();
 		//Draw the enemies
@@ -1142,6 +1210,15 @@ void render()
 		}
 
 		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
+
+		Rect r;
+        r.bot = 800;
+        r.left = 250;
+        r.center = 0;
+        ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", thyme);
+
+		clock_gettime(CLOCK_REALTIME, &fthymeEnd);
+	    thyme += timeDiff(&fthymeStart, &fthymeEnd);
 		//drawHaleyTimer();
 	}
 }
