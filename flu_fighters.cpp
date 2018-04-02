@@ -1143,13 +1143,20 @@ void render()
 					   || gameState == WAVE3 || gameState == WAVE4
 					 	 					 || gameState == WAVE5) {
 
-
+		static double thyme = 0.0;
+ 	    struct timespec fthymeStart, fthymeEnd;
+		clock_gettime(CLOCK_REALTIME, &fthymeStart);
 		glViewport(0, 0, gl.xres, gl.yres);
 		//clear color buffer
 		glClearColor(0.053f, .174f, .227f, 0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
+
+		if (thyme < 3.0) {
+			drawPre();
+		}
+
 		//drawPre();
 		//Draw the enemies
 		{
@@ -1201,6 +1208,15 @@ void render()
 		}
 
 		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
+
+		Rect r;
+        r.bot = 800;
+        r.left = 250;
+        r.center = 0;
+        ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", thyme);
+
+		clock_gettime(CLOCK_REALTIME, &fthymeEnd);
+	    thyme += timeDiff(&fthymeStart, &fthymeEnd);
 		//drawHaleyTimer();
 	}
 }
