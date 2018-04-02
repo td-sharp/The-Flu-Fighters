@@ -94,7 +94,7 @@ void drawPre()
         r.left = 250;
         r.center = 0;
         ggprint16(&r, 16, 0xFB6AD0, "LET'S GET A PHYSICAL");
-    
+
     //sleep(1);
     //return 1;
 }
