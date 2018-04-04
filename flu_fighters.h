@@ -43,9 +43,11 @@ public:
 	Ship ship;
 	Asteroid *ahead;
 	Gbola *gbhead;
+	Salmonella *shead;
 	Bullet *barr;
 	int nasteroids;
 	int nGbola;
+	int nSalmonella;
 	int nbullets;
 	struct timespec bulletTimer;
 	struct timespec mouseThrustTimer;

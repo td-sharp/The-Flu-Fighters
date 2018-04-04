@@ -107,7 +107,8 @@ extern void displayText();
 //-----------------------------------------------------------------------------
 // Create enemies from haleyH.cpp
 extern void moveGbola(Gbola *);
-extern void checkGbolaCollision(struct Game *);
+extern void moveSalmonella(Salmonella *);
+extern void checkEnemyCollision(struct Game *);
 extern void deleteGbola(struct Game *, Gbola *);
 
 struct Shape {
@@ -322,6 +323,7 @@ Game::Game()
 {
 	ahead = NULL;
 	gbhead = NULL;
+	shead = NULL;
 	barr = new Bullet[MAX_BULLETS];
 	nasteroids = 0;
 	nbullets = 0;
@@ -944,7 +946,7 @@ void physics()
 	//   2. break the asteroid into pieces
 	//      if asteroid small, delete it
 	a = g.ahead;
-	checkGbolaCollision(&g);
+	checkEnemyCollision(&g);
 	while (a) {
 		//is there a bullet within its radius?
 		int i=0;

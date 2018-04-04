@@ -19,9 +19,15 @@ class Salmonella {
 public:
 	float pos[3];
 	float vel[3];
+	float nverts;
+	float radius;
+	float vert[8][3];
 	float angle;
 	float rotate;
+	float color[3];
 	int health;
+	struct Salmonella *prev;
+	struct Salmonella *next;
 public:
 	Salmonella(float, float, float);
 };
