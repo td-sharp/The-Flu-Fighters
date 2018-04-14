@@ -85,16 +85,34 @@ void waveMenu(int xres, int yres, int WaveScreenTexture, int Cursor,
 
 }
 
-void drawPre()
+void drawPre(int gameState)
 {
         //Draw the ship
         //drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
         Rect r;
         r.bot = 800;
-        r.left = 250;
         r.center = 0;
-        ggprint16(&r, 16, 0xFB6AD0, "LET'S GET A PHYSICAL");
-
+        Rect s;
+        s.bot = 780;
+        s.center = 0;
+        if (gameState == 3) {
+            r.left = 170;
+            ggprint16(&r, 16, 0xFB6AD0, "LET'S GET A PHYSICAL");
+        } else if (gameState == 5) {
+            r.left = 100;
+            ggprint16(&r, 16, 0xFB6AD0, "DEFRIBILLATOR? I 'ARDLY EVEN KNOW 'ER!");
+        } else if (gameState == 7) {
+            r.left = 170;
+            ggprint16(&r, 16, 0xFB6AD0, "URINE A LOT OF TROUBLE");
+        } else if (gameState == 9) {
+            r.left = 168;
+            ggprint16(&r, 16, 0xFB6AD0, "TIME TO PRACTICE MEDICINE");
+            s.left = 184;
+            ggprint16(&s, 16, 0xFB6AD0, "AND CHEW BUBBLEGUM");
+        } else if (gameState == 11) {
+            r.left = 170;
+            ggprint16(&r, 16, 0xFB6AD0, "IT'S GOING TIBIA BAD DAY");
+        }
     //sleep(1);
     //return 1;
 }
@@ -180,12 +198,13 @@ void drawGBola(int GBolaTexture)
     glAlphaFunc(GL_GREATER, 0.0f);
     glBindTexture(GL_TEXTURE_2D, GBolaTexture);
     //glColor4ub(0,0,0,0);
-
+    float GHeight = 80.0;
+    float GWidth = 80.0;
     glBegin(GL_QUADS);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f( 80.0f,  80.0f);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f( 80.0f, -80.0f);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(-80.0f, -80.0f);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(-80.0f,  80.0f);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f( GWidth,  GHeight);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f( GWidth, -GHeight);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(-GWidth, -GHeight);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(-GWidth,  GHeight);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
@@ -202,27 +221,4 @@ void drawSalmonella(int salmonellaTexture)
     glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
     glPopMatrix();
-}
-
-void drawWave1()
-{
-}
-void drawWave2()
-{
-}
-void drawWave3()
-{
-
-}
-void drawWave4()
-{
-
-}
-void drawWave5()
-{
-
-}
-void drawTheBoss()
-{
-
 }
