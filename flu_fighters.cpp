@@ -1233,7 +1233,7 @@ void render()
 				glTranslatef(gb->pos[0], gb->pos[1], gb->pos[2]);
 				glRotatef(gb->angle, 0.0f, 0.0f, 0.0f);
 				//drawGBola(GBolaTexture);
-				drawSalmonella(salmonellaTexture);
+				drawGBola(GBolaTexture);
 				gb = gb->next;
 			}
 		}
