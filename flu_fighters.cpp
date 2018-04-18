@@ -50,7 +50,7 @@ const float TIMESLICE = 1.0f;
 const float GRAVITY = -0.2f;
 #define PI 3.141592653589793
 #define ALPHA 1
-const int MAX_BULLETS = 11;
+const int MAX_BULLETS = 3;
 const Flt MINIMUM_ASTEROID_SIZE = 60.0;
 
 //-----------------------------------------------------------------------------
@@ -71,16 +71,12 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 int lives = 3;
 extern void startMenu(int, int, int, int, int);
 extern void waveMenu(int, int, int, int, int);
-extern int drawPre();
+extern int drawPre(int);
+extern int drawPost();
 extern void drawShip(float, float, float, int);
 extern void drawBullet(float, float, int);
 extern void drawGBola(int);
 extern void drawOverlay(int, int, int, int);
-extern void drawWave1();
-extern void drawWave2();
-extern void drawWave3();
-extern void drawWave4();
-extern void drawWave5();
 extern void drawTheBoss();
 extern void drawSalmonella(int);
 enum states {
@@ -106,6 +102,7 @@ int cursorPos = 1;
 extern void displayText();
 //-----------------------------------------------------------------------------
 // Create enemies from haleyH.cpp
+void spawnGBola();
 extern void moveGbola(Gbola *);
 extern void moveSalmonella(Salmonella *);
 extern void checkEnemyCollision(struct Game *);
@@ -330,42 +327,46 @@ Game::Game()
 	nGbola = 0;
 	mouseThrustOn = false;
 	//build 10 asteroids...
-	for (int j=0; j<3; j++) {
-		Asteroid *a = new Asteroid;
-		Gbola *gb = new Gbola((float)(rand() % (gl.xres-75)), 800.0f);
-		a->nverts = 8;
-		a->radius = rnd()*80.0 + 40.0;
-		Flt r2 = a->radius / 2.0;
-		Flt angle = 0.0f;
-		Flt inc = (PI * 2.0) / (Flt)a->nverts;
-		for (int i=0; i<a->nverts; i++) {
-			a->vert[i][0] = sin(angle) * (r2 + rnd() * a->radius);
-			a->vert[i][1] = cos(angle) * (r2 + rnd() * a->radius);
-			angle += inc;
-		}
-		a->pos[0] = (Flt)(rand() % gl.xres);
-		a->pos[1] = (Flt)(rand() % gl.yres);
-		a->pos[2] = 0.0f;
-		a->angle = 0.0;
-		a->rotate = rnd() * 4.0 - 2.0;
-		a->color[0] = 0.8;
-		a->color[1] = 0.8;
-		a->color[2] = 0.7;
-		a->vel[0] = (Flt)(rnd()*2.0-1.0);
-		a->vel[1] = (Flt)(rnd()*2.0-1.0);
-		//std::cout << "asteroid" << std::endl;
-		//add to front of linked list
-		a->next = ahead;
-		gb->next = gbhead;
-		if (ahead != NULL)
-			ahead->prev = a;
-		if (gbhead != NULL)
-			gbhead-> prev = gb;
-		ahead = a;
-		gbhead = gb;
-		++nasteroids;
-		++nGbola;
-	}
+
+	//THIS CREATES GBOLA
+	//if (gameState == WAVE1) {
+		//for (int j=0; j<3; j++) {
+			//Asteroid *a = new Asteroid;
+		//	Gbola *gb = new Gbola((float)(rand() % (gl.xres-75)), 800.0f);
+			//a->nverts = 8;
+			//a->radius = rnd()*80.0 + 40.0;
+			//Flt r2 = a->radius / 2.0;
+			//Flt angle = 0.0f;
+			//Flt inc = (PI * 2.0) / (Flt)a->nverts;
+			//for (int i=0; i<a->nverts; i++) {
+			//	a->vert[i][0] = sin(angle) * (r2 + rnd() * a->radius);
+			//	a->vert[i][1] = cos(angle) * (r2 + rnd() * a->radius);
+			//	angle += inc;
+			//}
+			//a->pos[0] = (Flt)(rand() % gl.xres);
+			//a->pos[1] = (Flt)(rand() % gl.yres);
+			//a->pos[2] = 0.0f;
+			//a->angle = 0.0;
+			//a->rotate = rnd() * 4.0 - 2.0;
+			//a->color[0] = 0.8;
+			//a->color[1] = 0.8;
+			//a->color[2] = 0.7;
+			//a->vel[0] = (Flt)(rnd()*2.0-1.0);
+			//a->vel[1] = (Flt)(rnd()*2.0-1.0);
+			//std::cout << "asteroid" << std::endl;
+			//add to front of linked list
+			//a->next = ahead;
+		//	gb->next = gbhead;
+			//if (ahead != NULL)
+			//	ahead->prev = a;
+		//	if (gbhead != NULL)
+		//		gbhead-> prev = gb;
+			//ahead = a;
+		//	gbhead = gb;
+			//++nasteroids;
+		//	++nGbola;
+		//}
+	//}
 	clock_gettime(CLOCK_REALTIME, &bulletTimer);
 
 }
@@ -375,6 +376,16 @@ Game::~Game() {
 }
 
 Game g;
+
+void spawnGBola() {
+	Gbola *gb = new Gbola((float)(rand() % (gl.xres-75)), 800.0f);
+	gb->next = g.gbhead;
+	if (g.gbhead != NULL)
+		g.gbhead-> prev = gb;
+	g.gbhead = gb;
+	++g.nGbola;
+}
+
 
 //X Windows variables
 class X11_wrapper {
@@ -634,8 +645,10 @@ void init_opengl()
 
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, saw, sah, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
+
+	silhouetteData = buildAlphaData(&img[2]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, saw, sah, 0,
+							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
 
 	//TITLE SCREEN STUFF-----------------------------------------------
 	TitleScreenImage = &img[3];
@@ -694,7 +707,7 @@ void check_mouse(XEvent *e)
 		if (e->xbutton.button==1) {
 			//Left button is down
 			//a little time between each bullet
-			struct timespec bt;
+			/*struct timespec bt;
 			clock_gettime(CLOCK_REALTIME, &bt);
 			double ts = timeDiff(&g.bulletTimer, &bt);
 			if (ts > 0.1) {
@@ -720,8 +733,9 @@ void check_mouse(XEvent *e)
 					b->color[1] = 1.0f;
 					b->color[2] = 1.0f;
 					++g.nbullets;
+
 				}
-			}
+			}*/
 		}
 		if (e->xbutton.button==3) {
 			//Right button is down
@@ -868,13 +882,13 @@ void physics()
 	g.ship.pos[0] += g.ship.vel[0];
 	g.ship.pos[1] += g.ship.vel[1];
 	//Check for collision with window edges
-	if (g.ship.pos[0] < 0.0) {
+	if (g.ship.pos[0] < 20.0) {
 		g.ship.pos[0] += 4.0;
 	}
-	else if (g.ship.pos[0] > (float)gl.xres) {
+	else if (g.ship.pos[0] > (float)gl.xres - 20) {
 		g.ship.pos[0] -= 4.0;
 	}
-	else if (g.ship.pos[1] < 0.0) {
+	else if (g.ship.pos[1] < 70.0) {
 		g.ship.pos[1] += 4.0;
 	}
 	else if (g.ship.pos[1] > (float)gl.yres) {
@@ -901,6 +915,7 @@ void physics()
 		b->pos[0] += b->vel[0];
 		b->pos[1] += b->vel[1];
 		//Check for collision with window edges
+		/*
 		if (b->pos[0] < 0.0) {
 			b->pos[0] += (float)gl.xres;
 		}
@@ -912,7 +927,7 @@ void physics()
 		}
 		else if (b->pos[1] > (float)gl.yres) {
 			b->pos[1] -= (float)gl.yres;
-		}
+		}*/
 		i++;
 	}
 	//Update asteroid positions
@@ -1063,7 +1078,7 @@ void physics()
 		struct timespec bt;
 		clock_gettime(CLOCK_REALTIME, &bt);
 		double ts = timeDiff(&g.bulletTimer, &bt);
-		if (ts > 0.1) {
+		if (ts > 0.5) {
 			timeCopy(&g.bulletTimer, &bt);
 			if (g.nbullets < MAX_BULLETS) {
 				//shoot a bullet...
@@ -1128,6 +1143,7 @@ void physics()
 	*/
 }
 
+
 void render()
 {
 	//TEXT IN THE TOP CORNER
@@ -1139,15 +1155,37 @@ void render()
 		waveMenu(gl.xres, gl.yres, WaveScreenTexture, GBolaTexture,
 																	cursorPos);
 	}
-	if (gameState == CUT0) {
-		//NOT READY YET
-		gameState = WAVE1;
+	if (gameState == CUT0 || gameState == CUT1 || gameState == CUT2
+			|| gameState == CUT3 || gameState == CUT4 || gameState == CUT5) {
+		static double pthyme = 0.0;
+ 	    struct timespec fpthymeStart, fpthymeEnd;
+		clock_gettime(CLOCK_REALTIME, &fpthymeStart);
+		if (gameState == CUT0) {
+			gameState++;
+		} else if (gameState == CUT5) {
+			gameState = STARTMENU;
+		} else {
+			static double thyme = 0.0;
+	 	    struct timespec fpthymeStart, fpthymeEnd;
+			clock_gettime(CLOCK_REALTIME, &fpthymeStart);
+			if (pthyme < 3.0) {
+				drawPost();
+			} else {
+				gameState ++;
+			}
+			clock_gettime(CLOCK_REALTIME, &fpthymeEnd);
+		    pthyme += timeDiff(&fpthymeStart, &fpthymeEnd);
+		}
+
+		clock_gettime(CLOCK_REALTIME, &fpthymeEnd);
+	    pthyme += timeDiff(&fpthymeStart, &fpthymeEnd);
 	}
 	if (gameState == WAVE1 || gameState == WAVE2
 					   || gameState == WAVE3 || gameState == WAVE4
 					 	 					 || gameState == WAVE5) {
 
 		static double thyme = 0.0;
+
  	    struct timespec fthymeStart, fthymeEnd;
 		clock_gettime(CLOCK_REALTIME, &fthymeStart);
 		glViewport(0, 0, gl.xres, gl.yres);
@@ -1158,7 +1196,17 @@ void render()
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
 
 		if (thyme < 3.0) {
-			drawPre();
+			if (thyme < .5 || (thyme > 1.0 && thyme < 1.5) || (thyme > 2.0
+			 												&& thyme < 2.5)) {
+				drawPre(gameState);
+			}
+		}
+		static int enemyCounter = 3;
+		if (thyme > 4) {
+			while (enemyCounter > 0) {
+				spawnGBola();
+				enemyCounter --;
+			}
 		}
 
 		//drawPre();
@@ -1184,8 +1232,8 @@ void render()
 				glPushMatrix();
 				glTranslatef(gb->pos[0], gb->pos[1], gb->pos[2]);
 				glRotatef(gb->angle, 0.0f, 0.0f, 0.0f);
-				drawGBola(GBolaTexture);
-
+				//drawGBola(GBolaTexture);
+				drawSalmonella(salmonellaTexture);
 				gb = gb->next;
 			}
 		}
@@ -1211,13 +1259,20 @@ void render()
 			++b;
 		}
 
-		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
 
 		Rect r;
-        r.bot = 800;
+        r.bot = 500;
         r.left = 250;
         r.center = 0;
         ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", thyme);
+
+		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
+        //CHANGE WAVES:
+        if (thyme > 10.0 && g.nGbola == 0 ) {
+			thyme = 0;
+			enemyCounter = 0;
+        	gameState++;
+		}
 
 		clock_gettime(CLOCK_REALTIME, &fthymeEnd);
 	    thyme += timeDiff(&fthymeStart, &fthymeEnd);

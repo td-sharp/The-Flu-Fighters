@@ -116,6 +116,13 @@ void drawPre(int gameState)
     //sleep(1);
     //return 1;
 }
+void drawPost()
+{
+    Rect r;
+    r.bot = 800;
+    r.center = 0;
+    ggprint16(&r, 16, 0xFB6AD0, "WAVE COMPLETE!");
+}
 void drawOverlay(int xres, int yres, int lives, int shipTexture)
 {
     glColor3f(1.0f, 1.0f, 1.0f);
@@ -162,6 +169,7 @@ void drawBullet(float posA, float posB, int bulletTexture)
     glPushMatrix();
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
+    glColor3f(1.0f, 1.0f, 1.0f);
     glTranslatef(posA, posB, 0);
     glBindTexture(GL_TEXTURE_2D, bulletTexture);
     glBegin(GL_QUADS);
@@ -179,6 +187,7 @@ void drawShip(float posA, float posB, float posC, int shipTexture)
     glPushMatrix();
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
+    glColor3f(1.0f, 1.0f, 1.0f);
     glTranslatef(posA, posB, posC);
     glBindTexture(GL_TEXTURE_2D, shipTexture);
     glBegin(GL_QUADS);
@@ -198,8 +207,8 @@ void drawGBola(int GBolaTexture)
     glAlphaFunc(GL_GREATER, 0.0f);
     glBindTexture(GL_TEXTURE_2D, GBolaTexture);
     //glColor4ub(0,0,0,0);
-    float GHeight = 80.0;
-    float GWidth = 80.0;
+    float GHeight = 40.0;
+    float GWidth = 40.0;
     glBegin(GL_QUADS);
         glTexCoord2f(1.0f, 0.0f); glVertex2f( GWidth,  GHeight);
         glTexCoord2f(1.0f, 1.0f); glVertex2f( GWidth, -GHeight);
@@ -212,12 +221,16 @@ void drawGBola(int GBolaTexture)
 
 void drawSalmonella(int salmonellaTexture)
 {
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
     glBindTexture(GL_TEXTURE_2D, salmonellaTexture);
+    float SHeight = 40.0;
+    float SWidth = 40.0;
     glBegin(GL_QUADS);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f( 80.0f,  80.0f);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f( 80.0f, -80.0f);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(-80.0f, -80.0f);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(-80.0f,  80.0f);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f( SWidth,  SHeight);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f( SWidth, -SHeight);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(-SWidth, -SHeight);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(-SWidth,  SHeight);
     glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
     glPopMatrix();
