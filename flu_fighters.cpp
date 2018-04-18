@@ -50,7 +50,7 @@ const float TIMESLICE = 1.0f;
 const float GRAVITY = -0.2f;
 #define PI 3.141592653589793
 #define ALPHA 1
-const int MAX_BULLETS = 3;
+const int MAX_BULLETS = 11;
 const Flt MINIMUM_ASTEROID_SIZE = 60.0;
 
 //-----------------------------------------------------------------------------
@@ -75,7 +75,7 @@ extern int drawPre(int);
 extern int drawPost();
 extern void drawShip(float, float, float, int);
 extern void drawBullet(float, float, int);
-extern void drawGBola(int);
+extern void drawGBola(int, float);
 extern void drawOverlay(int, int, int, int);
 extern void drawTheBoss();
 extern void drawSalmonella(int);
@@ -1157,7 +1157,7 @@ void render()
 	}
 	if (gameState == CUT0 || gameState == CUT1 || gameState == CUT2
 			|| gameState == CUT3 || gameState == CUT4 || gameState == CUT5) {
-		static double pthyme = 0.0;
+		/*static double pthyme = 0.0;
  	    struct timespec fpthymeStart, fpthymeEnd;
 		clock_gettime(CLOCK_REALTIME, &fpthymeStart);
 		if (gameState == CUT0) {
@@ -1165,7 +1165,7 @@ void render()
 		} else if (gameState == CUT5) {
 			gameState = STARTMENU;
 		} else {
-			static double thyme = 0.0;
+			//static double thyme = 0.0;
 	 	    struct timespec fpthymeStart, fpthymeEnd;
 			clock_gettime(CLOCK_REALTIME, &fpthymeStart);
 			if (pthyme < 3.0) {
@@ -1178,7 +1178,13 @@ void render()
 		}
 
 		clock_gettime(CLOCK_REALTIME, &fpthymeEnd);
-	    pthyme += timeDiff(&fpthymeStart, &fpthymeEnd);
+	    pthyme += timeDiff(&fpthymeStart, &fpthymeEnd);*/
+
+		if (gameState == CUT5) {
+			gameState = STARTMENU;
+		} else {
+			gameState++;
+		}
 	}
 	if (gameState == WAVE1 || gameState == WAVE2
 					   || gameState == WAVE3 || gameState == WAVE4
@@ -1199,6 +1205,14 @@ void render()
 			if (thyme < .5 || (thyme > 1.0 && thyme < 1.5) || (thyme > 2.0
 			 												&& thyme < 2.5)) {
 				drawPre(gameState);
+			}
+		}
+		if (thyme > 5000) {
+			drawPost();
+			if (thyme > 5003) {
+				enemyCounter = 3;
+				gameState ++;
+				thyme = 0;
 			}
 		}
 		static int enemyCounter = 3;
@@ -1233,7 +1247,7 @@ void render()
 				glTranslatef(gb->pos[0], gb->pos[1], gb->pos[2]);
 				glRotatef(gb->angle, 0.0f, 0.0f, 0.0f);
 				//drawGBola(GBolaTexture);
-				drawSalmonella(salmonellaTexture);
+				drawGBola(GBolaTexture, thyme);
 				gb = gb->next;
 			}
 		}
@@ -1269,9 +1283,10 @@ void render()
 		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
         //CHANGE WAVES:
         if (thyme > 10.0 && g.nGbola == 0 ) {
-			thyme = 0;
-			enemyCounter = 0;
-        	gameState++;
+			thyme = 5000;
+			g.nGbola = 5;
+			//enemyCounter = 3;
+        	//gameState++;
 		}
 
 		clock_gettime(CLOCK_REALTIME, &fthymeEnd);
