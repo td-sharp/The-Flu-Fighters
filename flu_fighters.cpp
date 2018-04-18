@@ -1210,7 +1210,7 @@ void render()
 		if (thyme > 5000) {
 			drawPost();
 			if (thyme > 5003) {
-				enemyCounter = 3;
+				//enemyCounter = 3;
 				gameState ++;
 				thyme = 0;
 			}
