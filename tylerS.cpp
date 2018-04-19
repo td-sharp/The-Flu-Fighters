@@ -259,3 +259,21 @@ void drawPowerUp(int powerUpTexture)
     glEnd();
     glPopMatrix();
 }
+
+void drawSnot(int snotTexture)
+{
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glBindTexture(GL_TEXTURE_2D, snotTexture);
+    float SnHeight = 10.0;
+    float SnWidth = 10.0;
+    glBegin(GL_QUADS);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f( SnWidth,  SnHeight);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f( SnWidth, -SnHeight);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(-SnWidth, -SnHeight);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(-SnWidth,  SnHeight);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glEnd();
+    glPopMatrix();
+}

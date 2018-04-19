@@ -77,6 +77,7 @@ extern void drawShip(float, float, float, int);
 extern void drawBullet(float, float, int);
 extern void drawGBola(int, float);
 extern void drawPowerUp(int);
+extern void drawSnot(int);
 extern void drawOverlay(int, int, int, int);
 extern void drawTheBoss();
 extern void drawSalmonella(int);
@@ -168,9 +169,9 @@ public:
 	}
 };
 //PLACE IMAGES HERE, UPDATE LIST LENGTH-------------------------------------
-Image img[7] = {
+Image img[8] = {
 	"./ship.png", "./GBola.png", "./salmonella.png", "./TitleScreen.png",
-	"./bullet.png", "./WaveScreen.png", "./powerUp.png"
+	"./bullet.png", "./WaveScreen.png", "./powerUp.png", "./snot.png"
 };
 
 //DECLARE TEXTURE
@@ -182,6 +183,7 @@ GLuint silhouetteTexture;
 GLuint bulletTexture;
 GLuint WaveScreenTexture;
 GLuint powerUpTexture;
+GLuint snotTexture;
 
 //DECLARE IMAGE
 Image *shipImage = NULL;
@@ -191,6 +193,7 @@ Image *TitleScreenImage = NULL;
 Image *bulletImage = NULL;
 Image *WaveScreenImage = NULL;
 Image *powerUpImage = NULL;
+Image *snotImage = NULL;
 
 class Global {
 public:
@@ -691,6 +694,21 @@ void init_opengl()
 
 	silhouetteData = buildAlphaData(&img[6]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pw, ph, 0,
+							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
+
+	//SNOT STUFF-----------------------------------------------------------
+	snotImage = &img[7];
+	int snw = img[7].iWidth;
+	int snh = img[7].iHeight;
+	glGenTextures(1, &snotTexture);
+
+	glBindTexture(GL_TEXTURE_2D, snotTexture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+	silhouetteData = buildAlphaData(&img[7]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, snw, snh, 0,
 							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
 }
 void normalize2d(Vec v)
@@ -1239,9 +1257,12 @@ void render()
 		}
 		//DRAW POWER UP
 
-		drawPowerUp(powerUpTexture);
+		//drawPowerUp(powerUpTexture);
 
-		//drawPre();
+		//DRAW SNOT
+
+		//drawSnot(snotTexture);
+
 		//Draw the enemies
 		{
 			Asteroid *a = g.ahead;
@@ -1310,6 +1331,5 @@ void render()
 
 		clock_gettime(CLOCK_REALTIME, &fthymeEnd);
 	    thyme += timeDiff(&fthymeStart, &fthymeEnd);
-		//drawHaleyTimer();
 	}
 }
