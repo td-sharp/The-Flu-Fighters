@@ -121,6 +121,7 @@ void drawPost()
     Rect r;
     r.bot = 800;
     r.center = 0;
+    r.left = 185;
     ggprint16(&r, 16, 0xFB6AD0, "WAVE COMPLETE!");
 }
 void drawOverlay(int xres, int yres, int lives, int shipTexture)
@@ -200,14 +201,19 @@ void drawShip(float posA, float posB, float posC, int shipTexture)
     glPopMatrix();
 }
 
-void drawGBola(int GBolaTexture)
+void drawGBola(int GBolaTexture, float thyme)
 {
     //glBindTexture(GL_TEXTURE_2D, silhouetteTexture);
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
     glBindTexture(GL_TEXTURE_2D, GBolaTexture);
     //glColor4ub(0,0,0,0);
-    float GHeight = 40.0;
+    float GHeight;
+    if ((int)thyme % 2 != 0) {
+        GHeight = 35.0;
+    } else {
+        GHeight = 40.0;
+    }
     float GWidth = 40.0;
     glBegin(GL_QUADS);
         glTexCoord2f(1.0f, 0.0f); glVertex2f( GWidth,  GHeight);
