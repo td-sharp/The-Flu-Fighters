@@ -76,6 +76,7 @@ extern int drawPost();
 extern void drawShip(float, float, float, int);
 extern void drawBullet(float, float, int);
 extern void drawGBola(int, float);
+extern void drawPowerUp(int);
 extern void drawOverlay(int, int, int, int);
 extern void drawTheBoss();
 extern void drawSalmonella(int);
@@ -167,9 +168,9 @@ public:
 	}
 };
 //PLACE IMAGES HERE, UPDATE LIST LENGTH-------------------------------------
-Image img[6] = {
+Image img[7] = {
 	"./ship.png", "./GBola.png", "./salmonella.png", "./TitleScreen.png",
-	"./bullet.png", "./WaveScreen.png"
+	"./bullet.png", "./WaveScreen.png", "./powerUp.png"
 };
 
 //DECLARE TEXTURE
@@ -180,6 +181,7 @@ GLuint TitleScreenTexture;
 GLuint silhouetteTexture;
 GLuint bulletTexture;
 GLuint WaveScreenTexture;
+GLuint powerUpTexture;
 
 //DECLARE IMAGE
 Image *shipImage = NULL;
@@ -188,6 +190,7 @@ Image *salmonellaImage = NULL;
 Image *TitleScreenImage = NULL;
 Image *bulletImage = NULL;
 Image *WaveScreenImage = NULL;
+Image *powerUpImage = NULL;
 
 class Global {
 public:
@@ -634,7 +637,6 @@ void init_opengl()
 							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
 	free(silhouetteData);
 
-	//TITLE SCREEN STUFF-----------------------------------------------
 	//Salmonella STUFF------------------------------------------------------
 	salmonellaImage = &img[2];
 	int saw = img[1].iWidth;
@@ -676,8 +678,21 @@ void init_opengl()
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, ww, wh, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[5].data);
 
-}
+	//POWER UP STUFF------------------------------------------------------
+	powerUpImage = &img[6];
+	int pw = img[6].iWidth;
+	int ph = img[6].iHeight;
+	glGenTextures(1, &powerUpTexture);
 
+	glBindTexture(GL_TEXTURE_2D, powerUpTexture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+	silhouetteData = buildAlphaData(&img[6]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pw, ph, 0,
+							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
+}
 void normalize2d(Vec v)
 {
 	Flt len = v[0]*v[0] + v[1]*v[1];
@@ -1222,6 +1237,9 @@ void render()
 				enemyCounter --;
 			}
 		}
+		//DRAW POWER UP
+
+		drawPowerUp(powerUpTexture);
 
 		//drawPre();
 		//Draw the enemies
@@ -1246,10 +1264,9 @@ void render()
 				glPushMatrix();
 				glTranslatef(gb->pos[0], gb->pos[1], gb->pos[2]);
 				glRotatef(gb->angle, 0.0f, 0.0f, 0.0f);
-				//drawGBola(GBolaTexture);
 
 				drawGBola(GBolaTexture, thyme);
-        
+
 				gb = gb->next;
 			}
 		}

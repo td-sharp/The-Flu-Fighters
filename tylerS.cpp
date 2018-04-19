@@ -241,3 +241,21 @@ void drawSalmonella(int salmonellaTexture)
     glEnd();
     glPopMatrix();
 }
+
+void drawPowerUp(int powerUpTexture)
+{
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glBindTexture(GL_TEXTURE_2D, powerUpTexture);
+    float PHeight = 20.0;
+    float PWidth = 20.0;
+    glBegin(GL_QUADS);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f( PWidth,  PHeight);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f( PWidth, -PHeight);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(-PWidth, -PHeight);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(-PWidth,  PHeight);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glEnd();
+    glPopMatrix();
+}
