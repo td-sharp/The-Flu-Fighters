@@ -260,11 +260,13 @@ void drawPowerUp(int powerUpTexture)
     glPopMatrix();
 }
 
-void drawSnot(int snotTexture)
+void drawSnot(float posA, float posB, int snotTexture)
 {
+    glPushMatrix();
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
-    glColor3f(1.0f, 1.0f, 1.0f);
+    glColor3f(1.0f, 1.0f, 1.0f); 
+    glTranslatef(posA, posB, 0);
     glBindTexture(GL_TEXTURE_2D, snotTexture);
     float SnHeight = 10.0;
     float SnWidth = 10.0;

@@ -77,7 +77,7 @@ extern void drawShip(float, float, float, int);
 extern void drawBullet(float, float, int);
 extern void drawGBola(int, float);
 extern void drawPowerUp(int);
-extern void drawSnot(int);
+extern void drawSnot(float, float,int);
 extern void drawOverlay(int, int, int, int);
 extern void drawTheBoss();
 extern void drawSalmonella(int);
@@ -109,6 +109,9 @@ extern void moveGbola(Gbola *);
 extern void moveSalmonella(Salmonella *);
 extern void checkEnemyCollision(struct Game *);
 extern void deleteGbola(struct Game *, Gbola *);
+extern void deleteSalmonella(struct Game *, Salmonella *);
+extern void shootG(Gbola *, int);
+
 
 struct Shape {
 	float width, height;
@@ -947,27 +950,52 @@ void physics()
 		//move the bullet
 		b->pos[0] += b->vel[0];
 		b->pos[1] += b->vel[1];
-		//Check for collision with window edges
-		/*
-		if (b->pos[0] < 0.0) {
-			b->pos[0] += (float)gl.xres;
-		}
-		else if (b->pos[0] > (float)gl.xres) {
-			b->pos[0] -= (float)gl.xres;
-		}
-		else if (b->pos[1] < 0.0) {
-			b->pos[1] += (float)gl.yres;
-		}
-		else if (b->pos[1] > (float)gl.yres) {
-			b->pos[1] -= (float)gl.yres;
-		}*/
 		i++;
+	}
+
+	//Update snot positions
+	
+	int j=0;
+	Gbola *gb = g.gbhead;
+	while(gb)
+	{
+		struct timespec sbt;
+		clock_gettime(CLOCK_REALTIME, &sbt);
+		cout << "working on gbola " << j << endl;
+		i=0;
+		while (i < gb->nSbullets) {
+			S_Bullet *sb = &(gb->sbarr[i]);
+			//How long has bullet been alive?
+			double ts = timeDiff(&sb->time, &sbt);
+			if (ts > 12.0) {
+				//time to delete the bullet.
+				memcpy(&(gb->sbarr[i]), &(gb->sbarr[gb->nSbullets-1]),
+					sizeof(S_Bullet));
+				gb->nSbullets--;
+				cout << "deleted snot" << endl;
+				//do not increment i.
+				//continue;
+			}
+			//move the snot bullet
+			else {
+				sb->pos[0] += sb->vel[0];
+				sb->pos[1] += sb->vel[1];
+				cout << "moved snot " << endl;
+				i++;
+			}
+		}
+
+		cout << "increment gbola" << endl;
+		gb = gb->next;
+		j++;
 	}
 	//Update asteroid positions
 	//Update asteroid positions
 	Asteroid *a = g.ahead;
-	Gbola *gb = g.gbhead;
+	gb = g.gbhead;
 	moveGbola(gb);
+
+    //moveSnot(gb);
 	while (a) {
 		a->pos[0] += a->vel[0];
 		a->pos[1] += a->vel[1];
@@ -1312,6 +1340,25 @@ void render()
 			glEnd();*/
 			++b;
 		}
+		
+		Gbola *gb = g.gbhead;
+
+  		shootG(gb, snotTexture);
+		
+		while (gb)
+		{
+			S_Bullet *sb = &(gb->sbarr[0]);
+			for (int i=0; i<gb->nSbullets; i++) 
+			{
+				//Log("draw bullet...\n");
+				drawSnot(sb->pos[0], sb->pos[1], snotTexture);
+				++sb;
+				cout << "Drew a bullet" << endl;
+			}
+			
+			gb = gb->next;
+		}
+
 
 
 		Rect r;

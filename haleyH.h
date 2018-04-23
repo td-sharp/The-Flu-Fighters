@@ -1,6 +1,16 @@
+class S_Bullet {
+    public:
+        float pos[3];
+        float vel[3];
+        float color[3];
+        struct timespec time;
+    public:
+        S_Bullet();
+};
+
 class Gbola {
 public:
-	float pos[3];
+    float pos[3];
 	float vel[3];
 	int nverts;
 	float radius;
@@ -11,8 +21,13 @@ public:
 	int health;
 	struct Gbola *prev;
 	struct Gbola *next;
+    S_Bullet *sbarr;
+    int nSbullets;
+	static const int MAX_SBULLETS = 5;
+    struct timespec sbulletTimer;
 public:
 	Gbola(float, float);	
+    ~Gbola();
 };
 
 class Salmonella {
