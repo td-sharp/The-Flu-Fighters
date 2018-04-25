@@ -64,7 +64,9 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 
 //-----------------------------------------------------------------------------
 // Add Renee CPP
-//extern void printReneeFile();
+extern Gamestate State;
+Gamestate gameState = STARTMENU;
+extern void waves(struct Game *g, Gamestate gameState, Global gl);
 //-----------------------------------------------------------------------------
 //Add tylerS.cpp functions
 
@@ -81,22 +83,6 @@ extern void drawSnot(float, float,int);
 extern void drawOverlay(int, int, int, int);
 extern void drawTheBoss();
 extern void drawSalmonella(int);
-enum states {
-	STARTMENU,
-	WAVEMENU,
-	CUT0,
-	WAVE1,
-	CUT1,
-	WAVE2,
-	CUT2,
-	WAVE3,
-	CUT3,
-	WAVE4,
-	CUT4,
-	WAVE5,
-	CUT5
-};
-int gameState = STARTMENU;
 int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
@@ -112,12 +98,6 @@ extern void deleteGbola(struct Game *, Gbola *);
 extern void deleteSalmonella(struct Game *, Salmonella *);
 extern void shootG(Gbola *, int);
 
-
-struct Shape {
-	float width, height;
-	float radius;
-	Vec center;
-};
 
 Shape s;
 
@@ -198,21 +178,15 @@ Image *WaveScreenImage = NULL;
 Image *powerUpImage = NULL;
 Image *snotImage = NULL;
 
-class Global {
-public:
-	double thyme = 0.0;
-	struct timespec fthymeStart, fthymeEnd;
-	int xres, yres;
-//DECLARE SHAPE FOR IMAGE
-	Shape ship;
+Global::Global()
+{
+	thyme = 0.0;
+	xres = 600;
+	yres = 900;
+	memset(keys, 0, 65536);
+}
 
-	char keys[65536];
-	Global() {
-		xres = 600;
-		yres = 900;
-		memset(keys, 0, 65536);
-	}
-} gl;
+Global gl;
 
 /*class Ship {
 public:
@@ -732,9 +706,9 @@ void normalize2d(Vec v)
 void check_mouse(XEvent *e)
 {
 	//Was a mouse button clicked?
-	static int savex = 0;
-	static int savey = 0;
-	static int ct=0;
+	//static int savex = 0;
+	//static int savey = 0;
+	//static int ct=0;
 	if (e->type != ButtonPress &&
 			e->type != ButtonRelease &&
 			e->type != MotionNotify)
@@ -1246,8 +1220,9 @@ void render()
 		if (gameState == CUT5) {
 			gameState = STARTMENU;
 		} else {
-			clock_gettime(CLOCK_REALTIME, &gl.fthymeStart);
-			gameState++;
+			int i = gameState;
+			i++;
+			gameState = static_cast<Gamestate>(i);
 		}
 	}
 	if (gameState == WAVE1 || gameState == WAVE2
@@ -1265,7 +1240,9 @@ void render()
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
 
-		if (gl.thyme < 3.0) {
+		waves(&g, gameState, gl);
+
+		/*if (gl.thyme < 3.0) {
 			if (gl.thyme < .5 || (gl.thyme > 1.0 && gl.thyme < 1.5) || (gl.thyme > 2.0
 			 												&& gl.thyme < 2.5)) {
 				drawPre(gameState);
@@ -1286,6 +1263,7 @@ void render()
 				enemyCounter --;
 			}
 		}
+		*/
 		//DRAW POWER UP
 
 		//drawPowerUp(powerUpTexture);
@@ -1296,7 +1274,7 @@ void render()
 
 		//Draw the enemies
 		{
-			Asteroid *a = g.ahead;
+			//Asteroid *a = g.ahead;
 			Gbola *gb = g.gbhead;
 			/*	while (a) {
 			//Log("draw asteroid...\n");
