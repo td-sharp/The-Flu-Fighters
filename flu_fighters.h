@@ -1,6 +1,25 @@
 typedef float Flt;
 typedef float Vec[3];
 
+struct Shape {
+	float width, height;
+	float radius;
+	Vec center;
+};
+
+class Global {
+public:
+	double thyme;
+	struct timespec fthymeStart, fthymeEnd;
+	int xres, yres;
+//DECLARE SHAPE FOR IMAGE
+	Shape ship;
+
+	char keys[65536];
+	Global();
+	
+};
+
 class Bullet {
 public:
 	Vec pos;
@@ -55,4 +74,19 @@ public:
 public:
 	Game();
 	~Game();
+};
+enum Gamestate {
+	STARTMENU,
+	WAVEMENU,
+	CUT0,
+	WAVE1,
+	CUT1,
+	WAVE2,
+	CUT2,
+	WAVE3,
+	CUT3,
+	WAVE4,
+	CUT4,
+	WAVE5,
+	CUT5
 };
