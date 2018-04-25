@@ -1266,21 +1266,21 @@ void render()
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
 
 		if (gl.thyme < 3.0) {
-			if (gl.thyme < .5 || (gl.the > 1.0 && gl.the < 1.5) || (gl.the > 2.0
-			 												&& gl.the < 2.5)) {
+			if (gl.thyme < .5 || (gl.thyme > 1.0 && gl.thyme < 1.5) || (gl.thyme > 2.0
+			 												&& gl.thyme < 2.5)) {
 				drawPre(gameState);
 			}
 		}
-		if (gl.the > 5000) {
+		if (gl.thyme > 5000) {
 			drawPost();
-			if (gl.the > 5003) {
+			if (gl.thyme > 5003) {
 				//enemyCounter = 3;
 				gameState ++;
-				gl.the = 0;
+				gl.thyme = 0;
 			}
 		}
 		static int enemyCounter = 3;
-		if (gl.the > 4) {
+		if (gl.thyme > 4) {
 			while (enemyCounter > 0) {
 				spawnGBola();
 				enemyCounter --;
@@ -1317,7 +1317,7 @@ void render()
 				glTranslatef(gb->pos[0], gb->pos[1], gb->pos[2]);
 				glRotatef(gb->angle, 0.0f, 0.0f, 0.0f);
 
-				drawGBola(GBolaTexture, gl.the);
+				drawGBola(GBolaTexture, gl.thyme);
 
 				gb = gb->next;
 			}
@@ -1368,12 +1368,12 @@ void render()
         r.bot = 500;
         r.left = 250;
         r.center = 0;
-        ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", gl.the);
+        ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", gl.thyme);
 
 		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
         //CHANGE WAVES:
-        if (gl.the > 10.0 && g.nGbola == 0 ) {
-			gl.the = 5000;
+        if (gl.thyme > 10.0 && g.nGbola == 0 ) {
+			gl.thyme = 5000;
 			g.nGbola = 5;
 			//enemyCounter = 3;
         	//gameState++;
