@@ -200,6 +200,8 @@ Image *snotImage = NULL;
 
 class Global {
 public:
+	double thyme = 0.0;
+	struct timespec fthymeStart, fthymeEnd;
 	int xres, yres;
 //DECLARE SHAPE FOR IMAGE
 	Shape ship;
@@ -954,7 +956,7 @@ void physics()
 	}
 
 	//Update snot positions
-	
+
 	int j=0;
 	Gbola *gb = g.gbhead;
 	while(gb)
@@ -1244,6 +1246,7 @@ void render()
 		if (gameState == CUT5) {
 			gameState = STARTMENU;
 		} else {
+			clock_gettime(CLOCK_REALTIME, &gl.fthymeStart);
 			gameState++;
 		}
 	}
@@ -1251,10 +1254,10 @@ void render()
 					   || gameState == WAVE3 || gameState == WAVE4
 					 	 					 || gameState == WAVE5) {
 
-		static double thyme = 0.0;
+		//static double thyme = 0.0;
 
- 	    struct timespec fthymeStart, fthymeEnd;
-		clock_gettime(CLOCK_REALTIME, &fthymeStart);
+ 	    //struct timespec fthymeStart, fthymeEnd;
+		//clock_gettime(CLOCK_REALTIME, &fthymeStart);
 		glViewport(0, 0, gl.xres, gl.yres);
 		//clear color buffer
 		glClearColor(0.053f, .174f, .227f, 0);
@@ -1262,22 +1265,22 @@ void render()
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
 
-		if (thyme < 3.0) {
-			if (thyme < .5 || (thyme > 1.0 && thyme < 1.5) || (thyme > 2.0
-			 												&& thyme < 2.5)) {
+		if (gl.thyme < 3.0) {
+			if (gl.thyme < .5 || (gl.the > 1.0 && gl.the < 1.5) || (gl.the > 2.0
+			 												&& gl.the < 2.5)) {
 				drawPre(gameState);
 			}
 		}
-		if (thyme > 5000) {
+		if (gl.the > 5000) {
 			drawPost();
-			if (thyme > 5003) {
+			if (gl.the > 5003) {
 				//enemyCounter = 3;
 				gameState ++;
-				thyme = 0;
+				gl.the = 0;
 			}
 		}
 		static int enemyCounter = 3;
-		if (thyme > 4) {
+		if (gl.the > 4) {
 			while (enemyCounter > 0) {
 				spawnGBola();
 				enemyCounter --;
@@ -1314,7 +1317,7 @@ void render()
 				glTranslatef(gb->pos[0], gb->pos[1], gb->pos[2]);
 				glRotatef(gb->angle, 0.0f, 0.0f, 0.0f);
 
-				drawGBola(GBolaTexture, thyme);
+				drawGBola(GBolaTexture, gl.the);
 
 				gb = gb->next;
 			}
@@ -1340,22 +1343,22 @@ void render()
 			glEnd();*/
 			++b;
 		}
-		
+
 		Gbola *gb = g.gbhead;
 
   		shootG(gb, snotTexture);
-		
+
 		while (gb)
 		{
 			S_Bullet *sb = &(gb->sbarr[0]);
-			for (int i=0; i<gb->nSbullets; i++) 
+			for (int i=0; i<gb->nSbullets; i++)
 			{
 				//Log("draw bullet...\n");
 				drawSnot(sb->pos[0], sb->pos[1], snotTexture);
 				++sb;
 				cout << "Drew a bullet" << endl;
 			}
-			
+
 			gb = gb->next;
 		}
 
@@ -1365,18 +1368,18 @@ void render()
         r.bot = 500;
         r.left = 250;
         r.center = 0;
-        ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", thyme);
+        ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", gl.the);
 
 		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
         //CHANGE WAVES:
-        if (thyme > 10.0 && g.nGbola == 0 ) {
-			thyme = 5000;
+        if (gl.the > 10.0 && g.nGbola == 0 ) {
+			gl.the = 5000;
 			g.nGbola = 5;
 			//enemyCounter = 3;
         	//gameState++;
 		}
 
-		clock_gettime(CLOCK_REALTIME, &fthymeEnd);
-	    thyme += timeDiff(&fthymeStart, &fthymeEnd);
+		clock_gettime(CLOCK_REALTIME, &gl.fthymeEnd);
+	    gl.thyme = timeDiff(&gl.fthymeStart, &gl.fthymeEnd);
 	}
 }
