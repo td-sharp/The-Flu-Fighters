@@ -1222,6 +1222,8 @@ void render()
 		} else {
 			int i = gameState;
 			i++;
+			clock_gettime(CLOCK_REALTIME, &gl.fthymeStart);
+			gl.thyme = 0.0;
 			gameState = static_cast<Gamestate>(i);
 		}
 	}
