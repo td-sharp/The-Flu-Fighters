@@ -1,7 +1,7 @@
 /* Aurthor: Kyle Werts
  * Date: 2/23/2018
  * Flu Fighters Power up, ammo, boss
- */
+ 
 #include "kyleW.h"
 #include <time.h>
 #include <ctime>
@@ -49,7 +49,7 @@ BigBadBoss::BigBadBoss(float xpos, float ypos, float rotation, float acceleratio
     prev = NULL;
     next = NULL;
 }
-/* Not yet working. Will continue after Gordon's Progress Report
+ Not yet working. Will continue after Gordon's Progress Report
 
 void BossAmmo::addAmmo(int type, float pos[3], float vel[3])
 {
@@ -151,7 +151,7 @@ void BigBadBoss::update()
     else
         preFire = 0.0;
 }
-*/
+
 
 float *BigBadBoss::getPos()
 {
@@ -190,7 +190,7 @@ void BigBadBoss::calcShootInterval()
 {
     shootInterval = 1;
 }
-/*
+
 void deleteBigBadBoss (Game *game, BigBadBoss *bbb)
 {
     if (BigBadBoss_HEALTH = 0) {

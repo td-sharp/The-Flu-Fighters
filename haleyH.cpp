@@ -59,7 +59,7 @@ Gbola::Gbola(float xpos, float ypos)
     clock_gettime(CLOCK_REALTIME, &sbulletTimer);
     sbarr = new S_Bullet[3];    
 
-}	
+}   
 
 Gbola::~Gbola()
 {
@@ -112,7 +112,7 @@ void moveGbola(Gbola *g)
 {
     bool ispos = true;
     while(g)
-    {	if (ispos)
+    {   if (ispos)
         {
             g->pos[0]+= g->vel[0];
             if (g->pos[0] < 100)
@@ -121,7 +121,7 @@ void moveGbola(Gbola *g)
                 g->vel[0] = -g->vel[0];
             }
             else if (g->pos[0] > xres-100)
-            {	
+            {   
                 g->pos[0] = xres-100;
                 g->vel[0] = -g->vel[0];
             }
@@ -136,14 +136,14 @@ void moveGbola(Gbola *g)
                 g->vel[0] = -g->vel[0];
             }
             else if (g->pos[0] > xres-100)
-            {	
+            {   
                 g->pos[0] = xres-100;
                 g->vel[0] = -g->vel[0];
             }
             ispos = true;
         }
 
-        g = g->next;				 
+        g = g->next;                 
     }
 }
 
@@ -184,7 +184,7 @@ void moveSalmonella(Salmonella *s)
     bool isposx = true;  // starts moving right
 
     while(s)
-    {	if (isposx)
+    {   if (isposx)
         {
             s->pos[0]+= s->vel[0];
             if (s->pos[0] < 100)
@@ -193,7 +193,7 @@ void moveSalmonella(Salmonella *s)
                 s->vel[0] = -s->vel[0];
             }
             else if (s->pos[0] > xres-100)
-            {	
+            {   
                 s->pos[0] = xres-100;
                 s->vel[0] = -s->vel[0];
             }
@@ -208,7 +208,7 @@ void moveSalmonella(Salmonella *s)
                 s->vel[0] = -s->vel[0];
             }
             else if (s->pos[0] > xres-100)
-            {	
+            {   
                 s->pos[0] = xres-100;
                 s->vel[0] = -s->vel[0];
             }
@@ -227,7 +227,7 @@ void moveSalmonella(Salmonella *s)
             s->vel[1] = -s->vel[1];
         }
 
-        s = s->next;				 
+        s = s->next;                 
     } 
 }
 
@@ -333,7 +333,7 @@ void checkEnemyCollision(Game *game)
     }
 
     Salmonella *s;
-    s = game->shead;	
+    s = game->shead;    
 
     while(s)
     {

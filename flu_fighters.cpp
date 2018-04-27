@@ -371,6 +371,15 @@ void spawnGBola() {
 	++g.nGbola;
 }
 
+void spawnSalmonella() {
+	Salmonella *s = new Salmonella((float)(rand() % (gl.xres-75)), 800.0f);
+	s->next = g.shead;
+	if (g.shead != NULL)
+		g.shead-> prev = s;
+	g.shead = s;
+	++g.nSalmonella;
+}
+
 
 //X Windows variables
 class X11_wrapper {
