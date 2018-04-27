@@ -310,6 +310,7 @@ Game::Game()
 	nasteroids = 0;
 	nbullets = 0;
 	nGbola = 0;
+	nSalmonella = 0;
 	mouseThrustOn = false;
 	//build 10 asteroids...
 
@@ -943,6 +944,7 @@ void physics()
 
 	int j=0;
 	Gbola *gb = g.gbhead;
+	Salmonella *s = g.shead;
 	while(gb)
 	{
 		struct timespec sbt;
@@ -979,7 +981,10 @@ void physics()
 	//Update asteroid positions
 	Asteroid *a = g.ahead;
 	gb = g.gbhead;
+	s = g.shead;
+
 	moveGbola(gb);
+	moveSalmonella(s);
 
     //moveSnot(gb);
 	while (a) {
@@ -1311,6 +1316,19 @@ void render()
 
 				gb = gb->next;
 			}
+		}
+
+		Salmonella *s = g.shead;
+		while (s)
+		{
+				glColor3fv(s->color);
+				glPushMatrix();
+				glTranslatef(s->pos[0], s->pos[1], s->pos[2]);
+				glRotatef(s->angle, 0.0f, 0.0f, 0.0f);
+
+				drawSalmonella(salmonellaTexture);
+
+				s = s->next;
 		}
 		//----------------
 		//Draw the bullets
