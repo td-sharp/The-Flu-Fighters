@@ -372,7 +372,8 @@ void spawnGBola() {
 }
 
 void spawnSalmonella() {
-	Salmonella *s = new Salmonella((float)(rand() % (gl.xres-75)), 800.0f);
+	Salmonella *s = new Salmonella((float)(rand() % 
+		(gl.xres-75)), 800.0f, 0.0f);
 	s->next = g.shead;
 	if (g.shead != NULL)
 		g.shead-> prev = s;
