@@ -97,7 +97,7 @@ extern void checkEnemyCollision(struct Game *);
 extern void deleteGbola(struct Game *, Gbola *);
 extern void deleteSalmonella(struct Game *, Salmonella *);
 extern void shootG(Gbola *, int);
-
+extern int getHealth(int);
 
 Shape s;
 
@@ -373,7 +373,7 @@ void spawnGBola() {
 }
 
 void spawnSalmonella() {
-	Salmonella *s = new Salmonella((float)(rand() % 
+	Salmonella *s = new Salmonella((float)(rand() %
 		(gl.xres-75)), 800.0f, 0.0f);
 	s->next = g.shead;
 	if (g.shead != NULL)
@@ -1307,11 +1307,17 @@ void render()
 			}*/
 			while (gb)
 			{
-				glColor3fv(gb->color);
+				switch (gb->health) {
+					case 50 : glColor3f(1.0f, 1.0f, 1.0f); break;
+					case 40 : glColor3f(1.0f, 0.8f, 0.8f); break;
+					case 30 : glColor3f(1.0f, 0.5f, 0.5f); break;
+					case 20 : glColor3f(1.0f, 0.3f, 0.3f); break;
+					case 10 : glColor3f(0.7f, 0.0f, 0.0f); break;
+				}
 				glPushMatrix();
 				glTranslatef(gb->pos[0], gb->pos[1], gb->pos[2]);
 				glRotatef(gb->angle, 0.0f, 0.0f, 0.0f);
-
+				cout << gb->health << endl;
 				drawGBola(GBolaTexture, gl.thyme);
 
 				gb = gb->next;
@@ -1376,7 +1382,7 @@ void render()
         r.bot = 500;
         r.left = 250;
         r.center = 0;
-        ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", gl.thyme);
+        ggprint16(&r, 16, 0xFB6AD0, "TIME: %f, GBola: %d", gl.thyme, g.nGbola);
 
 		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
         //CHANGE WAVES:
@@ -1384,7 +1390,7 @@ void render()
 			gl.thyme = 5000;
 			g.nGbola = 5;
 			//enemyCounter = 3;
-        	//gameState++;
+			//gameState = static_cast<Gamestate>(i);
 		}
 
 		clock_gettime(CLOCK_REALTIME, &gl.fthymeEnd);
