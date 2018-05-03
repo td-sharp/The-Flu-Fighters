@@ -57,6 +57,19 @@ class Ship {
 		Ship();
 }; 
 
+
+class State {
+
+	public:
+		struct timespec stateTimer; 
+	
+	public:
+		State()
+		{
+			clock_gettime(CLOCK_REALTIME, &stateTimer);
+		}
+};
+
 class Game {
 public:
 	Ship ship;
@@ -64,6 +77,7 @@ public:
 	Gbola *gbhead;
 	Salmonella *shead;
 	Bullet *barr;
+	State *w1, *c1, *w2, *c2, *w3, *c3, *w4, *go;
 	int nasteroids;
 	int nGbola;
 	int nSalmonella;
@@ -88,5 +102,6 @@ enum Gamestate {
 	WAVE4,
 	CUT4,
 	WAVE5,
-	CUT5
+	CUT5,
+	GAMEOVER
 };
