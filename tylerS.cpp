@@ -3,6 +3,7 @@ using namespace std;
 #include <GL/glx.h>
 #include <ctime>
 #include <unistd.h>
+#include <iostream>
 
 extern double timeDiff(struct timespec *start, struct timespec *end);
 
@@ -112,6 +113,9 @@ void drawPre(int gameState)
         } else if (gameState == 11) {
             r.left = 170;
             ggprint16(&r, 16, 0xFB6AD0, "IT'S GOING TIBIA BAD DAY");
+        } else if (gameState == 13) {
+            r.left = 120;
+            ggprint16(&r, 16, 0xFB6AD0, "THE DISEASES RULE ALL..GAME OVER");
         }
     //sleep(1);
     //return 1;
@@ -225,12 +229,17 @@ void drawGBola(int GBolaTexture, float thyme)
     glPopMatrix();
 }
 
-void drawSalmonella(int salmonellaTexture)
+void drawSalmonella(int salmonellaTexture, float thyme)
 {
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
     glBindTexture(GL_TEXTURE_2D, salmonellaTexture);
-    float SHeight = 40.0;
+    float SHeight;
+    if ((int)thyme % 2 != 0) {
+        SHeight = 35.0;
+    } else {
+        SHeight = 40.0;
+    }
     float SWidth = 40.0;
     glBegin(GL_QUADS);
         glTexCoord2f(1.0f, 0.0f); glVertex2f( SWidth,  SHeight);
