@@ -33,7 +33,7 @@ Gbola::Gbola(float xpos, float ypos)
 {
 
     nverts = 8;
-    radius = rnd()*80.0 + 40.0;
+    radius = 70;
     float r2 = radius / 2.0;
     float a = 0.0f;
     float inc = (PI * 2.0) / (float)nverts;
@@ -70,7 +70,7 @@ Gbola::~Gbola()
 Salmonella::Salmonella(float xpos, float ypos, float rotation)
 {
     nverts = 8;
-    radius = rnd()*80.0 + 40.0;
+    radius = 70;
     float r2 = radius / 2.0;
     float angle = 0.0f;
     float inc = (PI * 2.0) / (float)nverts;
@@ -91,9 +91,12 @@ Salmonella::Salmonella(float xpos, float ypos, float rotation)
     vel[0] = 1;
     vel[1] = -1;
     rotate = rotation;
-    health = SALMONELLA_HEALTH;
+    health = 100;
     prev = NULL;
     next = NULL;
+    nSbullets = 0;
+    clock_gettime(CLOCK_REALTIME, &sbulletTimer);
+    sbarr = new S_Bullet[3];    
 }
 
 Cholera::Cholera(float xpos, float ypos, float rotation, float acceleration)
@@ -169,8 +172,8 @@ void shootG(Gbola *gb, int snotTexture)
                 sb->color[1] = 1.0f;
                 sb->color[2] = 1.0f;
                 gb->nSbullets++;
-                cout << "made a Snot Bullet" << endl;
-                cout << "now there are " << gb->nSbullets << " snots" << endl;
+                //cout << "made a Snot Bullet" << endl;
+                //cout << "now there are " << gb->nSbullets << " snots" << endl;
             }
         }
         gb = gb->next;
@@ -229,6 +232,53 @@ void moveSalmonella(Salmonella *s)
 
         s = s->next;                 
     } 
+}
+
+void shootS(Salmonella *s, int snotTexture, Game *g)
+{
+    while (s)
+    {
+        struct timespec bt;
+        clock_gettime(CLOCK_REALTIME, &bt);
+        double ts = timeDiff(&s->sbulletTimer, &bt);
+        if (ts > (rnd() + 4))
+        {
+            timeCopy(&(s->sbulletTimer), &bt);
+            if (s->nSbullets < 3)
+            {
+                S_Bullet *sb = &(s->sbarr[s->nSbullets]);
+                timeCopy(&sb->time, &bt);
+                sb->pos[0] = s->pos[0];
+                sb->pos[1] = s->pos[1];
+                float xdist = (g->ship.pos[0] - sb->pos[0]);
+                float ydist = (g->ship.pos[1] - sb->pos[1]);
+                cout << "YDIST: " << ydist << endl;
+                if (abs(ydist) < 10)
+                {
+                    sb->vel[0] = xdist/10.0;
+                    sb->vel[1] = ydist/10.0;
+                }
+                else if (abs(ydist) < 100)
+                {  
+                    sb->vel[0] = xdist/100.0;
+                    sb->vel[1] = ydist/100.0;
+                }
+                else
+                {
+                    cout << "major scale " << endl;
+                    sb->vel[0] = xdist/200.0;
+                    sb->vel[1] = ydist/200.0;
+                }
+                sb->color[0] = 1.0f;
+                sb->color[1] = 1.0f;
+                sb->color[2] = 1.0f;
+                s->nSbullets++;
+                cout << "made a Salmonella Snot Bullet" << endl;
+                cout << "now there are " << s->nSbullets << " snots" << endl;
+            }
+        }
+        s = s->next;    
+    }
 }
 
 void deleteGbola(Game *game, Gbola *g)
@@ -313,6 +363,7 @@ void checkEnemyCollision(Game *game)
                     deleteGbola(game,g);
                     g = saveg;
                     game->nGbola--;
+                    cout << "nGbola in collision: " << game->nGbola << endl;
 
                 }
 
@@ -332,7 +383,7 @@ void checkEnemyCollision(Game *game)
         g = g->next;
     }
 
-    Salmonella *s;
+    Salmonella *s;  
     s = game->shead;    
 
     while(s)
@@ -346,13 +397,18 @@ void checkEnemyCollision(Game *game)
             dist = (d0 * d0 + d1 * d1);
             if (dist < (s->radius * s->radius))
             {
-                s->color[0] = 1.0;
-                s->color[1] = 0.1;
-                s->color[2] = 0.1;
-                Salmonella *saves = s->next;
-                deleteSalmonella(game,s);
-                s = saves;
-                game->nSalmonella--;
+                s->health = s->health - 10;
+
+                if (s->health <= 0)
+                {
+                    s->color[0] = 1.0;
+                    s->color[1] = 0.1;
+                    s->color[2] = 0.1;
+                    Salmonella *saves = s->next;
+                    deleteSalmonella(game,s);
+                    s = saves;
+                    game->nSalmonella--;
+                }
 
                 memcpy(&(game->barr[i]), 
                         &(game->barr[game->nbullets-1]), sizeof(Bullet));

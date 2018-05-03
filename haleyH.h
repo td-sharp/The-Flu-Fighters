@@ -23,7 +23,6 @@ public:
     struct Gbola *next;
     S_Bullet *sbarr;
     int nSbullets;
-    static const int MAX_SBULLETS = 5;
     struct timespec sbulletTimer;
 public:
     Gbola(float, float);    
@@ -43,6 +42,9 @@ public:
     int health;
     struct Salmonella *prev;
     struct Salmonella *next;
+    S_Bullet *sbarr;
+    int nSbullets;
+    struct timespec sbulletTimer;
 public:
     Salmonella(float, float, float);
 };
