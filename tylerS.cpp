@@ -229,23 +229,40 @@ void drawGBola(int GBolaTexture, float thyme)
     glPopMatrix();
 }
 
-void drawSalmonella(int salmonellaTexture, float thyme)
+void drawSalmonella(int salmonellaTexture, int salmonella2Texture, float thyme)
 {
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
-    glBindTexture(GL_TEXTURE_2D, salmonellaTexture);
-    float SHeight;
     if ((int)thyme % 2 != 0) {
-        SHeight = 35.0;
+        glBindTexture(GL_TEXTURE_2D, salmonellaTexture);
     } else {
-        SHeight = 40.0;
+        glBindTexture(GL_TEXTURE_2D, salmonella2Texture);
     }
+    float SHeight = 40.0;
     float SWidth = 40.0;
     glBegin(GL_QUADS);
         glTexCoord2f(1.0f, 0.0f); glVertex2f( SWidth,  SHeight);
         glTexCoord2f(1.0f, 1.0f); glVertex2f( SWidth, -SHeight);
         glTexCoord2f(0.0f, 1.0f); glVertex2f(-SWidth, -SHeight);
         glTexCoord2f(0.0f, 0.0f); glVertex2f(-SWidth,  SHeight);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glEnd();
+    glPopMatrix();
+}
+
+void drawCholora(int choloraTexture)
+{
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glBindTexture(GL_TEXTURE_2D, choloraTexture);
+    float CHeight = 20.0;
+    float CWidth = 20.0;
+    glBegin(GL_QUADS);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f( CWidth,  CHeight);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f( CWidth, -CHeight);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(-CWidth, -CHeight);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(-CWidth,  CHeight);
     glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
     glPopMatrix();
@@ -274,7 +291,7 @@ void drawSnot(float posA, float posB, int snotTexture)
     glPushMatrix();
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
-    glColor3f(1.0f, 1.0f, 1.0f); 
+    glColor3f(1.0f, 1.0f, 1.0f);
     glTranslatef(posA, posB, 0);
     glBindTexture(GL_TEXTURE_2D, snotTexture);
     float SnHeight = 10.0;

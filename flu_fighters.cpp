@@ -82,7 +82,8 @@ extern void drawPowerUp(int);
 extern void drawSnot(float, float,int);
 extern void drawOverlay(int, int, int, int);
 extern void drawTheBoss();
-extern void drawSalmonella(int, float);
+extern void drawSalmonella(int, int, float);
+extern void drawCholora(int);
 int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
@@ -153,9 +154,10 @@ public:
 	}
 };
 //PLACE IMAGES HERE, UPDATE LIST LENGTH-------------------------------------
-Image img[8] = {
+Image img[10] = {
 	"./ship.png", "./GBola.png", "./salmonella.png", "./TitleScreen.png",
-	"./bullet.png", "./WaveScreen.png", "./powerUp.png", "./snot.png"
+	"./bullet.png", "./WaveScreen.png", "./powerUp.png", "./snot.png",
+	"./salmonella2.png", "cholora.png"
 };
 
 //DECLARE TEXTURE
@@ -168,6 +170,8 @@ GLuint bulletTexture;
 GLuint WaveScreenTexture;
 GLuint powerUpTexture;
 GLuint snotTexture;
+GLuint salmonella2Texture;
+GLuint choloraTexture;
 
 //DECLARE IMAGE
 Image *shipImage = NULL;
@@ -178,6 +182,8 @@ Image *bulletImage = NULL;
 Image *WaveScreenImage = NULL;
 Image *powerUpImage = NULL;
 Image *snotImage = NULL;
+Image *salmonella2Image = NULL;
+Image *choloraImage = NULL;
 
 Global::Global()
 {
@@ -209,7 +215,7 @@ Asteroid::Asteroid() {
 }
 
 Game::Game()
-{	
+{
 	gbhead = NULL;
 	shead = NULL;
 	barr = new Bullet[MAX_BULLETS];
@@ -243,7 +249,7 @@ void spawnGBola() {
 }
 
 void spawnSalmonella() {
-	Salmonella *s = new Salmonella((float)(rand() % 
+	Salmonella *s = new Salmonella((float)(rand() %
 		(gl.xres-75)), 800.0f, 0.0f);
 	s->next = g.shead;
 	if (g.shead != NULL)
@@ -570,6 +576,36 @@ void init_opengl()
 	silhouetteData = buildAlphaData(&img[7]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, snw, snh, 0,
 							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
+
+	//SALMONELLA 2 STUFF-----------------------------------------------------
+	salmonella2Image = &img[8];
+	int salw = img[8].iWidth;
+	int salh = img[8].iHeight;
+	glGenTextures(1, &salmonella2Texture);
+
+	glBindTexture(GL_TEXTURE_2D, salmonella2Texture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+	silhouetteData = buildAlphaData(&img[8]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, salw, salh, 0,
+							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
+
+	//SALMONELLA 2 STUFF-----------------------------------------------------
+	salmonella2Image = &img[9];
+	int chow = img[9].iWidth;
+	int choh = img[9].iHeight;
+	glGenTextures(1, &choloraTexture);
+
+	glBindTexture(GL_TEXTURE_2D, choloraTexture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+	silhouetteData = buildAlphaData(&img[9]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, chow, choh, 0,
+							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
 }
 void normalize2d(Vec v)
 {
@@ -871,15 +907,15 @@ void physics()
 		}
 	} else if (gl.keys[XK_space] && gameState == WAVEMENU) {
 		if (cursorPos == 1) {
-			gameState = WAVE1;
+			gameState = CUT0;
 		} else if (cursorPos == 2) {
-			gameState = WAVE2;
+			gameState = CUT1;
 		} else if (cursorPos == 3) {
-			gameState = WAVE3;
+			gameState = CUT2;
 		} else if (cursorPos == 4) {
-			gameState = WAVE4;
+			gameState = CUT3;
 		} else if (cursorPos == 5) {
-			gameState = WAVE5;
+			gameState = CUT4;
 		} else {
 			usleep(500000);
 			cursorPos = 2;
@@ -915,7 +951,7 @@ void render()
 	}
 	if (gameState == WAVE1 || gameState == WAVE2
 					   || gameState == WAVE3 || gameState == WAVE4
-					   || gameState == WAVE5 || gameState == CUT1 
+					   || gameState == WAVE5 || gameState == CUT1
 					   || gameState == CUT2 || gameState == CUT3) {
 
 		glViewport(0, 0, gl.xres, gl.yres);
@@ -945,7 +981,6 @@ void render()
 				glRotatef(gb->angle, 0.0f, 0.0f, 0.0f);
 
 				drawGBola(GBolaTexture, gl.thyme);
-
 				gb = gb->next;
 			}
 		}
@@ -961,7 +996,7 @@ void render()
 					case 60 : glColor3f(1.0f, 0.5f, 0.5f); break;
 					case 50 : glColor3f(1.0f, 0.4f, 0.4f); break;
 					case 40 : glColor3f(1.0f, 0.3f, 0.3f); break;
-					case 30 : glColor3f(0.85f, 0.15f, 0.15f); break; 
+					case 30 : glColor3f(0.85f, 0.15f, 0.15f); break;
 					case 20 : glColor3f(0.75f, 0.075f, 0.075f); break;
 					case 10 : glColor3f(0.7f, 0.0f, 0.0f); break;
 				}
@@ -969,7 +1004,7 @@ void render()
 				glTranslatef(s->pos[0], s->pos[1], s->pos[2]);
 				glRotatef(s->angle, 0.0f, 0.0f, 0.0f);
 
-				drawSalmonella(salmonellaTexture, gl.thyme);
+				drawSalmonella(salmonellaTexture, salmonella2Texture, gl.thyme);
 
 				s = s->next;
 		}
