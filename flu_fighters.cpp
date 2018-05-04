@@ -30,6 +30,8 @@ using namespace std;
 //#include <X11/Xutil.h>
 //#include <GL/glu.h>
 
+const int MAX_PARTICLES = 1000;
+
 //defined types
 typedef float Flt;
 typedef float Vec[3];
@@ -187,6 +189,7 @@ Image *choloraImage = NULL;
 
 Global::Global()
 {
+	n = 0;
 	thyme = 0.0;
 	xres = 600;
 	yres = 900;
@@ -620,6 +623,20 @@ void normalize2d(Vec v)
 	v[1] *= len;
 }
 
+void makeParticle(float x, float y)
+{
+	if (gl.n >= MAX_PARTICLES)
+		return;
+	Particle *p = &gl.particle[gl.n];
+	p->s.center[0] = x;
+	p->s.center[1] = y;
+	float xVel = (float) (rand() % 10) - 5;
+    float yVel = (float) (rand() % 10) - 5;
+	p->velocity[1] = yVel;
+	p->velocity[0] = xVel;
+	++gl.n;
+}
+
 void check_mouse(XEvent *e)
 {
 	if (e->type != ButtonPress &&
@@ -695,6 +712,20 @@ void physics()
 	}
 	else if (g.ship.pos[1] > (float)gl.yres) {
 		g.ship.pos[1] -= 4.0;
+	}
+
+	if (gl.n > 0) {
+		for (int i = 0; i < gl.n; i++) {
+			Particle *p = &gl.particle[i];
+			p->s.center[0] += p->velocity[0];
+			p->s.center[1] += p->velocity[1];
+
+			if (p->s.center[1] < 0.0 || p->s.center[1] > gl.yres ||
+				p->s.center[0] < 0.0 || p->s.center[0] > gl.xres) {
+					cout << "off screen" << endl;
+					gl.particle[i] = gl.particle[ --gl.n ];
+			}
+		}
 	}
 	//
 	//Update bullet positions
@@ -1007,6 +1038,22 @@ void render()
 				drawSalmonella(salmonellaTexture, salmonella2Texture, gl.thyme);
 
 				s = s->next;
+		}
+
+		float w, h;
+		for (int i = 0; i < gl.n; i++) {
+			glPushMatrix();
+			glColor3f(0.0f, 1.0f, 0.0f);
+			//Vec *c = &gl.particle[i].s.center;
+			w = 2;
+			h = 2;
+			glBegin(GL_QUADS);
+				glVertex2i(gl.particle[i].s.center[0]-w, gl.particle[i].s.center[1]-h);
+				glVertex2i(gl.particle[i].s.center[0]-w, gl.particle[i].s.center[1]+h);
+				glVertex2i(gl.particle[i].s.center[0]+w, gl.particle[i].s.center[1]+h);
+				glVertex2i(gl.particle[i].s.center[0]+w, gl.particle[i].s.center[1]-h);
+			glEnd();
+			glPopMatrix();
 		}
 		//----------------
 		//Draw the bullets

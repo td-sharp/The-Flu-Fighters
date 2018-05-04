@@ -7,8 +7,16 @@ struct Shape {
 	Vec center;
 };
 
+struct Particle {
+	Shape s;
+	Vec velocity;
+};
+
 class Global {
 public:
+	//const int MAX_PARTICLES = 1000;
+	int n;
+	Particle particle[1000];
 	double thyme;
 	struct timespec fthymeStart, fthymeEnd;
 	int xres, yres;
@@ -17,7 +25,7 @@ public:
 
 	char keys[65536];
 	Global();
-	
+
 };
 
 class Bullet {
@@ -55,14 +63,14 @@ class Ship {
 		float color[3];
 	public:
 		Ship();
-}; 
+};
 
 
 class State {
 
 	public:
-		struct timespec stateTimer; 
-	
+		struct timespec stateTimer;
+
 	public:
 		State()
 		{

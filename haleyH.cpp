@@ -15,7 +15,7 @@
 #define  rnd() (((float)rand())/(float)RAND_MAX)
 #define PI  3.141592653589793
 
-
+extern void makeParticle(float, float);
 extern struct timespec timeStart, timeCurrent;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
@@ -29,7 +29,7 @@ using namespace std;
 
 S_Bullet::S_Bullet() {}
 
-Gbola::Gbola(float xpos, float ypos) 
+Gbola::Gbola(float xpos, float ypos)
 {
 
     nverts = 8;
@@ -57,9 +57,9 @@ Gbola::Gbola(float xpos, float ypos)
     next = NULL;
     nSbullets = 0;
     clock_gettime(CLOCK_REALTIME, &sbulletTimer);
-    sbarr = new S_Bullet[3];    
+    sbarr = new S_Bullet[3];
 
-}   
+}
 
 Gbola::~Gbola()
 {
@@ -96,7 +96,7 @@ Salmonella::Salmonella(float xpos, float ypos, float rotation)
     next = NULL;
     nSbullets = 0;
     clock_gettime(CLOCK_REALTIME, &sbulletTimer);
-    sbarr = new S_Bullet[3];    
+    sbarr = new S_Bullet[3];
 }
 
 Cholera::Cholera(float xpos, float ypos, float rotation, float acceleration)
@@ -124,7 +124,7 @@ void moveGbola(Gbola *g)
                 g->vel[0] = -g->vel[0];
             }
             else if (g->pos[0] > xres-100)
-            {   
+            {
                 g->pos[0] = xres-100;
                 g->vel[0] = -g->vel[0];
             }
@@ -139,14 +139,14 @@ void moveGbola(Gbola *g)
                 g->vel[0] = -g->vel[0];
             }
             else if (g->pos[0] > xres-100)
-            {   
+            {
                 g->pos[0] = xres-100;
                 g->vel[0] = -g->vel[0];
             }
             ispos = true;
         }
 
-        g = g->next;                 
+        g = g->next;
     }
 }
 
@@ -196,7 +196,7 @@ void moveSalmonella(Salmonella *s)
                 s->vel[0] = -s->vel[0];
             }
             else if (s->pos[0] > xres-100)
-            {   
+            {
                 s->pos[0] = xres-100;
                 s->vel[0] = -s->vel[0];
             }
@@ -211,7 +211,7 @@ void moveSalmonella(Salmonella *s)
                 s->vel[0] = -s->vel[0];
             }
             else if (s->pos[0] > xres-100)
-            {   
+            {
                 s->pos[0] = xres-100;
                 s->vel[0] = -s->vel[0];
             }
@@ -230,8 +230,8 @@ void moveSalmonella(Salmonella *s)
             s->vel[1] = -s->vel[1];
         }
 
-        s = s->next;                 
-    } 
+        s = s->next;
+    }
 }
 
 void shootS(Salmonella *s, int snotTexture, Game *g)
@@ -259,7 +259,7 @@ void shootS(Salmonella *s, int snotTexture, Game *g)
                     sb->vel[1] = ydist/10.0;
                 }
                 else if (abs(ydist) < 100)
-                {  
+                {
                     sb->vel[0] = xdist/100.0;
                     sb->vel[1] = ydist/100.0;
                 }
@@ -277,7 +277,7 @@ void shootS(Salmonella *s, int snotTexture, Game *g)
                 cout << "now there are " << s->nSbullets << " snots" << endl;
             }
         }
-        s = s->next;    
+        s = s->next;
     }
 }
 
@@ -303,7 +303,8 @@ void deleteGbola(Game *game, Gbola *g)
             g->next->prev = g->prev;
         }
     }
-
+    for (int i=0; i<100; i++)
+		makeParticle(g->pos[0], g->pos[1]);
     delete g;
     g = NULL;
 }
@@ -367,7 +368,7 @@ void checkEnemyCollision(Game *game)
 
                 }
 
-                memcpy(&(game->barr[i]), 
+                memcpy(&(game->barr[i]),
                         &(game->barr[game->nbullets-1]),sizeof(Bullet));
                 game->nbullets--;
 
@@ -383,8 +384,8 @@ void checkEnemyCollision(Game *game)
         g = g->next;
     }
 
-    Salmonella *s;  
-    s = game->shead;    
+    Salmonella *s;
+    s = game->shead;
 
     while(s)
     {
@@ -410,7 +411,7 @@ void checkEnemyCollision(Game *game)
                     game->nSalmonella--;
                 }
 
-                memcpy(&(game->barr[i]), 
+                memcpy(&(game->barr[i]),
                         &(game->barr[game->nbullets-1]), sizeof(Bullet));
                 game->nbullets--;
                 if (s == NULL)
