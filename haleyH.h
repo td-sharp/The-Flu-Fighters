@@ -34,7 +34,8 @@ public:
     float pos[3];
     float vel[3];
     float nverts;
-    float radius;
+    float xradius;
+    float yradius; 
     float vert[8][3];
     float angle;
     float rotate;
@@ -47,6 +48,7 @@ public:
     struct timespec sbulletTimer;
 public:
     Salmonella(float, float, float);
+    ~Salmonella();
 };
 
 class Cholera {

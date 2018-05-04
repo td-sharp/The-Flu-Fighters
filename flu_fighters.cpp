@@ -1,7 +1,3 @@
-//
-//
-//
-//
 //program: flu fighters
 //authors:
 //Tyler Sharp, Kyle Werts, Haley Hamer, Renee Romero
@@ -30,8 +26,6 @@ using namespace std;
 //#include <X11/Xutil.h>
 //#include <GL/glu.h>
 
-//const int MAX_PARTICLES = 1000;
-
 //defined types
 typedef float Flt;
 typedef float Vec[3];
@@ -52,7 +46,7 @@ const float TIMESLICE = 1.0f;
 const float GRAVITY = -0.2f;
 #define PI 3.141592653589793
 #define ALPHA 1
-const int MAX_BULLETS = 3;
+const int MAX_BULLETS = 11;
 const Flt MINIMUM_ASTEROID_SIZE = 60.0;
 
 //-----------------------------------------------------------------------------
@@ -68,15 +62,15 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 // Add Renee CPP
 extern Gamestate State;
 Gamestate gameState = STARTMENU;
-extern int waves(struct Game *g, Gamestate gameState, Global *gl);
+extern int waves(struct Game *, Gamestate, Global *, int);
+extern int check_ship_collisions(Game *,int);
 //-----------------------------------------------------------------------------
 //Add tylerS.cpp functions
 
 int lives = 3;
-extern void moveParticle(int, int);
 extern void startMenu(int, int, int, int, int);
 extern void waveMenu(int, int, int, int, int);
-extern void makeParticle(float, float);
+extern void moveParticle (int, int);
 extern void drawBlood();
 extern int drawPre(int);
 extern int drawPost();
@@ -88,7 +82,6 @@ extern void drawSnot(float, float,int);
 extern void drawOverlay(int, int, int, int);
 extern void drawTheBoss();
 extern void drawSalmonella(int, int, float);
-extern void drawCholora(int);
 int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
@@ -162,7 +155,7 @@ public:
 Image img[10] = {
 	"./ship.png", "./GBola.png", "./salmonella.png", "./TitleScreen.png",
 	"./bullet.png", "./WaveScreen.png", "./powerUp.png", "./snot.png",
-	"./salmonella2.png", "cholora.png"
+	"./salmonella2.png", "./cholora.png"
 };
 
 //DECLARE TEXTURE
@@ -192,7 +185,6 @@ Image *choloraImage = NULL;
 
 Global::Global()
 {
-	n = 0;
 	thyme = 0.0;
 	xres = 600;
 	yres = 900;
@@ -209,19 +201,15 @@ Ship::Ship()
 	pos[2] = 0.0f;
 	VecZero(vel);
 	angle = 0.0;
+	radius = 30;
 	//OPACITY
 	color[0] = color[1] = color[2] = 1.0;
 }
 
 Bullet::Bullet() {}
 
-Asteroid::Asteroid() {
-	prev = NULL;
-	next = NULL;
-}
-
 Game::Game()
-{
+{	
 	gbhead = NULL;
 	shead = NULL;
 	barr = new Bullet[MAX_BULLETS];
@@ -245,24 +233,7 @@ Game::~Game() {
 
 Game g;
 
-void spawnGBola() {
-	Gbola *gb = new Gbola((float)(rand() % (gl.xres-75)), 800.0f);
-	gb->next = g.gbhead;
-	if (g.gbhead != NULL)
-		g.gbhead-> prev = gb;
-	g.gbhead = gb;
-	++g.nGbola;
-}
 
-void spawnSalmonella() {
-	Salmonella *s = new Salmonella((float)(rand() %
-		(gl.xres-75)), 800.0f, 0.0f);
-	s->next = g.shead;
-	if (g.shead != NULL)
-		g.shead-> prev = s;
-	g.shead = s;
-	++g.nSalmonella;
-}
 
 
 //X Windows variables
@@ -685,7 +656,7 @@ int check_keys(XEvent *e)
 
 void physics()
 {
-	Flt d0,d1,dist;
+	//Flt d0,d1,dist;
 	//Update ship position
 	g.ship.pos[0] += g.ship.vel[0];
 	g.ship.pos[1] += g.ship.vel[1];
@@ -702,8 +673,9 @@ void physics()
 	else if (g.ship.pos[1] > (float)gl.yres) {
 		g.ship.pos[1] -= 4.0;
 	}
-	//velocity and out of bounds
-	moveParticle(gl.xres, gl.yres);
+
+	moveParticle((float)gl.xres, (float)gl.yres);
+	//
 	//Update bullet positions
 	struct timespec bt;
 	clock_gettime(CLOCK_REALTIME, &bt);
@@ -810,7 +782,14 @@ void physics()
 	//   1. delete the bullet
 	//   2. delete enemy
 	checkEnemyCollision(&g);
-	//---------------------------------------------------
+
+	//Ship collision with Enemy bullets?
+	//if collision detected
+	//	 1. delete the bullet
+	//	 2. delete ship livess
+
+	lives = check_ship_collisions(&g,lives);
+	//--------------------------------------------------
 	//check keys pressed now
 	if (gl.keys[XK_Left] && (gameState == WAVE1 || gameState == WAVE2
 						 || gameState == WAVE3 || gameState == WAVE4
@@ -876,7 +855,7 @@ void physics()
 		struct timespec bt;
 		clock_gettime(CLOCK_REALTIME, &bt);
 		double ts = timeDiff(&g.bulletTimer, &bt);
-		if (ts > 0.2) {
+		if (ts > 0.5) {
 			timeCopy(&g.bulletTimer, &bt);
 			if (g.nbullets < MAX_BULLETS) {
 				//shoot a bullet...
@@ -914,15 +893,15 @@ void physics()
 		}
 	} else if (gl.keys[XK_space] && gameState == WAVEMENU) {
 		if (cursorPos == 1) {
-			gameState = CUT0;
+			gameState = WAVE1;
 		} else if (cursorPos == 2) {
-			gameState = CUT1;
+			gameState = WAVE2;
 		} else if (cursorPos == 3) {
-			gameState = CUT2;
+			gameState = WAVE3;
 		} else if (cursorPos == 4) {
-			gameState = CUT3;
+			gameState = WAVE4;
 		} else if (cursorPos == 5) {
-			gameState = CUT4;
+			gameState = WAVE5;
 		} else {
 			usleep(500000);
 			cursorPos = 2;
@@ -945,20 +924,20 @@ void render()
 	}
 	if ( gameState == CUT0 || gameState == CUT5)
 	{
-		//cout << "in the if with " << gameState << endl;
+		cout << "in the if with " << gameState << endl;
 		if (gameState == CUT5) {
 			gameState = STARTMENU;
 		} else if (gameState == CUT0) {
-			//cout << "gamestate when cut0: " << gameState << endl;
+			cout << "gamestate when cut0: " << gameState << endl;
 			clock_gettime(CLOCK_REALTIME, &gl.fthymeStart);
 			gl.thyme = 0.0;
 			gameState = WAVE1;
-			//cout << "gameState after changing: " << gameState << endl;
+			cout << "gameState after changing: " << gameState << endl;
 		}
 	}
 	if (gameState == WAVE1 || gameState == WAVE2
 					   || gameState == WAVE3 || gameState == WAVE4
-					   || gameState == WAVE5 || gameState == CUT1
+					   || gameState == WAVE5 || gameState == CUT1 
 					   || gameState == CUT2 || gameState == CUT3) {
 
 		glViewport(0, 0, gl.xres, gl.yres);
@@ -967,11 +946,10 @@ void render()
 		glClear(GL_COLOR_BUFFER_BIT);
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
+		gameState = (Gamestate)waves(&g, gameState, &gl, lives);
+		drawBlood();
 
-		//cout << "gameState before waves call: " << gameState << endl;
-		gameState = (Gamestate)waves(&g, gameState, &gl);
-		//cout << "gameState after waves call: " << gameState << endl;
-			drawBlood();
+
 		{
 			Gbola *gb = g.gbhead;
 			while (gb)
@@ -988,6 +966,7 @@ void render()
 				glRotatef(gb->angle, 0.0f, 0.0f, 0.0f);
 
 				drawGBola(GBolaTexture, gl.thyme);
+
 				gb = gb->next;
 			}
 		}
@@ -997,26 +976,24 @@ void render()
 		{
 				switch (s->health) {
 					case 100 : glColor3f(1.0f, 1.0f, 1.0f); break;
-					case 90 : glColor3f(0.8f, 0.9f, 0.9f); break;
-					case 80 : glColor3f(0.8f, 0.7f, 0.8f); break;
-					case 70 : glColor3f(0.8f, 0.5f, 0.65f); break;
-					case 60 : glColor3f(0.7f, 0.4f, 0.4f); break;
-					case 50 : glColor3f(0.7f, 0.2f, 0.4f); break;
-					case 40 : glColor3f(0.6f, 0.1f, 0.3f); break;
-					case 30 : glColor3f(0.5f, 0.0f, 0.15f); break;
-					case 20 : glColor3f(0.5f, 0.0f, 0.075f); break;
-					case 10 : glColor3f(0.5f, 0.0f, 0.0f); break;
+					case 90 : glColor3f(1.0f, 0.9f, 0.9f); break;
+					case 80 : glColor3f(1.0f, 0.8f, 0.8f); break;
+					case 70 : glColor3f(1.0f, 0.65f, 0.65f); break;
+					case 60 : glColor3f(1.0f, 0.5f, 0.5f); break;
+					case 50 : glColor3f(1.0f, 0.4f, 0.4f); break;
+					case 40 : glColor3f(1.0f, 0.3f, 0.3f); break;
+					case 30 : glColor3f(0.85f, 0.15f, 0.15f); break; 
+					case 20 : glColor3f(0.75f, 0.075f, 0.075f); break;
+					case 10 : glColor3f(0.7f, 0.0f, 0.0f); break;
 				}
 				glPushMatrix();
 				glTranslatef(s->pos[0], s->pos[1], s->pos[2]);
 				glRotatef(s->angle, 0.0f, 0.0f, 0.0f);
 
-				drawSalmonella(salmonellaTexture, salmonella2Texture, gl.thyme);
+				drawSalmonella(salmonellaTexture,salmonella2Texture, gl.thyme);
 
 				s = s->next;
 		}
-
-
 		//----------------
 		//Draw the bullets
 		Bullet *b = &g.barr[0];
@@ -1063,7 +1040,7 @@ void render()
         ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", gl.thyme);
 
 		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
-		//cout << "made it to updating time " << endl;
+		cout << "made it to updating time " << endl;
 		clock_gettime(CLOCK_REALTIME, &gl.fthymeEnd);
 	    gl.thyme = timeDiff(&gl.fthymeStart, &gl.fthymeEnd);
 	}

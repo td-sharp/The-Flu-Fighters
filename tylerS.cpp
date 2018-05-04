@@ -316,7 +316,7 @@ void makeParticle(float x, float y, int fl)
 }
 
 float yVel = 2.0f;
-void drawCredits(int xres, yres)
+/*void drawCredits(int xres, yres)
 {
 	glClearColor(0.053f, .174f, .227f, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -330,7 +330,7 @@ void drawCredits(int xres, yres)
 
 
 }
-
+*/
 void moveParticle(int xres, int yres)
 {
 	if (n > 0) {
