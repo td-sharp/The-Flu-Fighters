@@ -75,6 +75,7 @@ extern int waves(struct Game *g, Gamestate gameState, Global *gl);
 int lives = 3;
 extern void startMenu(int, int, int, int, int);
 extern void waveMenu(int, int, int, int, int);
+extern void drawBlood(float, float, int);
 extern int drawPre(int);
 extern int drawPost();
 extern void drawShip(float, float, float, int);
@@ -630,8 +631,8 @@ void makeParticle(float x, float y)
 	Particle *p = &gl.particle[gl.n];
 	p->s.center[0] = x;
 	p->s.center[1] = y;
-	float xVel = (float) (rand() % 10) - 5;
-    float yVel = (float) (rand() % 10) - 5;
+	float xVel = (float) (rand() % 50) - 25;
+    float yVel = (float) (rand() % 50) - 25;
 	p->velocity[1] = yVel;
 	p->velocity[0] = xVel;
 	++gl.n;
@@ -722,7 +723,7 @@ void physics()
 
 			if (p->s.center[1] < 0.0 || p->s.center[1] > gl.yres ||
 				p->s.center[0] < 0.0 || p->s.center[0] > gl.xres) {
-					cout << "off screen" << endl;
+					cout << "off screen. n count: " << gl.n << endl;
 					gl.particle[i] = gl.particle[ --gl.n ];
 			}
 		}
@@ -969,15 +970,15 @@ void render()
 	}
 	if ( gameState == CUT0 || gameState == CUT5)
 	{
-		cout << "in the if with " << gameState << endl;
+		//cout << "in the if with " << gameState << endl;
 		if (gameState == CUT5) {
 			gameState = STARTMENU;
 		} else if (gameState == CUT0) {
-			cout << "gamestate when cut0: " << gameState << endl;
+			//cout << "gamestate when cut0: " << gameState << endl;
 			clock_gettime(CLOCK_REALTIME, &gl.fthymeStart);
 			gl.thyme = 0.0;
 			gameState = WAVE1;
-			cout << "gameState after changing: " << gameState << endl;
+			//cout << "gameState after changing: " << gameState << endl;
 		}
 	}
 	if (gameState == WAVE1 || gameState == WAVE2
@@ -992,9 +993,14 @@ void render()
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
 
-		cout << "gameState before waves call: " << gameState << endl;
+		//cout << "gameState before waves call: " << gameState << endl;
 		gameState = (Gamestate)waves(&g, gameState, &gl);
-		cout << "gameState after waves call: " << gameState << endl;
+		//cout << "gameState after waves call: " << gameState << endl;
+		for (int i = 0; i < gl.n; i++) {
+			float px = gl.particle[i].s.center[0];
+			float py = gl.particle[i].s.center[1];
+			drawBlood(px, py, i);
+		}
 
 		{
 			Gbola *gb = g.gbhead;
@@ -1040,21 +1046,7 @@ void render()
 				s = s->next;
 		}
 
-		float w, h;
-		for (int i = 0; i < gl.n; i++) {
-			glPushMatrix();
-			glColor3f(0.0f, 1.0f, 0.0f);
-			//Vec *c = &gl.particle[i].s.center;
-			w = 2;
-			h = 2;
-			glBegin(GL_QUADS);
-				glVertex2i(gl.particle[i].s.center[0]-w, gl.particle[i].s.center[1]-h);
-				glVertex2i(gl.particle[i].s.center[0]-w, gl.particle[i].s.center[1]+h);
-				glVertex2i(gl.particle[i].s.center[0]+w, gl.particle[i].s.center[1]+h);
-				glVertex2i(gl.particle[i].s.center[0]+w, gl.particle[i].s.center[1]-h);
-			glEnd();
-			glPopMatrix();
-		}
+
 		//----------------
 		//Draw the bullets
 		Bullet *b = &g.barr[0];
@@ -1094,6 +1086,25 @@ void render()
 			s = s->next;
 		}
 
+		//drawBlood(gl.particle[i].s.center[0], gl.particle[i].s.center[1], gl.n);
+
+		//float qw, qh;
+
+			/*glPushMatrix();
+			glColor3f(0.016f, 0.019f, 0.94f);
+			//Vec *c = &gl.particle[i].s.center;
+			//cout << "doodly-doo";
+			qw = 2;
+			qh = 2;
+			glBegin(GL_QUADS);
+				glVertex2i(px-qw, py-qh);
+				glVertex2i(px-qw, py+qh);
+				glVertex2i(px+qw, py+qh);
+				glVertex2i(px+qw, py-qh);
+			glEnd();
+			glPopMatrix();
+		}*/
+
 		Rect r;
         r.bot = 500;
         r.left = 250;
@@ -1101,7 +1112,7 @@ void render()
         ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", gl.thyme);
 
 		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
-		cout << "made it to updating time " << endl;
+		//cout << "made it to updating time " << endl;
 		clock_gettime(CLOCK_REALTIME, &gl.fthymeEnd);
 	    gl.thyme = timeDiff(&gl.fthymeStart, &gl.fthymeEnd);
 	}

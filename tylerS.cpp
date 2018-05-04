@@ -286,6 +286,30 @@ void drawPowerUp(int powerUpTexture)
     glPopMatrix();
 }
 
+float w = 2;
+float h = 2;
+void drawBlood(float px, float py, int n)
+{
+    //float w, h;
+    //for (int i = 0; i < n; i++) {
+        glPushMatrix();
+        glColor3f(0.016f, 0.019f, 0.94f);
+        //Vec *c = &gl.particle[i].s.center;
+        //cout << "doodly-doo";
+        //w = 2;
+        //h = 2;
+        //float px = gl.particle[i].s.center[0];
+        //float py = gl.particle[i].s.center[1];
+        glBegin(GL_QUADS);
+            glVertex2i(px-w, py-h);
+            glVertex2i(px-w, py+h);
+            glVertex2i(px+w, py+h);
+            glVertex2i(px+w, py-h);
+        glEnd();
+        glPopMatrix();
+    //}
+}
+
 void drawSnot(float posA, float posB, int snotTexture)
 {
     glPushMatrix();
