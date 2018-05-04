@@ -15,7 +15,7 @@
 #define  rnd() (((float)rand())/(float)RAND_MAX)
 #define PI  3.141592653589793
 
-extern void makeParticle(float, float);
+extern void makeParticle(float, float, int);
 extern struct timespec timeStart, timeCurrent;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
@@ -172,8 +172,8 @@ void shootG(Gbola *gb, int snotTexture)
                 sb->color[1] = 1.0f;
                 sb->color[2] = 1.0f;
                 gb->nSbullets++;
-                //cout << "made a Snot Bullet" << endl;
-                //cout << "now there are " << gb->nSbullets << " snots" << endl;
+                ////cout << "made a Snot Bullet" << endl;
+                ////cout << "now there are " << gb->nSbullets << " snots" << endl;
             }
         }
         gb = gb->next;
@@ -252,7 +252,7 @@ void shootS(Salmonella *s, int snotTexture, Game *g)
                 sb->pos[1] = s->pos[1];
                 float xdist = (g->ship.pos[0] - sb->pos[0]);
                 float ydist = (g->ship.pos[1] - sb->pos[1]);
-                cout << "YDIST: " << ydist << endl;
+                //cout << "YDIST: " << ydist << endl;
                 if (abs(ydist) < 10)
                 {
                     sb->vel[0] = xdist/10.0;
@@ -265,7 +265,7 @@ void shootS(Salmonella *s, int snotTexture, Game *g)
                 }
                 else
                 {
-                    cout << "major scale " << endl;
+                    //cout << "major scale " << endl;
                     sb->vel[0] = xdist/200.0;
                     sb->vel[1] = ydist/200.0;
                 }
@@ -273,8 +273,8 @@ void shootS(Salmonella *s, int snotTexture, Game *g)
                 sb->color[1] = 1.0f;
                 sb->color[2] = 1.0f;
                 s->nSbullets++;
-                cout << "made a Salmonella Snot Bullet" << endl;
-                cout << "now there are " << s->nSbullets << " snots" << endl;
+                //cout << "made a Salmonella Snot Bullet" << endl;
+                //cout << "now there are " << s->nSbullets << " snots" << endl;
             }
         }
         s = s->next;
@@ -304,7 +304,7 @@ void deleteGbola(Game *game, Gbola *g)
         }
     }
     for (int i=0; i<100; i++)
-		makeParticle(g->pos[0], g->pos[1]);
+		makeParticle(g->pos[0], g->pos[1], 0);
     delete g;
     g = NULL;
 }
@@ -331,7 +331,8 @@ void deleteSalmonella(Game *game, Salmonella *s)
             s->next->prev = s->prev;
         }
     }
-
+    for (int i=0; i<100; i++)
+		makeParticle(s->pos[0], s->pos[1], 1);
     delete s;
     s = NULL;
 }
@@ -364,7 +365,7 @@ void checkEnemyCollision(Game *game)
                     deleteGbola(game,g);
                     g = saveg;
                     game->nGbola--;
-                    cout << "nGbola in collision: " << game->nGbola << endl;
+                    ////cout << "nGbola in collision: " << game->nGbola << endl;
 
                 }
 

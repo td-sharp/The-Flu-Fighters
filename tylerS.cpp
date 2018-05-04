@@ -4,6 +4,21 @@ using namespace std;
 #include <ctime>
 #include <unistd.h>
 #include <iostream>
+#include <cstdlib>
+
+typedef float Flt;
+typedef float Vec[3];
+
+struct Shape {
+	float width, height;
+	float radius;
+	Vec center;
+};
+
+struct Particle {
+	Shape s;
+	Vec velocity;
+};
 
 extern double timeDiff(struct timespec *start, struct timespec *end);
 
@@ -88,37 +103,33 @@ void waveMenu(int xres, int yres, int WaveScreenTexture, int Cursor,
 
 void drawPre(int gameState)
 {
-        //Draw the ship
-        //drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
-        Rect r;
-        r.bot = 800;
-        r.center = 0;
-        Rect s;
-        s.bot = 780;
-        s.center = 0;
-        if (gameState == 3) {
-            r.left = 170;
-            ggprint16(&r, 16, 0xFB6AD0, "LET'S GET A PHYSICAL");
-        } else if (gameState == 5) {
-            r.left = 100;
-            ggprint16(&r, 16, 0xFB6AD0, "DEFRIBILLATOR? I 'ARDLY EVEN KNOW 'ER!");
-        } else if (gameState == 7) {
-            r.left = 170;
-            ggprint16(&r, 16, 0xFB6AD0, "URINE A LOT OF TROUBLE");
-        } else if (gameState == 9) {
-            r.left = 168;
-            ggprint16(&r, 16, 0xFB6AD0, "TIME TO PRACTICE MEDICINE");
-            s.left = 184;
-            ggprint16(&s, 16, 0xFB6AD0, "AND CHEW BUBBLEGUM");
-        } else if (gameState == 11) {
-            r.left = 170;
-            ggprint16(&r, 16, 0xFB6AD0, "IT'S GOING TIBIA BAD DAY");
-        } else if (gameState == 13) {
-            r.left = 120;
-            ggprint16(&r, 16, 0xFB6AD0, "THE DISEASES RULE ALL..GAME OVER");
-        }
-    //sleep(1);
-    //return 1;
+    Rect r;
+    r.bot = 800;
+    r.center = 0;
+    Rect s;
+    s.bot = 780;
+    s.center = 0;
+    if (gameState == 3) {
+        r.left = 170;
+        ggprint16(&r, 16, 0xFB6AD0, "LET'S GET A PHYSICAL");
+    } else if (gameState == 5) {
+        r.left = 100;
+        ggprint16(&r, 16, 0xFB6AD0, "DEFRIBILLATOR? I 'ARDLY EVEN KNOW 'ER!");
+    } else if (gameState == 7) {
+        r.left = 170;
+        ggprint16(&r, 16, 0xFB6AD0, "URINE A LOT OF TROUBLE");
+    } else if (gameState == 9) {
+        r.left = 168;
+        ggprint16(&r, 16, 0xFB6AD0, "TIME TO PRACTICE MEDICINE");
+        s.left = 184;
+        ggprint16(&s, 16, 0xFB6AD0, "AND CHEW BUBBLEGUM");
+    } else if (gameState == 11) {
+        r.left = 170;
+        ggprint16(&r, 16, 0xFB6AD0, "IT'S GOING TIBIA BAD DAY");
+    } else if (gameState == 13) {
+        r.left = 120;
+        ggprint16(&r, 16, 0xFB6AD0, "THE DISEASES RULE ALL..GAME OVER");
+    }
 }
 void drawPost()
 {
@@ -128,15 +139,12 @@ void drawPost()
     r.left = 185;
     ggprint16(&r, 16, 0xFB6AD0, "WAVE COMPLETE!");
 }
+
 void drawOverlay(int xres, int yres, int lives, int shipTexture)
 {
     glColor3f(1.0f, 1.0f, 1.0f);
     glColor3ub(77, 166, 255);
 	glPushMatrix();
-	//glTranslatef( 50, 50, 0);
-	//glRotatef(angle, 0.0f, 0.0f, 1.0f);
-    //glTranslatef(-50, -50, 0);
-    //angle = angle + 2.5;
 	glBegin(GL_QUADS);
 		glVertex2i(0  , 0);
         glVertex2i(xres, 0);
@@ -169,6 +177,7 @@ void drawOverlay(int xres, int yres, int lives, int shipTexture)
         glPopMatrix();
     }
 }
+
 void drawBullet(float posA, float posB, int bulletTexture)
 {
     glPushMatrix();
@@ -186,9 +195,9 @@ void drawBullet(float posA, float posB, int bulletTexture)
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 }
+
 void drawShip(float posA, float posB, float posC, int shipTexture)
 {
-    //glColor3f(1.0f, 1.0f, 1.0f);
     glPushMatrix();
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
@@ -207,11 +216,9 @@ void drawShip(float posA, float posB, float posC, int shipTexture)
 
 void drawGBola(int GBolaTexture, float thyme)
 {
-    //glBindTexture(GL_TEXTURE_2D, silhouetteTexture);
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
     glBindTexture(GL_TEXTURE_2D, GBolaTexture);
-    //glColor4ub(0,0,0,0);
     float GHeight;
     if ((int)thyme % 2 != 0) {
         GHeight = 35.0;
@@ -288,26 +295,78 @@ void drawPowerUp(int powerUpTexture)
 
 float w = 2;
 float h = 2;
-void drawBlood(float px, float py, int n)
+const int MAX_PARTICLES = 1000;
+int n;
+int flag;
+Particle particle[MAX_PARTICLES];
+
+void makeParticle(float x, float y, int fl)
 {
-    //float w, h;
-    //for (int i = 0; i < n; i++) {
+	flag = fl;
+	if (n >= MAX_PARTICLES)
+		return;
+	Particle *p = &particle[n];
+	p->s.center[0] = x;
+	p->s.center[1] = y;
+	float xVel = (float) (rand() % 50) - 25;
+    float yVel = (float) (rand() % 50) - 25;
+	p->velocity[1] = yVel;
+	p->velocity[0] = xVel;
+	++n;
+}
+
+float yVel = 2.0f;
+void drawCredits(int xres, yres)
+{
+	glClearColor(0.053f, .174f, .227f, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	Rect r;
+    r.bot += ;
+    r.left = 20;
+    r.center = 0;
+    ggprint16(&r, 16, 0xFB6AD0, "LIVES");
+
+
+
+}
+
+void moveParticle(int xres, int yres)
+{
+	if (n > 0) {
+		for (int i = 0; i < n; i++) {
+			Particle *p = &particle[i];
+			p->s.center[0] += p->velocity[0];
+			p->s.center[1] += p->velocity[1];
+
+			if (p->s.center[1] < 0.0 || p->s.center[1] > yres ||
+							p->s.center[0] < 0.0 || p->s.center[0] > xres) {
+				cout << "off screen. n count: " << n << endl;
+				particle[i] = particle[ --n ];
+			}
+		}
+	}
+}
+
+void drawBlood()
+{
+	for (int i = 0; i < n; i++) {
+		float px = particle[i].s.center[0];
+		float py = particle[i].s.center[1];
         glPushMatrix();
-        glColor3f(0.016f, 0.019f, 0.94f);
-        //Vec *c = &gl.particle[i].s.center;
-        //cout << "doodly-doo";
-        //w = 2;
-        //h = 2;
-        //float px = gl.particle[i].s.center[0];
-        //float py = gl.particle[i].s.center[1];
-        glBegin(GL_QUADS);
+		if (flag == 0) {
+        	glColor3f(0.016f, 0.019f, 0.94f);
+		} else if (flag == 1) {
+			glColor3f(0.94f, 0.019f, 0.016f);
+		}
+		glBegin(GL_QUADS);
             glVertex2i(px-w, py-h);
             glVertex2i(px-w, py+h);
             glVertex2i(px+w, py+h);
             glVertex2i(px+w, py-h);
         glEnd();
         glPopMatrix();
-    //}
+    }
 }
 
 void drawSnot(float posA, float posB, int snotTexture)

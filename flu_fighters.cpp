@@ -30,7 +30,7 @@ using namespace std;
 //#include <X11/Xutil.h>
 //#include <GL/glu.h>
 
-const int MAX_PARTICLES = 1000;
+//const int MAX_PARTICLES = 1000;
 
 //defined types
 typedef float Flt;
@@ -52,7 +52,7 @@ const float TIMESLICE = 1.0f;
 const float GRAVITY = -0.2f;
 #define PI 3.141592653589793
 #define ALPHA 1
-const int MAX_BULLETS = 11;
+const int MAX_BULLETS = 3;
 const Flt MINIMUM_ASTEROID_SIZE = 60.0;
 
 //-----------------------------------------------------------------------------
@@ -73,9 +73,11 @@ extern int waves(struct Game *g, Gamestate gameState, Global *gl);
 //Add tylerS.cpp functions
 
 int lives = 3;
+extern void moveParticle(int, int);
 extern void startMenu(int, int, int, int, int);
 extern void waveMenu(int, int, int, int, int);
-extern void drawBlood(float, float, int);
+extern void makeParticle(float, float);
+extern void drawBlood();
 extern int drawPre(int);
 extern int drawPost();
 extern void drawShip(float, float, float, int);
@@ -624,20 +626,6 @@ void normalize2d(Vec v)
 	v[1] *= len;
 }
 
-void makeParticle(float x, float y)
-{
-	if (gl.n >= MAX_PARTICLES)
-		return;
-	Particle *p = &gl.particle[gl.n];
-	p->s.center[0] = x;
-	p->s.center[1] = y;
-	float xVel = (float) (rand() % 50) - 25;
-    float yVel = (float) (rand() % 50) - 25;
-	p->velocity[1] = yVel;
-	p->velocity[0] = xVel;
-	++gl.n;
-}
-
 void check_mouse(XEvent *e)
 {
 	if (e->type != ButtonPress &&
@@ -714,21 +702,8 @@ void physics()
 	else if (g.ship.pos[1] > (float)gl.yres) {
 		g.ship.pos[1] -= 4.0;
 	}
-
-	if (gl.n > 0) {
-		for (int i = 0; i < gl.n; i++) {
-			Particle *p = &gl.particle[i];
-			p->s.center[0] += p->velocity[0];
-			p->s.center[1] += p->velocity[1];
-
-			if (p->s.center[1] < 0.0 || p->s.center[1] > gl.yres ||
-				p->s.center[0] < 0.0 || p->s.center[0] > gl.xres) {
-					cout << "off screen. n count: " << gl.n << endl;
-					gl.particle[i] = gl.particle[ --gl.n ];
-			}
-		}
-	}
-	//
+	//velocity and out of bounds
+	moveParticle(gl.xres, gl.yres);
 	//Update bullet positions
 	struct timespec bt;
 	clock_gettime(CLOCK_REALTIME, &bt);
@@ -901,7 +876,7 @@ void physics()
 		struct timespec bt;
 		clock_gettime(CLOCK_REALTIME, &bt);
 		double ts = timeDiff(&g.bulletTimer, &bt);
-		if (ts > 0.5) {
+		if (ts > 0.2) {
 			timeCopy(&g.bulletTimer, &bt);
 			if (g.nbullets < MAX_BULLETS) {
 				//shoot a bullet...
@@ -996,12 +971,7 @@ void render()
 		//cout << "gameState before waves call: " << gameState << endl;
 		gameState = (Gamestate)waves(&g, gameState, &gl);
 		//cout << "gameState after waves call: " << gameState << endl;
-		for (int i = 0; i < gl.n; i++) {
-			float px = gl.particle[i].s.center[0];
-			float py = gl.particle[i].s.center[1];
-			drawBlood(px, py, i);
-		}
-
+			drawBlood();
 		{
 			Gbola *gb = g.gbhead;
 			while (gb)
@@ -1027,15 +997,15 @@ void render()
 		{
 				switch (s->health) {
 					case 100 : glColor3f(1.0f, 1.0f, 1.0f); break;
-					case 90 : glColor3f(1.0f, 0.9f, 0.9f); break;
-					case 80 : glColor3f(1.0f, 0.8f, 0.8f); break;
-					case 70 : glColor3f(1.0f, 0.65f, 0.65f); break;
-					case 60 : glColor3f(1.0f, 0.5f, 0.5f); break;
-					case 50 : glColor3f(1.0f, 0.4f, 0.4f); break;
-					case 40 : glColor3f(1.0f, 0.3f, 0.3f); break;
-					case 30 : glColor3f(0.85f, 0.15f, 0.15f); break;
-					case 20 : glColor3f(0.75f, 0.075f, 0.075f); break;
-					case 10 : glColor3f(0.7f, 0.0f, 0.0f); break;
+					case 90 : glColor3f(0.8f, 0.9f, 0.9f); break;
+					case 80 : glColor3f(0.8f, 0.7f, 0.8f); break;
+					case 70 : glColor3f(0.8f, 0.5f, 0.65f); break;
+					case 60 : glColor3f(0.7f, 0.4f, 0.4f); break;
+					case 50 : glColor3f(0.7f, 0.2f, 0.4f); break;
+					case 40 : glColor3f(0.6f, 0.1f, 0.3f); break;
+					case 30 : glColor3f(0.5f, 0.0f, 0.15f); break;
+					case 20 : glColor3f(0.5f, 0.0f, 0.075f); break;
+					case 10 : glColor3f(0.5f, 0.0f, 0.0f); break;
 				}
 				glPushMatrix();
 				glTranslatef(s->pos[0], s->pos[1], s->pos[2]);
@@ -1085,25 +1055,6 @@ void render()
 
 			s = s->next;
 		}
-
-		//drawBlood(gl.particle[i].s.center[0], gl.particle[i].s.center[1], gl.n);
-
-		//float qw, qh;
-
-			/*glPushMatrix();
-			glColor3f(0.016f, 0.019f, 0.94f);
-			//Vec *c = &gl.particle[i].s.center;
-			//cout << "doodly-doo";
-			qw = 2;
-			qh = 2;
-			glBegin(GL_QUADS);
-				glVertex2i(px-qw, py-qh);
-				glVertex2i(px-qw, py+qh);
-				glVertex2i(px+qw, py+qh);
-				glVertex2i(px+qw, py-qh);
-			glEnd();
-			glPopMatrix();
-		}*/
 
 		Rect r;
         r.bot = 500;

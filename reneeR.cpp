@@ -1,4 +1,4 @@
-/*  
+/*
    Layout of Levels
 */
 
@@ -30,30 +30,30 @@ int waves(Game *g, Gamestate gameState, Global *gl)
 {
 		double tw;
 		if(gameState == WAVE1){
-			cout << "IN WAVE 1 w address: " << g->w1 << endl;
+			////cout << "IN WAVE 1 w address: " << g->w1 << endl;
 			if (g->w1 == NULL){
-				cout << "spawned a wave" << endl;
+				////cout << "spawned a wave" << endl;
 				g->w1 = new State;
-				cout << "w1 address: " << g->w1 << endl;
+				////cout << "w1 address: " << g->w1 << endl;
 			}
 			struct timespec w1_t;
 			clock_gettime(CLOCK_REALTIME, &w1_t);
 			tw = timeDiff(&(g->w1->stateTimer), &w1_t);
 			wave_start(gameState, gl, g->w1);
-			cout << "TW: " << tw << endl;	
+			////cout << "TW: " << tw << endl;
 			if(tw > 4){
-				wave_one();	
+				wave_one();
 			}
 			if (g->nGbola == 0 && tw > 4.5){
 				gameState = CUT1;
 				if (g->c1 == NULL)
 					g->c1 = new State;
 			}
-		}else if( g->nGbola == 0 && gameState == CUT1){ 
+		}else if( g->nGbola == 0 && gameState == CUT1){
 			struct timespec c1_t;
 			clock_gettime(CLOCK_REALTIME, &c1_t);
 			tw = timeDiff(&(g->c1->stateTimer), &c1_t);
-			cout << "wave clear in here\n";
+			////cout << "wave clear in here\n";
 			wave_clear(gameState, gl, g->c1);
 			if(tw > 4){
 				gameState = WAVE2;
@@ -66,12 +66,12 @@ int waves(Game *g, Gamestate gameState, Global *gl)
 			tw = timeDiff(&(g->w2->stateTimer), &w2_t);
 			wave_start(gameState, gl, g->w2);
 		 	if (tw > 4){
-				cout << "in wave two" << endl;
+				////cout << "in wave two" << endl;
 				wave_two();
 			}
 			if (g->nGbola == 0 && g->nSalmonella == 0 && tw > 4.5){
 				gameState = CUT2;
-				cout << "leaving wave two" << endl;
+				//cout << "leaving wave two" << endl;
 				if (g->c2 == NULL)
 					g->c2 = new State;
 			}
@@ -91,12 +91,12 @@ int waves(Game *g, Gamestate gameState, Global *gl)
 			tw = timeDiff(&(g->w3->stateTimer), &w3_t);
 			wave_start(gameState, gl, g->w3);
 		 	if (tw > 4){
-				cout << "in wave three" << endl;
+				//cout << "in wave three" << endl;
 				wave_three();
 			}
 			if (g->nGbola == 0 && g->nSalmonella == 0 && tw > 4.5){
 				gameState = CUT3;
-				cout << "leaving wave two" << endl;
+				//cout << "leaving wave two" << endl;
 				if (g->c3 == NULL)
 					g->c3 = new State;
 			}
@@ -114,18 +114,18 @@ int waves(Game *g, Gamestate gameState, Global *gl)
 			gameState = GAMEOVER;
 			//wave_start(gameState, gl);
 		}
-	cout << "gameState as gameState from waves: " << gameState << endl;
-	cout << "gameState as int from waves: " << (int)gameState << endl;
+	//cout << "gameState as gameState from waves: " << gameState << endl;
+	//cout << "gameState as int from waves: " << (int)gameState << endl;
 	return (int)gameState;
 }
 
 void wave_start(Gamestate gameState, Global *gl, State *st)
 {
-	cout << "in wave start " << endl;
+	//cout << "in wave start " << endl;
 	struct timespec ws;
 	clock_gettime(CLOCK_REALTIME, &ws);
 	double tw = timeDiff(&(st->stateTimer), &ws);
-	cout << "TW in WAVE START: " << tw << endl;
+	//cout << "TW in WAVE START: " << tw << endl;
 	if (tw < 4){
 		if (gameState == WAVE1 || gameState == WAVE2 || gameState == WAVE3){
 			if (tw < 0.5 || (tw >1.0 && tw  <  1.5) || (tw > 2.0 && tw < 2.5)) {
@@ -133,8 +133,8 @@ void wave_start(Gamestate gameState, Global *gl, State *st)
 			}
 		}
 		clock_gettime(CLOCK_REALTIME, &ws);
-		tw = timeDiff(&(st->stateTimer), &ws);	
-		cout << "TW in while: " << tw << endl;	
+		tw = timeDiff(&(st->stateTimer), &ws);
+		//cout << "TW in while: " << tw << endl;
 	}
 }
 
@@ -143,12 +143,12 @@ void wave_clear(Gamestate gameState, Global *gl, State *s)
 	struct timespec wc;
 	clock_gettime(CLOCK_REALTIME, &wc);
 	double tw = timeDiff(&(s->stateTimer), &wc);
-	if (tw < 4){	
+	if (tw < 4){
 		if (gameState == CUT1 || gameState == CUT2 || gameState == CUT3) {
-			if (tw < 0.5 || (tw >1.0 && tw  <  1.5) || (tw > 2.0 && tw < 2.5)){
-				cout << "in clear\n";
+			//if (tw < 0.5 || (tw >1.0 && tw  <  1.5) || (tw > 2.0 && tw < 2.5)){
+				////cout << "in clear\n";
 				drawPost();
-			}
+			//}
 		}
 		clock_gettime(CLOCK_REALTIME, &wc);
 		tw = timeDiff(&(s->stateTimer), &wc);
@@ -156,14 +156,14 @@ void wave_clear(Gamestate gameState, Global *gl, State *s)
 }
 
 void wave_one()
-{	
+{
 
 	static int enemyCounter = 4;
 	while(enemyCounter > 0)
 	{
-		spawnGBola();	
-		enemyCounter--;	
-	}	
+		spawnGBola();
+		enemyCounter--;
+	}
 }
 
 void wave_two()
@@ -199,5 +199,5 @@ void wave_three()
 		spawnSalmonella();
 		SalmonellaEnemyCounter--;
 
-	}	
+	}
 }
