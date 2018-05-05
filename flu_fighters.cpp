@@ -68,7 +68,7 @@ extern int check_ship_collisions(Game *,int);
 //Add tylerS.cpp functions
 
 int lives = 3;
-extern void drawCredits(int, int);
+extern void drawCredits(int, int, int, int, int, int);
 extern void moveParticle(int, int);
 extern void startMenu(int, int, int, int, int);
 extern void waveMenu(int, int, int, int, int);
@@ -954,7 +954,18 @@ void render()
 	if (gameState == WAVEMENU) {
 		//waveMenu(gl.xres, gl.yres, WaveScreenTexture, GBolaTexture,
 		//															cursorPos);
-		drawCredits(gl.xres, gl.yres);
+		glClearColor(0.053f, .174f, .227f, 0);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		for (int q = 0; q < gl.bgThingCount; q++) {
+			glPushMatrix();
+			glTranslatef(gl.xBGPos[q], gl.yBGVel[q], 0.0f);
+			drawBackgroundThing(backgroundThingTexture, backgroundThing2Texture,
+				 gl.xBGPos[q], gl.yBGVel[q], gl.size[q]);
+			gl.yBGVel[q] -= 10/gl.size[q];
+		}
+		drawCredits(gl.xres, gl.yres, GBolaTexture, salmonellaTexture,
+			salmonella2Texture, choloraTexture);
 	}
 	if ( gameState == CUT0 || gameState == CUT5)
 	{

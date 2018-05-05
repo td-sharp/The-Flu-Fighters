@@ -262,19 +262,26 @@ void drawSalmonella(int salmonellaTexture, int salmonella2Texture, float thyme)
     glPopMatrix();
 }
 
-void drawCholora(int choloraTexture)
+void drawCholora(int choloraTexture, float thyme)
 {
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
     glColor3f(1.0f, 1.0f, 1.0f);
     glBindTexture(GL_TEXTURE_2D, choloraTexture);
-    float CHeight = 20.0;
-    float CWidth = 20.0;
+    float CHeight = 40.0;
+    float CWidth = 40.0;
     glBegin(GL_QUADS);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f( CWidth,  CHeight);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f( CWidth, -CHeight);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(-CWidth, -CHeight);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(-CWidth,  CHeight);
+	if ((int)thyme % 2 != 0) {
+		glTexCoord2f(1.0f, 0.0f); glVertex2f( CWidth,  CHeight);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f( CWidth, -CHeight);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(-CWidth, -CHeight);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(-CWidth,  CHeight);
+	} else {
+		glTexCoord2f(1.0f, 0.0f); glVertex2f(-CWidth,  CHeight);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f(-CWidth, -CHeight);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f( CWidth, -CHeight);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f( CWidth,  CHeight);
+	}
     glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
     glPopMatrix();
@@ -320,11 +327,17 @@ void makeParticle(float x, float y, int fl)
 	++n;
 }
 
+float fakeTime = 0;
 float yVel = 2.0f;
-void drawCredits(int xres, int yres)
+void drawCredits(int xres, int yres, int GBolaTexture, int salmonellaTexture,
+	int salmonella2Texture, int choloraTexture)
 {
-	glClearColor(0.053f, .174f, .227f, 0);
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClearColor(0.053f, .174f, .227f, 0);
+	//glClear(GL_COLOR_BUFFER_BIT);
+
+	if ((int) yVel % 50 == 0 ) {
+		fakeTime += 1;
+	}
 
 	Rect r;
     r.bot = yVel;
@@ -337,6 +350,40 @@ void drawCredits(int xres, int yres)
     s.left = xres/2 - 70;
     s.center = 0;
     ggprint16(&s, 16, 0xFB6AD0, "Starring:");
+
+	Rect g;
+    g.bot = yVel - 700;
+    g.left = xres/2 - 200;
+    g.center = 0;
+    ggprint16(&g, 16, 0xFB6AD0, "\"The G\" G-Bola");
+
+	glPushMatrix();
+	glTranslatef(xres/2 + 10, yVel - 700, 0);
+
+	drawGBola(GBolaTexture, fakeTime);
+
+	Rect sa;
+    sa.bot = yVel - 900;
+    sa.left = xres/2 - 200;
+    sa.center = 0;
+    ggprint16(&sa, 16, 0xFB6AD0, "Salmonella");
+
+	glPushMatrix();
+	glTranslatef(xres/2 + 10, yVel - 900, 0);
+
+	drawSalmonella(salmonellaTexture, salmonella2Texture, fakeTime);
+
+	Rect c;
+    c.bot = yVel - 1000;
+    c.left = xres/2 - 200;
+    c.center = 0;
+    ggprint16(&c, 16, 0xFB6AD0, "Cholo-ra");
+
+	glPushMatrix();
+	glTranslatef(xres/2 + 10, yVel - 1000, 0);
+
+	drawCholora(choloraTexture, fakeTime);
+
 	yVel += 3.0;
 }
 
