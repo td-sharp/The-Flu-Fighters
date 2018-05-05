@@ -196,12 +196,17 @@ void drawBullet(float posA, float posB, int bulletTexture)
     glPopMatrix();
 }
 
-void drawShip(float posA, float posB, float posC, int shipTexture)
+void drawShip(float posA, float posB, float posC, int shipTexture, int lives)
 {
     glPushMatrix();
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
-    glColor3f(1.0f, 1.0f, 1.0f);
+	switch (lives) {
+		case (3) : glColor3f(1.0f, 1.0f, 1.0f); break;
+		case (2) : glColor3f(1.0f, 0.4f, 0.8f); break;
+		case (1) : glColor3f(0.8f, 0.2f, 0.3f); break;
+		default : glColor3f(1.0f, 1.0f, 1.0f);
+	}
     glTranslatef(posA, posB, posC);
     glBindTexture(GL_TEXTURE_2D, shipTexture);
     glBegin(GL_QUADS);
@@ -362,6 +367,8 @@ void drawBlood()
         	glColor3f(0.016f, 0.019f, 0.94f);
 		} else if (flag == 1) {
 			glColor3f(0.94f, 0.019f, 0.016f);
+		} else if (flag == 2) {
+			glColor3f(0.0f, 1.0f, 0.0f);
 		}
 		glBegin(GL_QUADS);
             glVertex2i(px-w, py-h);

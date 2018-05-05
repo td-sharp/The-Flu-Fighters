@@ -1,4 +1,4 @@
-/*  
+/*
    Renee Romero
    Layout of Levels
 */
@@ -12,6 +12,7 @@ using namespace std;
 #include <ctime>
 #include "haleyH.h"
 #include "flu_fighters.h"
+extern void makeParticle(float, float, int);
 extern struct timespec timeStart, timeCurrent;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
@@ -31,7 +32,7 @@ int waves(Game *g, Gamestate gameState, Global *gl, int ship_lives)
 
 		if(ship_lives == 0)
 		{
-			gameState = GAMEOVER;	
+			gameState = GAMEOVER;
 		}
 		if(gameState == WAVE1){
 			if (g->w1 == NULL){
@@ -42,14 +43,14 @@ int waves(Game *g, Gamestate gameState, Global *gl, int ship_lives)
 			tw = timeDiff(&(g->w1->stateTimer), &w1_t);
 			wave_start(gameState, gl, g->w1);
 			if(tw > 4){
-				wave_one(g);	
+				wave_one(g);
 			}
 			if (g->nGbola == 0 && tw > 4.5){
 				gameState = CUT1;
 				if (g->c1 == NULL)
 					g->c1 = new State;
 			}
-		}else if( g->nGbola == 0 && gameState == CUT1){ 
+		}else if( g->nGbola == 0 && gameState == CUT1){
 			struct timespec c1_t;
 			clock_gettime(CLOCK_REALTIME, &c1_t);
 			tw = timeDiff(&(g->c1->stateTimer), &c1_t);
@@ -124,7 +125,7 @@ void wave_start(Gamestate gameState, Global *gl, State *st)
 			}
 		}
 		clock_gettime(CLOCK_REALTIME, &ws);
-		tw = timeDiff(&(st->stateTimer), &ws);	
+		tw = timeDiff(&(st->stateTimer), &ws);
 	}
 }
 
@@ -133,7 +134,7 @@ void wave_clear(Gamestate gameState, Global *gl, State *s)
 	struct timespec wc;
 	clock_gettime(CLOCK_REALTIME, &wc);
 	double tw = timeDiff(&(s->stateTimer), &wc);
-	if (tw < 4){	
+	if (tw < 4){
 		if (gameState == CUT1 || gameState == CUT2 || gameState == CUT3) {
 			if (tw < 0.5 || (tw >1.0 && tw  <  1.5) || (tw > 2.0 && tw < 2.5)){
 				drawPost();
@@ -145,7 +146,7 @@ void wave_clear(Gamestate gameState, Global *gl, State *s)
 }
 
 void wave_one(Game *g)
-{	
+{
 
 	static int GbolaEnemyCounter = 4;
 	float gx = 40.0f;
@@ -157,8 +158,8 @@ void wave_one(Game *g)
 		//cout << "inc: " << inc << endl;
 		spawnGBola(g, gx);
 		GbolaEnemyCounter--;
-		gx += inc;	
-	}	
+		gx += inc;
+	}
 }
 
 void wave_two(Game *g)
@@ -210,7 +211,7 @@ void wave_three(Game *g)
 		SalmonellaEnemyCounter--;
 		sx += s_inc;
 
-	}	
+	}
 }
 
 int check_ship_collisions(Game *game, int ship_lives)
@@ -223,10 +224,13 @@ int check_ship_collisions(Game *game, int ship_lives)
         while (i < g->nSbullets)
         {
             S_Bullet *b = &(g->sbarr[i]);
-            if (b->pos[0] > game->ship.pos[0] - game->ship.radius && 
+            if (b->pos[0] > game->ship.pos[0] - game->ship.radius &&
             	b->pos[0] < game->ship.pos[0] + game->ship.radius &&
-            	b->pos[1] > game->ship.pos[1] - game->ship.radius && 
+            	b->pos[1] > game->ship.pos[1] - game->ship.radius &&
             	b->pos[1] < game->ship.pos[1] + game->ship.radius ){
+				for (int j = 0; j < 100; j++) {
+					makeParticle(game->ship.pos[0], game->ship.pos[1], 2);
+				}
             	ship_lives--;
                 memcpy(&(g->sbarr[i]), &(g->sbarr[g->nSbullets-1]),sizeof(S_Bullet));
                 g->nSbullets--;
@@ -250,9 +254,9 @@ int check_ship_collisions(Game *game, int ship_lives)
         while (i < s->nSbullets)
         {
             S_Bullet *b = &(s->sbarr[i]);
-            if (b->pos[0] > game->ship.pos[0] - game->ship.radius && 
+            if (b->pos[0] > game->ship.pos[0] - game->ship.radius &&
             	b->pos[0] < game->ship.pos[0] + game->ship.radius &&
-            	b->pos[1] > game->ship.pos[1] - game->ship.radius && 
+            	b->pos[1] > game->ship.pos[1] - game->ship.radius &&
             	b->pos[1] < game->ship.pos[1] + game->ship.radius ){
             	ship_lives--;
                 memcpy(&(s->sbarr[i]), &(s->sbarr[s->nSbullets-1]),sizeof(S_Bullet));

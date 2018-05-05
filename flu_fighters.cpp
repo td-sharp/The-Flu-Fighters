@@ -76,7 +76,7 @@ extern void moveParticle (int, int);
 extern void drawBlood();
 extern int drawPre(int);
 extern int drawPost();
-extern void drawShip(float, float, float, int);
+extern void drawShip(float, float, float, int, int);
 extern void drawBullet(float, float, int);
 extern void drawGBola(int, float);
 extern void drawPowerUp(int);
@@ -948,7 +948,8 @@ void render()
 		glClearColor(0.053f, .174f, .227f, 0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		//Draw the ship
-		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2], shipTexture);
+		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2],
+															shipTexture, lives);
 		gameState = (Gamestate)waves(&g, gameState, &gl, lives);
 		drawBlood();
 
@@ -1043,7 +1044,7 @@ void render()
         ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", gl.thyme);
 
 		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
-		cout << "made it to updating time " << endl;
+		//cout << "made it to updating time " << endl;
 		clock_gettime(CLOCK_REALTIME, &gl.fthymeEnd);
 	    gl.thyme = timeDiff(&gl.fthymeStart, &gl.fthymeEnd);
 	}
