@@ -350,7 +350,7 @@ void moveParticle(int xres, int yres)
 
 			if (p->s.center[1] < 0.0 || p->s.center[1] > yres ||
 							p->s.center[0] < 0.0 || p->s.center[0] > xres) {
-				cout << "off screen. n count: " << n << endl;
+				//cout << "off screen. n count: " << n << endl;
 				particle[i] = particle[ --n ];
 			}
 		}
@@ -397,5 +397,35 @@ void drawSnot(float posA, float posB, int snotTexture)
         glTexCoord2f(0.0f, 0.0f); glVertex2f(-SnWidth,  SnHeight);
     glBindTexture(GL_TEXTURE_2D, 0);
     glEnd();
+    glPopMatrix();
+}
+
+//float yBGVel = 0.2;
+//glTranslatef(350, 440, 0.0f);
+void drawBackgroundThing(int backgroundThingTexture,
+	int backgroundThing2Texture, int xres, float yBGVel, float size)
+{
+	//glPushMatrix();
+	//glTranslatef(xpos, yBGVel, 0.0f);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+	float color = 20/size;
+	glColor3f(color, color, color);
+	if ((int) size % 3 == 0) {
+		glBindTexture(GL_TEXTURE_2D, backgroundThing2Texture);
+	} else {
+		glBindTexture(GL_TEXTURE_2D, backgroundThingTexture);
+	}
+	//cout << " xres: " << xres
+	//	 << " xpos: " << xpos << " Y: " << yBGVel << endl;
+    float BHeight = size;
+    float BWidth = size;
+    glBegin(GL_QUADS);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f( BWidth,  BHeight);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f( BWidth, -BHeight);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(-BWidth, -BHeight);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(-BWidth,  BHeight);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 }

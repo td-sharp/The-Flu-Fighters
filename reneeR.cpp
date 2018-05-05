@@ -228,7 +228,7 @@ int check_ship_collisions(Game *game, int ship_lives)
             	b->pos[0] < game->ship.pos[0] + game->ship.radius &&
             	b->pos[1] > game->ship.pos[1] - game->ship.radius &&
             	b->pos[1] < game->ship.pos[1] + game->ship.radius ){
-				for (int j = 0; j < 100; j++) {
+				for (int j = 0; j < 30; j++) {
 					makeParticle(game->ship.pos[0], game->ship.pos[1], 2);
 				}
             	ship_lives--;
@@ -258,6 +258,9 @@ int check_ship_collisions(Game *game, int ship_lives)
             	b->pos[0] < game->ship.pos[0] + game->ship.radius &&
             	b->pos[1] > game->ship.pos[1] - game->ship.radius &&
             	b->pos[1] < game->ship.pos[1] + game->ship.radius ){
+				for (int j = 0; j < 30; j++) {
+					makeParticle(game->ship.pos[0], game->ship.pos[1], 2);
+				}
             	ship_lives--;
                 memcpy(&(s->sbarr[i]), &(s->sbarr[s->nSbullets-1]),sizeof(S_Bullet));
                 s->nSbullets--;

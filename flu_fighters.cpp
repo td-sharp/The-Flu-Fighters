@@ -84,6 +84,7 @@ extern void drawSnot(float, float,int);
 extern void drawOverlay(int, int, int, int);
 extern void drawTheBoss();
 extern void drawSalmonella(int, int, float);
+extern void drawBackgroundThing(int, int, int, float, float);
 int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
@@ -154,10 +155,11 @@ public:
 	}
 };
 //PLACE IMAGES HERE, UPDATE LIST LENGTH-------------------------------------
-Image img[10] = {
+Image img[12] = {
 	"./ship.png", "./GBola.png", "./salmonella.png", "./TitleScreen.png",
 	"./bullet.png", "./WaveScreen.png", "./powerUp.png", "./snot.png",
-	"./salmonella2.png", "./cholora.png"
+	"./salmonella2.png", "./cholora.png", "./backgroundThing.png",
+	"./backgroundThing2.png"
 };
 
 //DECLARE TEXTURE
@@ -172,6 +174,8 @@ GLuint powerUpTexture;
 GLuint snotTexture;
 GLuint salmonella2Texture;
 GLuint choloraTexture;
+GLuint backgroundThingTexture;
+GLuint backgroundThing2Texture;
 
 //DECLARE IMAGE
 Image *shipImage = NULL;
@@ -184,10 +188,20 @@ Image *powerUpImage = NULL;
 Image *snotImage = NULL;
 Image *salmonella2Image = NULL;
 Image *choloraImage = NULL;
+Image *backgroundThingImage = NULL;
+Image *backgroundThing2Image = NULL;
 
 Global::Global()
 {
 	thyme = 0.0;
+	bgThingCount = 20;
+	//float xBGPos[bgThingCount];
+	//float yBGVel[bgThingCount];
+	for (int i = 0; i < bgThingCount; i++) {
+		xBGPos[i] = rand() % 8 * 75;
+		yBGVel[i] = rand() % 20 * 150;
+		size[i] = (rand() % 10)  * 20 + 30;
+	}
 	xres = 600;
 	yres = 900;
 	memset(keys, 0, 65536);
@@ -396,18 +410,6 @@ unsigned char *buildAlphaData(Image *img)
 		*(ptr+0) = a;
 		*(ptr+1) = b;
 		*(ptr+2) = c;
-		//-----------------------------------------------
-		//get largest color component...
-		//*(ptr+3) = (unsigned char)((
-		//		(int)*(ptr+0) +
-		//		(int)*(ptr+1) +
-		//		(int)*(ptr+2)) / 3);
-		//d = a;
-		//if (b >= a && b >= c) d = b;
-		//if (c >= a && c >= b) d = c;
-		//*(ptr+3) = d;
-		//-----------------------------------------------
-		//this code optimizes the commented code above.
 		*(ptr+3) = (a|b|c);
 		//-----------------------------------------------
 		ptr += 4;
@@ -571,8 +573,8 @@ void init_opengl()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, salw, salh, 0,
 							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
 
-	//SALMONELLA 2 STUFF-----------------------------------------------------
-	salmonella2Image = &img[9];
+	//CHOLORA STUFF-----------------------------------------------------
+	choloraImage = &img[9];
 	int chow = img[9].iWidth;
 	int choh = img[9].iHeight;
 	glGenTextures(1, &choloraTexture);
@@ -584,6 +586,35 @@ void init_opengl()
 
 	silhouetteData = buildAlphaData(&img[9]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, chow, choh, 0,
+							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
+
+	//BACKGROUND THING STUFF-----------------------------------------------------------
+	backgroundThingImage = &img[10];
+	int btw = img[10].iWidth;
+	int bth = img[10].iHeight;
+	glGenTextures(1, &backgroundThingTexture);
+
+	glBindTexture(GL_TEXTURE_2D, backgroundThingTexture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+	silhouetteData = buildAlphaData(&img[10]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, btw, bth, 0,
+							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
+	//BACKGROUND THING 2 STUFF-----------------------------------------------------------
+	backgroundThing2Image = &img[11];
+	int bt2w = img[11].iWidth;
+	int bt2h = img[11].iHeight;
+	glGenTextures(1, &backgroundThing2Texture);
+
+	glBindTexture(GL_TEXTURE_2D, backgroundThing2Texture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+	silhouetteData = buildAlphaData(&img[11]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bt2w, bt2h, 0,
 							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
 }
 void normalize2d(Vec v)
@@ -934,6 +965,7 @@ void render()
 			cout << "gamestate when cut0: " << gameState << endl;
 			clock_gettime(CLOCK_REALTIME, &gl.fthymeStart);
 			gl.thyme = 0.0;
+
 			gameState = WAVE1;
 			cout << "gameState after changing: " << gameState << endl;
 		}
@@ -947,12 +979,21 @@ void render()
 		//clear color buffer
 		glClearColor(0.053f, .174f, .227f, 0);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		for (int q = 0; q < gl.bgThingCount; q++) {
+			glPushMatrix();
+			glTranslatef(gl.xBGPos[q], gl.yBGVel[q], 0.0f);
+			drawBackgroundThing(backgroundThingTexture, backgroundThing2Texture,
+				 gl.xBGPos[q], gl.yBGVel[q], gl.size[q]);
+			gl.yBGVel[q] -= 10/gl.size[q];
+		}
+
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2],
 															shipTexture, lives);
 		gameState = (Gamestate)waves(&g, gameState, &gl, lives);
-		drawBlood();
 
+		drawBlood();
 
 		{
 			Gbola *gb = g.gbhead;
@@ -970,7 +1011,6 @@ void render()
 				glRotatef(gb->angle, 0.0f, 0.0f, 0.0f);
 
 				drawGBola(GBolaTexture, gl.thyme);
-
 				gb = gb->next;
 			}
 		}
@@ -1024,6 +1064,9 @@ void render()
 
 			gb = gb->next;
 		}
+
+		//for (int q = 0; q < gl.bgThingCount; q++) {
+
 
 		while (s)
 		{
