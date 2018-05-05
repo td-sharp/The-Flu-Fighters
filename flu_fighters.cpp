@@ -68,11 +68,8 @@ extern int check_ship_collisions(Game *,int);
 //Add tylerS.cpp functions
 
 int lives = 3;
-<<<<<<< HEAD
 extern void drawCredits(int, int);
 extern void moveParticle(int, int);
-=======
->>>>>>> cbc7a7cabf924e33201a5204d6113e48b87e0e3c
 extern void startMenu(int, int, int, int, int);
 extern void waveMenu(int, int, int, int, int);
 extern void moveParticle (int, int);
@@ -214,7 +211,7 @@ Ship::Ship()
 Bullet::Bullet() {}
 
 Game::Game()
-{	
+{
 	gbhead = NULL;
 	shead = NULL;
 	barr = new Bullet[MAX_BULLETS];
@@ -943,7 +940,7 @@ void render()
 	}
 	if (gameState == WAVE1 || gameState == WAVE2
 					   || gameState == WAVE3 || gameState == WAVE4
-					   || gameState == WAVE5 || gameState == CUT1 
+					   || gameState == WAVE5 || gameState == CUT1
 					   || gameState == CUT2 || gameState == CUT3) {
 
 		glViewport(0, 0, gl.xres, gl.yres);
@@ -988,7 +985,7 @@ void render()
 					case 60 : glColor3f(1.0f, 0.5f, 0.5f); break;
 					case 50 : glColor3f(1.0f, 0.4f, 0.4f); break;
 					case 40 : glColor3f(1.0f, 0.3f, 0.3f); break;
-					case 30 : glColor3f(0.85f, 0.15f, 0.15f); break; 
+					case 30 : glColor3f(0.85f, 0.15f, 0.15f); break;
 					case 20 : glColor3f(0.75f, 0.075f, 0.075f); break;
 					case 10 : glColor3f(0.7f, 0.0f, 0.0f); break;
 				}
