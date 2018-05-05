@@ -7,16 +7,8 @@ struct Shape {
 	Vec center;
 };
 
-struct Particle {
-	Shape s;
-	Vec velocity;
-};
-
 class Global {
 public:
-	//const int MAX_PARTICLES = 1000;
-	int n;
-	Particle particle[1000];
 	double thyme;
 	struct timespec fthymeStart, fthymeEnd;
 	int xres, yres;
@@ -25,7 +17,7 @@ public:
 
 	char keys[65536];
 	Global();
-
+	
 };
 
 class Bullet {
@@ -38,22 +30,6 @@ public:
 	Bullet();
 };
 
-class Asteroid {
-	public:
-		Vec pos;
-		Vec vel;
-		int nverts;
-		Flt radius;
-		Vec vert[8];
-		float angle;
-		float rotate;
-		float color[3];
-		struct Asteroid *prev;
-		struct Asteroid *next;
-	public:
-		Asteroid();
-};
-
 class Ship {
 	public:
 		Vec dir;
@@ -61,16 +37,17 @@ class Ship {
 		Vec vel;
 		float angle;
 		float color[3];
+		float radius;
 	public:
 		Ship();
-};
+}; 
 
 
 class State {
 
 	public:
-		struct timespec stateTimer;
-
+		struct timespec stateTimer; 
+	
 	public:
 		State()
 		{
@@ -81,12 +58,10 @@ class State {
 class Game {
 public:
 	Ship ship;
-	Asteroid *ahead;
 	Gbola *gbhead;
 	Salmonella *shead;
 	Bullet *barr;
 	State *w1, *c1, *w2, *c2, *w3, *c3, *w4, *go;
-	int nasteroids;
 	int nGbola;
 	int nSalmonella;
 	int nbullets;
