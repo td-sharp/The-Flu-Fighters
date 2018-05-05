@@ -73,6 +73,7 @@ extern int waves(struct Game *g, Gamestate gameState, Global *gl);
 //Add tylerS.cpp functions
 
 int lives = 3;
+extern void drawCredits(int, int);
 extern void moveParticle(int, int);
 extern void startMenu(int, int, int, int, int);
 extern void waveMenu(int, int, int, int, int);
@@ -940,8 +941,9 @@ void render()
 																	cursorPos);
 	}
 	if (gameState == WAVEMENU) {
-		waveMenu(gl.xres, gl.yres, WaveScreenTexture, GBolaTexture,
-																	cursorPos);
+		//waveMenu(gl.xres, gl.yres, WaveScreenTexture, GBolaTexture,
+		//															cursorPos);
+		drawCredits(gl.xres, gl.yres);
 	}
 	if ( gameState == CUT0 || gameState == CUT5)
 	{

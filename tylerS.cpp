@@ -316,19 +316,23 @@ void makeParticle(float x, float y, int fl)
 }
 
 float yVel = 2.0f;
-void drawCredits(int xres, yres)
+void drawCredits(int xres, int yres)
 {
 	glClearColor(0.053f, .174f, .227f, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	Rect r;
-    r.bot += ;
-    r.left = 20;
+    r.bot = yVel;
+    r.left = xres/2 - 90;
     r.center = 0;
-    ggprint16(&r, 16, 0xFB6AD0, "LIVES");
+    ggprint16(&r, 16, 0xFB6AD0, "Thanks for playing!");
 
-
-
+	Rect s;
+    s.bot = yVel - 500;
+    s.left = xres/2 - 70;
+    s.center = 0;
+    ggprint16(&s, 16, 0xFB6AD0, "Starring:");
+	yVel += 3.0;
 }
 
 void moveParticle(int xres, int yres)
