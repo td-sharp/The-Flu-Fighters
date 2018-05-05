@@ -12,12 +12,16 @@ public:
 	double thyme;
 	struct timespec fthymeStart, fthymeEnd;
 	int xres, yres;
+	int bgThingCount;
+	float yBGVel[20];
+	int xBGPos[20];
+	float size[20];
 //DECLARE SHAPE FOR IMAGE
 	Shape ship;
 
 	char keys[65536];
 	Global();
-	
+
 };
 
 class Bullet {
@@ -40,14 +44,14 @@ class Ship {
 		float radius;
 	public:
 		Ship();
-}; 
+};
 
 
 class State {
 
 	public:
-		struct timespec stateTimer; 
-	
+		struct timespec stateTimer;
+
 	public:
 		State()
 		{
