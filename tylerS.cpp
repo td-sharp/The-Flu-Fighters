@@ -19,6 +19,7 @@ struct Particle {
 	Shape s;
 	Vec velocity;
 };
+void makeParticle(float, float, int);
 
 extern double timeDiff(struct timespec *start, struct timespec *end);
 
@@ -157,6 +158,7 @@ void drawPost()
 
 void drawOverlay(int xres, int yres, int lives, int shipTexture)
 {
+	/*
     glColor3f(1.0f, 1.0f, 1.0f);
     glColor3ub(77, 166, 255);
 	glPushMatrix();
@@ -167,7 +169,7 @@ void drawOverlay(int xres, int yres, int lives, int shipTexture)
         glVertex2i(0  , 60);
     glPopMatrix();
 	glEnd();
-
+	*/
     Rect r;
     r.bot = 20;
     r.left = 20;
@@ -210,28 +212,36 @@ void drawBullet(float posA, float posB, int bulletTexture)
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 }
+int dflag = 0;
 
 void drawShip(float posA, float posB, float posC, int shipTexture, int lives)
 {
-    glPushMatrix();
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-	switch (lives) {
-		case (3) : glColor3f(1.0f, 1.0f, 1.0f); break;
-		case (2) : glColor3f(1.0f, 0.4f, 0.8f); break;
-		case (1) : glColor3f(0.8f, 0.2f, 0.3f); break;
-		default : glColor3f(1.0f, 1.0f, 1.0f);
+	if (lives == 0 && dflag == 0) {
+		for (int j = 0; j < 100; j++) {
+			makeParticle(posA, posB, 3);
+			dflag = 1;
+		}
+	} else if (lives != 0) {
+	    glPushMatrix();
+	    glEnable(GL_ALPHA_TEST);
+	    glAlphaFunc(GL_GREATER, 0.0f);
+		switch (lives) {
+			case (3) : glColor3f(1.0f, 1.0f, 1.0f); break;
+			case (2) : glColor3f(1.0f, 0.4f, 0.8f); break;
+			case (1) : glColor3f(0.8f, 0.2f, 0.3f); break;
+			default : glColor3f(1.0f, 1.0f, 1.0f);
+		}
+	    glTranslatef(posA, posB, posC);
+	    glBindTexture(GL_TEXTURE_2D, shipTexture);
+	    glBegin(GL_QUADS);
+	        glTexCoord2f(1.0f, 0.0f); glVertex2f( 30.0f,  30.0f);
+	        glTexCoord2f(1.0f, 1.0f); glVertex2f( 30.0f, -30.0f);
+	        glTexCoord2f(0.0f, 1.0f); glVertex2f(-30.0f, -30.0f);
+	        glTexCoord2f(0.0f, 0.0f); glVertex2f(-30.0f,  30.0f);
+	    glEnd();
+	    glBindTexture(GL_TEXTURE_2D, 0);
+	    glPopMatrix();
 	}
-    glTranslatef(posA, posB, posC);
-    glBindTexture(GL_TEXTURE_2D, shipTexture);
-    glBegin(GL_QUADS);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f( 30.0f,  30.0f);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f( 30.0f, -30.0f);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(-30.0f, -30.0f);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(-30.0f,  30.0f);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
 }
 
 void drawGBola(int GBolaTexture, float thyme)
@@ -404,19 +414,30 @@ void drawCredits(int xres, int yres, int GBolaTexture, int salmonellaTexture,
 		"Haley Hamer: Enemies");
 
 	Rect re;
-    re.bot = yVel - 1800;
+    re.bot = yVel - 1900;
     re.left = 100;
     re.center = 0;
     ggprint16(&re, 16, 0xFB6AD0,
 		"Renee Romero: Waves");
 
 	Rect t;
-    t.bot = yVel - 1900;
+    t.bot = yVel - 2100;
     t.left = 100;
     t.center = 0;
     ggprint16(&t, 16, 0xFB6AD0,
 		"Tyler Sharp: Graphics");
+
+	Rect k;
+    k.bot = yVel - 2300;
+    k.left = 100;
+    k.center = 0;
+    ggprint16(&k, 16, 0xFB6AD0,
+		"Kyle Wertz: Boss, Sound, and Powerups");
 	yVel += 2.0;
+
+	//if ((yVel - 2300) > 900) {
+	//	exit(0);
+	//}
 }
 
 void moveParticle(int xres, int yres)
@@ -446,6 +467,8 @@ void drawBlood()
 			glColor3f(0.94f, 0.019f, 0.016f);
 		} else if (flag == 2) {
 			glColor3f(0.0f, 1.0f, 0.0f);
+		} else if (flag == 3) {
+			glColor3f(1.0f, 0.0f, 0.4f);
 		}
 		glBegin(GL_QUADS);
             glVertex2i(px-w, py-h);

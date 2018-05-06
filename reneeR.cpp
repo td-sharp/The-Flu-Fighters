@@ -14,6 +14,7 @@ using namespace std;
 #include "flu_fighters.h"
 extern void makeParticle(float, float, int);
 extern struct timespec timeStart, timeCurrent;
+extern void gameOver(int, int, int);
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 extern int drawPre(int);
@@ -32,7 +33,8 @@ int waves(Game *g, Gamestate gameState, Global *gl, int ship_lives)
 
 		if(ship_lives == 0)
 		{
-			gameState = GAMEOVER;
+
+			//gameState = GAMEOVER;
 		}
 		if(gameState == WAVE1){
 			if (g->w1 == NULL){
@@ -136,9 +138,9 @@ void wave_clear(Gamestate gameState, Global *gl, State *s)
 	double tw = timeDiff(&(s->stateTimer), &wc);
 	if (tw < 4){
 		if (gameState == CUT1 || gameState == CUT2 || gameState == CUT3) {
-			if (tw < 0.5 || (tw >1.0 && tw  <  1.5) || (tw > 2.0 && tw < 2.5)){
+		//	if (tw < 0.5 || (tw >1.0 && tw  <  1.5) || (tw > 2.0 && tw < 2.5)){
 				drawPost();
-			}
+		//	}
 		}
 		clock_gettime(CLOCK_REALTIME, &wc);
 		tw = timeDiff(&(s->stateTimer), &wc);

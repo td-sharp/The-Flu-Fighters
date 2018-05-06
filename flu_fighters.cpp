@@ -982,11 +982,15 @@ void render()
 		drawCredits(gl.xres, gl.yres, GBolaTexture, salmonellaTexture,
 			salmonella2Texture, choloraTexture);
 	}
+	if (gameState == GAMEOVER) {
+		gameOver(gl.xres, gl.yres, gameOverTexture);
+	}
 	if ( gameState == CUT0 || gameState == CUT5)
 	{
 		cout << "in the if with " << gameState << endl;
 		if (gameState == CUT5) {
-			gameState = STARTMENU;
+			drawCredits(gl.xres, gl.yres, GBolaTexture, salmonellaTexture,
+				salmonella2Texture, choloraTexture);
 		} else if (gameState == CUT0) {
 			cout << "gamestate when cut0: " << gameState << endl;
 			clock_gettime(CLOCK_REALTIME, &gl.fthymeStart);
