@@ -58,6 +58,7 @@ void startMenu(int xres, int yres, int TitleScreenTexture, int Cursor,
     glPopMatrix();
 
 }
+
 void waveMenu(int xres, int yres, int WaveScreenTexture, int Cursor,
                                                                 int cursorPos)
 {
@@ -99,6 +100,20 @@ void waveMenu(int xres, int yres, int WaveScreenTexture, int Cursor,
     glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 
+}
+
+void gameOver(int xres, int yres, int gameOverTexture)
+{
+	glPushMatrix();
+	glBindTexture(GL_TEXTURE_2D, gameOverTexture);
+    glBegin(GL_QUADS);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f( xres, yres);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f( xres, 0.0f);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f( 0.0f, 0.0f);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f( 0.0f, yres);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glPopMatrix();
 }
 
 void drawPre(int gameState)
@@ -332,10 +347,7 @@ float yVel = 2.0f;
 void drawCredits(int xres, int yres, int GBolaTexture, int salmonellaTexture,
 	int salmonella2Texture, int choloraTexture)
 {
-	//glClearColor(0.053f, .174f, .227f, 0);
-	//glClear(GL_COLOR_BUFFER_BIT);
-
-	if ((int) yVel % 50 == 0 ) {
+	if ((int) yVel % 100 == 0 ) {
 		fakeTime += 1;
 	}
 
@@ -363,28 +375,48 @@ void drawCredits(int xres, int yres, int GBolaTexture, int salmonellaTexture,
 	drawGBola(GBolaTexture, fakeTime);
 
 	Rect sa;
-    sa.bot = yVel - 900;
+    sa.bot = yVel - 1000;
     sa.left = xres/2 - 200;
     sa.center = 0;
-    ggprint16(&sa, 16, 0xFB6AD0, "Salmonella");
+    ggprint16(&sa, 16, 0xFB6AD0, "\"Sassy\" Salmonella");
 
 	glPushMatrix();
-	glTranslatef(xres/2 + 10, yVel - 900, 0);
+	glTranslatef(xres/2 + 10, yVel - 1000, 0);
 
 	drawSalmonella(salmonellaTexture, salmonella2Texture, fakeTime);
 
 	Rect c;
-    c.bot = yVel - 1000;
+    c.bot = yVel - 1300;
     c.left = xres/2 - 200;
     c.center = 0;
     ggprint16(&c, 16, 0xFB6AD0, "Cholo-ra");
 
 	glPushMatrix();
-	glTranslatef(xres/2 + 10, yVel - 1000, 0);
+	glTranslatef(xres/2 + 10, yVel - 1300, 0);
 
 	drawCholora(choloraTexture, fakeTime);
 
-	yVel += 3.0;
+	Rect h;
+    h.bot = yVel - 1700;
+    h.left = 100;
+    h.center = 0;
+    ggprint16(&h, 16, 0xFB6AD0,
+		"Haley Hamer: Enemies");
+
+	Rect re;
+    re.bot = yVel - 1800;
+    re.left = 100;
+    re.center = 0;
+    ggprint16(&re, 16, 0xFB6AD0,
+		"Renee Romero: Waves");
+
+	Rect t;
+    t.bot = yVel - 1900;
+    t.left = 100;
+    t.center = 0;
+    ggprint16(&t, 16, 0xFB6AD0,
+		"Tyler Sharp: Graphics");
+	yVel += 2.0;
 }
 
 void moveParticle(int xres, int yres)
@@ -394,10 +426,8 @@ void moveParticle(int xres, int yres)
 			Particle *p = &particle[i];
 			p->s.center[0] += p->velocity[0];
 			p->s.center[1] += p->velocity[1];
-
 			if (p->s.center[1] < 0.0 || p->s.center[1] > yres ||
 							p->s.center[0] < 0.0 || p->s.center[0] > xres) {
-				//cout << "off screen. n count: " << n << endl;
 				particle[i] = particle[ --n ];
 			}
 		}
@@ -447,13 +477,9 @@ void drawSnot(float posA, float posB, int snotTexture)
     glPopMatrix();
 }
 
-//float yBGVel = 0.2;
-//glTranslatef(350, 440, 0.0f);
 void drawBackgroundThing(int backgroundThingTexture,
 	int backgroundThing2Texture, int xres, float yBGVel, float size)
 {
-	//glPushMatrix();
-	//glTranslatef(xpos, yBGVel, 0.0f);
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
 	float color = 20/size;
@@ -463,8 +489,6 @@ void drawBackgroundThing(int backgroundThingTexture,
 	} else {
 		glBindTexture(GL_TEXTURE_2D, backgroundThingTexture);
 	}
-	//cout << " xres: " << xres
-	//	 << " xpos: " << xpos << " Y: " << yBGVel << endl;
     float BHeight = size;
     float BWidth = size;
     glBegin(GL_QUADS);

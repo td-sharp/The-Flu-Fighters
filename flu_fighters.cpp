@@ -72,6 +72,7 @@ extern void drawCredits(int, int, int, int, int, int);
 extern void moveParticle(int, int);
 extern void startMenu(int, int, int, int, int);
 extern void waveMenu(int, int, int, int, int);
+extern void gameOver(int, int, int);
 extern void moveParticle (int, int);
 extern void drawBlood();
 extern int drawPre(int);
@@ -79,6 +80,7 @@ extern int drawPost();
 extern void drawShip(float, float, float, int, int);
 extern void drawBullet(float, float, int);
 extern void drawGBola(int, float);
+extern void drawCholora(int, float);
 extern void drawPowerUp(int);
 extern void drawSnot(float, float,int);
 extern void drawOverlay(int, int, int, int);
@@ -155,11 +157,11 @@ public:
 	}
 };
 //PLACE IMAGES HERE, UPDATE LIST LENGTH-------------------------------------
-Image img[12] = {
+Image img[13] = {
 	"./ship.png", "./GBola.png", "./salmonella.png", "./TitleScreen.png",
 	"./bullet.png", "./WaveScreen.png", "./powerUp.png", "./snot.png",
 	"./salmonella2.png", "./cholora.png", "./backgroundThing.png",
-	"./backgroundThing2.png"
+	"./backgroundThing2.png", "gameOver.png"
 };
 
 //DECLARE TEXTURE
@@ -176,6 +178,7 @@ GLuint salmonella2Texture;
 GLuint choloraTexture;
 GLuint backgroundThingTexture;
 GLuint backgroundThing2Texture;
+GLuint gameOverTexture;
 
 //DECLARE IMAGE
 Image *shipImage = NULL;
@@ -190,17 +193,16 @@ Image *salmonella2Image = NULL;
 Image *choloraImage = NULL;
 Image *backgroundThingImage = NULL;
 Image *backgroundThing2Image = NULL;
+Image *gameOverImage = NULL;
 
 Global::Global()
 {
 	thyme = 0.0;
 	bgThingCount = 20;
-	//float xBGPos[bgThingCount];
-	//float yBGVel[bgThingCount];
 	for (int i = 0; i < bgThingCount; i++) {
 		xBGPos[i] = rand() % 8 * 75;
 		yBGVel[i] = rand() % 20 * 150;
-		size[i] = (rand() % 10)  * 20 + 30;
+		size[i] = (rand() % 10 + 9)  * 10 ;
 	}
 	xres = 600;
 	yres = 900;
@@ -602,7 +604,7 @@ void init_opengl()
 	silhouetteData = buildAlphaData(&img[10]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, btw, bth, 0,
 							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
-	//BACKGROUND THING 2 STUFF-----------------------------------------------------------
+	//BACKGROUND THING 2 STUFF-------------------------------------------------
 	backgroundThing2Image = &img[11];
 	int bt2w = img[11].iWidth;
 	int bt2h = img[11].iHeight;
@@ -616,6 +618,18 @@ void init_opengl()
 	silhouetteData = buildAlphaData(&img[11]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bt2w, bt2h, 0,
 							GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
+	//GAME OVER SCREEN---------------------------------------------------
+	gameOverImage = &img[12];
+	int gow = img[12].iWidth;
+	int goh = img[12].iHeight;
+	glGenTextures(1, &gameOverTexture);
+
+	glBindTexture(GL_TEXTURE_2D, gameOverTexture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, gow, goh, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[12].data);
 }
 void normalize2d(Vec v)
 {
@@ -950,6 +964,7 @@ void render()
 	if (gameState == STARTMENU) {
 		startMenu(gl.xres, gl.yres, TitleScreenTexture, GBolaTexture,
 																	cursorPos);
+		//gameOver(gl.xres, gl.yres, gameOverTexture);
 	}
 	if (gameState == WAVEMENU) {
 		//waveMenu(gl.xres, gl.yres, WaveScreenTexture, GBolaTexture,
@@ -1005,6 +1020,9 @@ void render()
 		gameState = (Gamestate)waves(&g, gameState, &gl, lives);
 
 		drawBlood();
+
+		//HERE'S CHOLORA
+		//drawCholora(choloraTexture, gl.thyme);
 
 		{
 			Gbola *gb = g.gbhead;
