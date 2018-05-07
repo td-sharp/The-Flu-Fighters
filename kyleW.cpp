@@ -1,6 +1,6 @@
 /* Aurthor: Kyle Werts
  * Date: 05/06/2018
- * Flu Fighters Power up, ammo, boss
+ * Flu Fighters Power up, Sound, Boss
  */
 
 #ifdef USE_OPENAL_SOUND
@@ -34,6 +34,7 @@ void displayText();
 void drawSalmonella();
 
 extern double timeDiff(struct timespec *start, struct timespec *end);
+extern bool audio_on;
 
 #ifdef USE_OPENAL_SOUND
 ALuint alSource;
@@ -44,7 +45,7 @@ extern void initial_sounds()
 {
     alutInit(0, NULL);
     if ( alGetError() != AL_NO_ERROR ) {
-        printf("error initializing sound\n");
+        printf("Error initializing sound\n");
         return;
     }
     alGetError();
@@ -52,7 +53,6 @@ extern void initial_sounds()
     alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
     alListenerfv(AL_ORIENTATION, vec);
     alListenerf(AL_GAIN, 1.0f);
-
 }
 
 extern void clean_sounds()
@@ -67,7 +67,7 @@ extern void clean_sounds()
 extern void Laser_Gun_Shot()
 {
     //ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("./sounds/Laser_Gun_Shot.wav");
+    alBuffer = alutCreateBufferFromFile("./Sounds/Laser_Gun_Shot.wav");
 
     //ALuint alSource;
     alGenSources(1, &alSource);
@@ -77,7 +77,7 @@ extern void Laser_Gun_Shot()
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
     if (alGetError() != AL_NO_ERROR) {
-        printf("Error setting sound source\n");
+        printf("Error, Sound Source is Incorrect\n");
         return;
     }
     alSourcePlay(alSource);
@@ -86,7 +86,7 @@ extern void Laser_Gun_Shot()
 extern void SnotShot()
 {
     //ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("./sounds/SnotShot.wav");
+    alBuffer = alutCreateBufferFromFile("./Sounds/SnotShot.wav");
 
     //ALuint alSource;
     alGenSources(1, &alSource);
@@ -96,7 +96,7 @@ extern void SnotShot()
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
     if (alGetError() != AL_NO_ERROR) {
-        printf("Error setting sound source\n");
+        printf("Error, Sound Source is Incorrect\n");
         return;
     }
     alSourcePlay(alSource);
@@ -105,7 +105,7 @@ extern void SnotShot()
 extern void Enemy_Explosion()
 {
     //ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("./sounds/EnemyExplosion.wav");
+    alBuffer = alutCreateBufferFromFile("./Sounds/EnemyExplosion.wav");
 
     //ALuint alSource;
     alGenSources(1, &alSource);
@@ -115,7 +115,7 @@ extern void Enemy_Explosion()
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
     if (alGetError() != AL_NO_ERROR) {
-        printf("Error setting sound source\n");
+        printf("Error, Sound Source is Incorrect\n");
         return;
     }
     alSourcePlay(alSource);
@@ -124,7 +124,7 @@ extern void Enemy_Explosion()
 extern void PowerUP_Sound()
 {
     //ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("./sounds/Power-UP.wav");
+    alBuffer = alutCreateBufferFromFile("./Sounds/Power-UP.wav");
 
     //ALuint alSource;
     alGenSources(1, &alSource);
@@ -134,7 +134,7 @@ extern void PowerUP_Sound()
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
     if (alGetError() != AL_NO_ERROR) {
-        printf("Error setting sound source\n");
+        printf("Error, Sound Source is Incorrect\n");
         return;
     }
 
@@ -144,7 +144,7 @@ extern void PowerUP_Sound()
 extern void Boss_Explosion()
 {
     //ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("./sounds/BossExplosion.wav");
+    alBuffer = alutCreateBufferFromFile("./Sounds/BossExplosion.wav");
 
     //ALuint alSource;
     alGenSources(1, &alSource);
@@ -154,7 +154,7 @@ extern void Boss_Explosion()
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
     if (alGetError() != AL_NO_ERROR) {
-        printf("Error setting sound source\n");
+        printf("Error, Sound Source is Incorrect\n");
         return;
     }
 
@@ -164,20 +164,20 @@ extern void Boss_Explosion()
 extern void PlayTheme()
 {
     //ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("./sounds/ThemeMusic.wav");
+    alBuffer = alutCreateBufferFromFile("./Sounds/ThemeMusic.wav");
 
-    //ALuint alSource;
-    alGenSources(1, &alSource);
-    alSourcei(alSource, AL_BUFFER, alBuffer);
-    alSourcef(alSource, AL_GAIN, 1.0f);
-    alSourcef(alSource, AL_PITCH, 1.0f);
-    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+    alGenSources(1, &themeSource);
+    alSourcei(themeSource, AL_BUFFER, alBuffer);
 
+    alSourcef(themeSource, AL_GAIN, .30f);
+    alSourcef(themeSource, AL_PITCH, 1.0f);
+    alSourcei(themeSource, AL_LOOPING, AL_TRUE);
     if (alGetError() != AL_NO_ERROR) {
-        printf("Error setting sound source\n");
-        return;
+    printf("Error, Sound Source is Incorrect\n");
+    return;
     }
-    alSourcePlay(alSource);
+
+    alSourcePlay(themeSource);
 }
 
 extern void stoptheme() 
@@ -204,7 +204,7 @@ extern void PlayGameOver()
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
 
     if (alGetError() != AL_NO_ERROR) {
-        printf("Error setting sound source\n");
+        printf("Error, Sound Source is Incorrect\n");
         return;
     }
     alSourcePlay(alSource);

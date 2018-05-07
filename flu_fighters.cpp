@@ -91,6 +91,7 @@ int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
 // Sounds for the Game
+#ifdef USE_OPENAL_SOUND
 extern void initial_sounds();
 extern void clean_sounds();
 extern void Laser_Gun_Shot(); 
@@ -102,6 +103,13 @@ extern void PlayTheme();
 extern void stoptheme();
 extern void continuetheme();
 extern void PlayGameOver();
+#endif
+
+//-----------------------------------------------------------------------------
+// Add Kyle Bollean Values
+
+bool audio_on = true;
+
 //-----------------------------------------------------------------------------
 // Create enemies from haleyH.cpp
 void spawnGBola();
