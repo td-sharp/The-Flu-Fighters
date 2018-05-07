@@ -384,8 +384,20 @@ void render();
 //==========================================================================
 int main()
 {
+
+#ifdef USE_OPENAL_SOUND
+	initial_sounds();
+#endif
+
 	logOpen();
 	init_opengl();
+
+#ifdef USE_OPENAL_SOUND
+	if (audio_on) {
+		PlayTheme();
+	}
+#endif
+
 	srand(time(NULL));
 	//level_one();
 	x11.set_mouse_position(100, 100);
@@ -401,6 +413,9 @@ int main()
 		render();
 		x11.swapBuffers();
 	}
+#ifdef USE_OPENAL_SOUND
+	clean_sounds();
+#endif
 	cleanup_fonts();
 	logClose();
 	return 0;

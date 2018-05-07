@@ -164,7 +164,7 @@ extern void Boss_Explosion()
 extern void PlayTheme()
 {
     //ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("./sounds/.wav");
+    alBuffer = alutCreateBufferFromFile("./sounds/ThemeMusic.wav");
 
     //ALuint alSource;
     alGenSources(1, &alSource);
