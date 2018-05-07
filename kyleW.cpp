@@ -194,7 +194,7 @@ extern void continuetheme()
 extern void PlayGameOver()
 {
     //ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("./sounds/.wav");
+    alBuffer = alutCreateBufferFromFile("./Sounds/GameOver.wav");
 
     //ALuint alSource;
     alGenSources(1, &alSource);
