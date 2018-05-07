@@ -90,8 +90,27 @@ extern void drawBackgroundThing(int, int, int, float, float);
 int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
-// Will take care of AMMO/Powerups in the future
-extern void displayText();
+// Sounds for the Game
+#ifdef USE_OPENAL_SOUND
+extern void initial_sounds();
+extern void clean_sounds();
+extern void Laser_Gun_Shot(); 
+extern void SnotShot();
+extern void Enemy_Explosion();
+extern void PowerUP_Sound();
+extern void Boss_Explosion();
+extern void PlayTheme();
+extern void stoptheme();
+extern void continuetheme();
+extern void PlayGameOver();
+extern void Player_Explosion();
+#endif
+
+//-----------------------------------------------------------------------------
+// Add Kyle Bollean Values
+
+bool audio_on = true;
+
 //-----------------------------------------------------------------------------
 // Create enemies from haleyH.cpp
 void spawnGBola();
@@ -374,8 +393,20 @@ void render();
 //==========================================================================
 int main()
 {
+
+#ifdef USE_OPENAL_SOUND
+	initial_sounds();
+#endif
+
 	logOpen();
 	init_opengl();
+
+#ifdef USE_OPENAL_SOUND
+	if (audio_on) {
+		PlayTheme();
+	}
+#endif
+
 	srand(time(NULL));
 	//level_one();
 	x11.set_mouse_position(100, 100);
@@ -391,6 +422,9 @@ int main()
 		render();
 		x11.swapBuffers();
 	}
+#ifdef USE_OPENAL_SOUND
+	clean_sounds();
+#endif
 	cleanup_fonts();
 	logClose();
 	return 0;
