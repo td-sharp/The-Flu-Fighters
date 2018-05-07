@@ -121,6 +121,25 @@ extern void Enemy_Explosion()
     alSourcePlay(alSource);
 }
 
+extern void Player_Explosion()
+{
+    //ALuint alBuffer;
+    alBuffer = alutCreateBufferFromFile("./Sounds/PlayerExplosion.wav");
+
+    //ALuint alSource;
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+
+    if (alGetError() != AL_NO_ERROR) {
+        printf("Error, Sound Source is Incorrect\n");
+        return;
+    }
+    alSourcePlay(alSource);
+}
+
 extern void PowerUP_Sound()
 {
     //ALuint alBuffer;

@@ -103,6 +103,7 @@ extern void PlayTheme();
 extern void stoptheme();
 extern void continuetheme();
 extern void PlayGameOver();
+extern void Player_Explosion();
 #endif
 
 //-----------------------------------------------------------------------------
