@@ -90,8 +90,18 @@ extern void drawBackgroundThing(int, int, int, float, float);
 int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
-// Will take care of AMMO/Powerups in the future
-extern void displayText();
+// Sounds for the Game
+extern void initial_sounds();
+extern void clean_sounds();
+extern void Laser_Gun_Shot(); 
+extern void SnotShot();
+extern void Enemy_Explosion();
+extern void PowerUP_Sound();
+extern void Boss_Explosion();
+extern void PlayTheme();
+extern void stoptheme();
+extern void continuetheme();
+extern void PlayGameOver();
 //-----------------------------------------------------------------------------
 // Create enemies from haleyH.cpp
 void spawnGBola();
