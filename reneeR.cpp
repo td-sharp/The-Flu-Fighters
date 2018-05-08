@@ -52,7 +52,7 @@ int waves(Game *g, Gamestate gameState, Global *gl, int ship_lives)
 				if (g->c1 == NULL)
 					g->c1 = new State;
 			}
-		}else if( g->nGbola == 0 && gameState == CUT1){
+		}else if(gameState == CUT1){//&& gameState == CUT1){
 			struct timespec c1_t;
 			clock_gettime(CLOCK_REALTIME, &c1_t);
 			tw = timeDiff(&(g->c1->stateTimer), &c1_t);

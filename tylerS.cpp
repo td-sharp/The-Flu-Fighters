@@ -156,20 +156,8 @@ void drawPost()
     ggprint16(&r, 16, 0xFB6AD0, "WAVE COMPLETE!");
 }
 
-void drawOverlay(int xres, int yres, int lives, int shipTexture)
+void drawOverlay(int lives, int shipTexture)
 {
-	/*
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glColor3ub(77, 166, 255);
-	glPushMatrix();
-	glBegin(GL_QUADS);
-		glVertex2i(0  , 0);
-        glVertex2i(xres, 0);
-        glVertex2i(xres, 60);
-        glVertex2i(0  , 60);
-    glPopMatrix();
-	glEnd();
-	*/
     Rect r;
     r.bot = 20;
     r.left = 20;
@@ -354,7 +342,7 @@ void makeParticle(float x, float y, int fl)
 
 float fakeTime = 0;
 float yVel = 2.0f;
-void drawCredits(int xres, int yres, int GBolaTexture, int salmonellaTexture,
+void drawCredits(int xres, int GBolaTexture, int salmonellaTexture,
 	int salmonella2Texture, int choloraTexture)
 {
 	if ((int) yVel % 100 == 0 ) {
@@ -501,7 +489,7 @@ void drawSnot(float posA, float posB, int snotTexture)
 }
 
 void drawBackgroundThing(int backgroundThingTexture,
-	int backgroundThing2Texture, int xres, float yBGVel, float size)
+	int backgroundThing2Texture, float size)
 {
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);

@@ -68,7 +68,7 @@ extern int check_ship_collisions(Game *,int);
 //Add tylerS.cpp functions
 
 int lives = 3;
-extern void drawCredits(int, int, int, int, int, int);
+extern void drawCredits(int, int, int, int, int);
 extern void moveParticle(int, int);
 extern void startMenu(int, int, int, int, int);
 extern void waveMenu(int, int, int, int, int);
@@ -83,10 +83,10 @@ extern void drawGBola(int, float);
 extern void drawCholora(int, float);
 extern void drawPowerUp(int);
 extern void drawSnot(float, float,int);
-extern void drawOverlay(int, int, int, int);
+extern void drawOverlay(int, int);
 extern void drawTheBoss();
 extern void drawSalmonella(int, int, float);
-extern void drawBackgroundThing(int, int, int, float, float);
+extern void drawBackgroundThing(int, int, float);
 int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
@@ -94,7 +94,7 @@ int cursorPos = 1;
 #ifdef USE_OPENAL_SOUND
 extern void initial_sounds();
 extern void clean_sounds();
-extern void Laser_Gun_Shot(); 
+extern void Laser_Gun_Shot();
 extern void SnotShot();
 extern void Enemy_Explosion();
 extern void PowerUP_Sound();
@@ -974,15 +974,15 @@ void physics()
 		}
 	} else if (gl.keys[XK_space] && gameState == WAVEMENU) {
 		if (cursorPos == 1) {
-			gameState = WAVE1;
+			gameState = CUT0;
 		} else if (cursorPos == 2) {
 			gameState = WAVE2;
 		} else if (cursorPos == 3) {
-			gameState = WAVE3;
+			gameState = CUT2;
 		} else if (cursorPos == 4) {
-			gameState = WAVE4;
+			gameState = CUT3;
 		} else if (cursorPos == 5) {
-			gameState = WAVE5;
+			gameState = CUT4;
 		} else {
 			usleep(500000);
 			cursorPos = 2;
@@ -1001,20 +1001,20 @@ void render()
 		//gameOver(gl.xres, gl.yres, gameOverTexture);
 	}
 	if (gameState == WAVEMENU) {
-		//waveMenu(gl.xres, gl.yres, WaveScreenTexture, GBolaTexture,
-		//															cursorPos);
-		glClearColor(0.053f, .174f, .227f, 0);
+		waveMenu(gl.xres, gl.yres, WaveScreenTexture, GBolaTexture,
+																	cursorPos);
+		/*glClearColor(0.053f, .174f, .227f, 0);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		for (int q = 0; q < gl.bgThingCount; q++) {
 			glPushMatrix();
 			glTranslatef(gl.xBGPos[q], gl.yBGVel[q], 0.0f);
 			drawBackgroundThing(backgroundThingTexture, backgroundThing2Texture,
-				 gl.xBGPos[q], gl.yBGVel[q], gl.size[q]);
+				 gl.size[q]);
 			gl.yBGVel[q] -= 10/gl.size[q];
 		}
-		drawCredits(gl.xres, gl.yres, GBolaTexture, salmonellaTexture,
-			salmonella2Texture, choloraTexture);
+		drawCredits(gl.xres, GBolaTexture, salmonellaTexture,
+			salmonella2Texture, choloraTexture);*/
 	}
 	if (gameState == GAMEOVER) {
 		gameOver(gl.xres, gl.yres, gameOverTexture);
@@ -1023,7 +1023,7 @@ void render()
 	{
 		cout << "in the if with " << gameState << endl;
 		if (gameState == CUT5) {
-			drawCredits(gl.xres, gl.yres, GBolaTexture, salmonellaTexture,
+			drawCredits(gl.xres, GBolaTexture, salmonellaTexture,
 				salmonella2Texture, choloraTexture);
 		} else if (gameState == CUT0) {
 			cout << "gamestate when cut0: " << gameState << endl;
@@ -1048,7 +1048,7 @@ void render()
 			glPushMatrix();
 			glTranslatef(gl.xBGPos[q], gl.yBGVel[q], 0.0f);
 			drawBackgroundThing(backgroundThingTexture, backgroundThing2Texture,
-				 gl.xBGPos[q], gl.yBGVel[q], gl.size[q]);
+				 gl.size[q]);
 			gl.yBGVel[q] -= 10/gl.size[q];
 		}
 
@@ -1153,7 +1153,7 @@ void render()
         r.center = 0;
         ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", gl.thyme);
 
-		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
+		drawOverlay(lives, shipTexture);
 		//cout << "made it to updating time " << endl;
 		clock_gettime(CLOCK_REALTIME, &gl.fthymeEnd);
 	    gl.thyme = timeDiff(&gl.fthymeStart, &gl.fthymeEnd);
