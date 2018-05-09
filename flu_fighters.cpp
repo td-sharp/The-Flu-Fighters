@@ -62,7 +62,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 // Add Renee CPP
 extern Gamestate State;
 Gamestate gameState = STARTMENU;
-extern int waves(struct Game *, Gamestate, Global *, int);
+extern int waves(struct Game *, Gamestate, int);
 extern int check_ship_collisions(Game *,int);
 //-----------------------------------------------------------------------------
 //Add tylerS.cpp functions
@@ -260,8 +260,13 @@ Game::Game()
 	w1 = NULL;
 	w2 = NULL;
 	w3 = NULL;
+	w4 = NULL;
+	w5 = NULL;
 	c1 = NULL;
 	c2 = NULL;
+	c3 = NULL;
+	c4 = NULL;
+	c5 = NULL;
 
 	clock_gettime(CLOCK_REALTIME, &bulletTimer);
 
@@ -1065,7 +1070,8 @@ void render()
 	if (gameState == WAVE1 || gameState == WAVE2
 					   || gameState == WAVE3 || gameState == WAVE4
 					   || gameState == WAVE5 || gameState == CUT1
-					   || gameState == CUT2 || gameState == CUT3) {
+					   || gameState == CUT2 || gameState == CUT3 
+					   || gameState == CUT4 || gameState == CUT5) {
 
 		glViewport(0, 0, gl.xres, gl.yres);
 		//clear color buffer
@@ -1083,7 +1089,7 @@ void render()
 		//Draw the ship
 		drawShip(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2],
 															shipTexture, lives);
-		gameState = (Gamestate)waves(&g, gameState, &gl, lives);
+		gameState = (Gamestate)waves(&g, gameState, lives);
 
 		drawBlood();
 
@@ -1095,10 +1101,8 @@ void render()
 			while (gb)
 			{
 				switch (gb->health) {
-					case 50 : glColor3f(1.0f, 1.0f, 1.0f); break;
-					case 40 : glColor3f(1.0f, 0.8f, 0.8f); break;
-					case 30 : glColor3f(1.0f, 0.5f, 0.5f); break;
-					case 20 : glColor3f(1.0f, 0.3f, 0.3f); break;
+					case 30 : glColor3f(1.0f, 1.0f, 1.0f); break;
+					case 20 : glColor3f(0.85f, 0.5f, 0.5f); break;
 					case 10 : glColor3f(0.7f, 0.0f, 0.0f); break;
 				}
 				glPushMatrix();
@@ -1114,15 +1118,10 @@ void render()
 		while (s)
 		{
 				switch (s->health) {
-					case 100 : glColor3f(1.0f, 1.0f, 1.0f); break;
-					case 90 : glColor3f(1.0f, 0.9f, 0.9f); break;
-					case 80 : glColor3f(1.0f, 0.8f, 0.8f); break;
-					case 70 : glColor3f(1.0f, 0.65f, 0.65f); break;
-					case 60 : glColor3f(1.0f, 0.5f, 0.5f); break;
-					case 50 : glColor3f(1.0f, 0.4f, 0.4f); break;
-					case 40 : glColor3f(1.0f, 0.3f, 0.3f); break;
-					case 30 : glColor3f(0.85f, 0.15f, 0.15f); break;
-					case 20 : glColor3f(0.75f, 0.075f, 0.075f); break;
+					case 50 : glColor3f(1.0f, 1.0f, 1.0f); break;
+					case 40 : glColor3f(0.9f, 0.75f, 0.75f); break;
+					case 30 : glColor3f(0.85f, 0.5f, 0.5f); break;
+					case 20 : glColor3f(0.75f, 0.25f, 0.25f); break;
 					case 10 : glColor3f(0.7f, 0.0f, 0.0f); break;
 				}
 				glPushMatrix();
@@ -1140,10 +1139,6 @@ void render()
 		{
 				//cout << "CHEALTH " << c->health << endl;
 				switch (c->health) {
-					cout << "CHEALTH " << c->health << endl;
-					//case 100 : glColor3f(1.0f, 1.0f, 1.0f); break;
-					//case 90 : glColor3f(1.0f, 0.9f, 0.9f); break;
-					//case 80 : glColor3f(1.0f, 0.8f, 0.8f); break;
 					case 70 : glColor3f(1.0f, 1.0f, 1.0f); break;
 					case 60 : glColor3f(1.0f, 0.5f, 0.5f); break;
 					case 50 : glColor3f(1.0f, 0.4f, 0.4f); break;
@@ -1217,8 +1212,8 @@ void render()
 		}
 
 		Rect r;
-        r.bot = 500;
-        r.left = 250;
+        r.bot = 20;
+        r.left = 400;
         r.center = 0;
         ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", gl.thyme);
 

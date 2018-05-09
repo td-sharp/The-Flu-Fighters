@@ -66,7 +66,7 @@ public:
 	Salmonella *shead;
 	Cholora *chead;
 	Bullet *barr;
-	State *w1, *c1, *w2, *c2, *w3, *c3, *w4, *go;
+	State *w1, *c1, *w2, *c2, *w3, *c3, *w4, *c4, *w5, *c5, *go;
 	int nGbola;
 	int nSalmonella;
 	int nCholora;
@@ -92,5 +92,6 @@ enum Gamestate {
 	CUT4,
 	WAVE5,
 	CUT5,
-	GAMEOVER
+	GAMEOVER,
+	GAMEOVERC
 };

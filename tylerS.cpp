@@ -291,7 +291,6 @@ void drawCholora(int choloraTexture, float thyme)
 {
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
-    glColor3f(1.0f, 1.0f, 1.0f);
     glBindTexture(GL_TEXTURE_2D, choloraTexture);
     float CHeight = 40.0;
     float CWidth = 40.0;
