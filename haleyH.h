@@ -12,11 +12,7 @@ class Gbola {
 public:
     float pos[3];
     float vel[3];
-    int nverts;
     float radius;
-    float vert[8][3];
-    float angle;
-    float rotate;
     float color[3];
     int health;
     struct Gbola *prev;
@@ -33,12 +29,8 @@ class Salmonella {
 public:
     float pos[3];
     float vel[3];
-    float nverts;
     float xradius;
     float yradius; 
-    float vert[8][3];
-    float angle;
-    float rotate;
     float color[3];
     int health;
     struct Salmonella *prev;
@@ -47,18 +39,27 @@ public:
     int nSbullets;
     struct timespec sbulletTimer;
 public:
-    Salmonella(float, float, float);
+    Salmonella(float, float);
     ~Salmonella();
 };
 
-class Cholera {
+class Cholora {
 public:
     float pos[3];
     float vel[3];
-    float angle;
-    float rotate;
+    float xdest;
+    float ydest;
+    float radius;
+    float color[3];
     float accelerate;
-    int health;
+	int health;
+    struct Cholora *prev;
+    struct Cholora *next;
+    S_Bullet *sbarr;
+    int nSbullets;
+    struct timespec sbulletTimer;
+    struct timespec waitTimer;
 public:
-    Cholera(float, float, float, float);
+    Cholora(float, float, float, float);
+    ~Cholora();
 };

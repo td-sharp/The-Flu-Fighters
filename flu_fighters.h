@@ -64,10 +64,12 @@ public:
 	Ship ship;
 	Gbola *gbhead;
 	Salmonella *shead;
+	Cholora *chead;
 	Bullet *barr;
 	State *w1, *c1, *w2, *c2, *w3, *c3, *w4, *go;
 	int nGbola;
 	int nSalmonella;
+	int nCholora;
 	int nbullets;
 	struct timespec bulletTimer;
 	struct timespec mouseThrustTimer;

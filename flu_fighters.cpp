@@ -116,12 +116,13 @@ bool audio_on = true;
 void spawnGBola();
 extern void moveGbola(Gbola *);
 extern void moveSalmonella(Salmonella *);
+extern void moveCholora(Cholora *);
 extern void checkEnemyCollision(struct Game *);
 extern void deleteGbola(struct Game *, Gbola *);
 extern void deleteSalmonella(struct Game *, Salmonella *);
-extern void shootG(Gbola *, int);
-extern void shootS(Salmonella *, int, struct Game *);
-
+extern void shootG(Gbola *);
+extern void shootS(Salmonella *, struct Game *);
+extern void shootC(Cholora *);
 
 Shape s;
 
@@ -249,10 +250,12 @@ Game::Game()
 {
 	gbhead = NULL;
 	shead = NULL;
+	chead = NULL;
 	barr = new Bullet[MAX_BULLETS];
 	nbullets = 0;
 	nGbola = 0;
 	nSalmonella = 0;
+	nCholora = 0;
 	mouseThrustOn = false;
 	w1 = NULL;
 	w2 = NULL;
@@ -784,6 +787,7 @@ void physics()
 	int j=0;
 	Gbola *gb = g.gbhead;
 	Salmonella *s = g.shead;
+	Cholora *c = g.chead;
 	while(gb)
 	{
 		struct timespec sbt;
@@ -847,14 +851,38 @@ void physics()
 
 		//cout << "increment gbola" << endl;
 		s = s->next;
-		j++;
+	}
+
+	while (c)
+	{
+		struct timespec sbt;
+		clock_gettime(CLOCK_REALTIME, &sbt);
+		i = 0;
+		while (i < c->nSbullets)
+		{	
+			S_Bullet *sb = &(c->sbarr[i]);
+			//How long has bullet been alive?
+			double ts = timeDiff(&sb->time, &sbt);
+			if (ts > 8.0) {
+				//time to delete the bullet.
+				memcpy(&(c->sbarr[i]), &(c->sbarr[c->nSbullets-1]),
+				sizeof(S_Bullet));
+				c->nSbullets--;
+			}
+
+			i++;
+		}
+
+		c = c->next;
 	}
 
 	gb = g.gbhead;
 	s = g.shead;
+	c = g.chead;
 
 	moveGbola(gb);
 	moveSalmonella(s);
+	moveCholora(c);
 
     //moveSnot(gb);
 	//
@@ -1075,7 +1103,7 @@ void render()
 				}
 				glPushMatrix();
 				glTranslatef(gb->pos[0], gb->pos[1], gb->pos[2]);
-				glRotatef(gb->angle, 0.0f, 0.0f, 0.0f);
+				glRotatef(0.0f, 0.0f, 0.0f, 0.0f);
 
 				drawGBola(GBolaTexture, gl.thyme);
 				gb = gb->next;
@@ -1099,11 +1127,38 @@ void render()
 				}
 				glPushMatrix();
 				glTranslatef(s->pos[0], s->pos[1], s->pos[2]);
-				glRotatef(s->angle, 0.0f, 0.0f, 0.0f);
+				glRotatef(0.0f, 0.0f, 0.0f, 0.0f);
 
 				drawSalmonella(salmonellaTexture,salmonella2Texture, gl.thyme);
 
 				s = s->next;
+		}
+
+
+		Cholora *c = g.chead;
+		while (c)
+		{
+				//cout << "CHEALTH " << c->health << endl;
+				switch (c->health) {
+					cout << "CHEALTH " << c->health << endl;
+					//case 100 : glColor3f(1.0f, 1.0f, 1.0f); break;
+					//case 90 : glColor3f(1.0f, 0.9f, 0.9f); break;
+					//case 80 : glColor3f(1.0f, 0.8f, 0.8f); break;
+					case 70 : glColor3f(1.0f, 1.0f, 1.0f); break;
+					case 60 : glColor3f(1.0f, 0.5f, 0.5f); break;
+					case 50 : glColor3f(1.0f, 0.4f, 0.4f); break;
+					case 40 : glColor3f(1.0f, 0.3f, 0.3f); break;
+					case 30 : glColor3f(0.85f, 0.15f, 0.15f); break; 
+					case 20 : glColor3f(0.75f, 0.075f, 0.075f); break;
+					case 10 : glColor3f(0.7f, 0.0f, 0.0f); break;
+				}
+				glPushMatrix();
+				glTranslatef(c->pos[0], c->pos[1], c->pos[2]);
+				glRotatef(0.0f, 0.0f, 0.0f, 0.0f);
+
+				drawCholora(choloraTexture, gl.thyme);
+
+				c = c->next;
 		}
 		//----------------
 		//Draw the bullets
@@ -1116,9 +1171,9 @@ void render()
 		Gbola *gb = g.gbhead;
 		s = g.shead;
 
-  		shootG(gb, snotTexture);
+  		shootG(gb);
 
-  		shootS(s, snotTexture, &g);
+  		shootS(s, &g);
 
 		while (gb)
 		{
@@ -1145,6 +1200,20 @@ void render()
 			}
 
 			s = s->next;
+		}
+
+		c = g.chead;
+		while (c)
+		{
+			S_Bullet *cb = &(c->sbarr[0]);
+			for (int i=0; i<c->nSbullets; i++)
+			{
+				drawSnot(cb->pos[0], cb->pos[1], snotTexture);
+				++cb;
+				cout << "in here" << endl;
+			}
+
+			c = c->next;
 		}
 
 		Rect r;

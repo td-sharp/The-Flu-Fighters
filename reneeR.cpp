@@ -293,10 +293,19 @@ void spawnGBola(Game *g, float x) {
 }
 
 void spawnSalmonella(Game *g, float x) {
-	Salmonella *s = new Salmonella(x, 800.0f, 0.0f);
+	Salmonella *s = new Salmonella(x, 800.0f);
 	s->next = g->shead;
 	if (g->shead != NULL)
 		g->shead-> prev = s;
 	g->shead = s;
 	++g->nSalmonella;
+}
+
+void spawnCholora(Game *g, float x) {
+	Cholora *c = new Cholora(x, 850.0f, 0, 0);
+	c->next = g->chead;
+	if (g->chead != NULL)
+		g->chead-> prev = c;
+	g->chead = c;
+	++g->nCholora;
 }
