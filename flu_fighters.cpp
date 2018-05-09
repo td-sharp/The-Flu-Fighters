@@ -94,7 +94,7 @@ int cursorPos = 1;
 #ifdef USE_OPENAL_SOUND
 extern void initial_sounds();
 extern void clean_sounds();
-extern void Laser_Gun_Shot(); 
+extern void Laser_Gun_Shot();
 extern void SnotShot();
 extern void Enemy_Explosion();
 extern void PowerUP_Sound();
@@ -864,7 +864,7 @@ void physics()
 		clock_gettime(CLOCK_REALTIME, &sbt);
 		i = 0;
 		while (i < c->nSbullets)
-		{	
+		{
 			S_Bullet *sb = &(c->sbarr[i]);
 			//How long has bullet been alive?
 			double ts = timeDiff(&sb->time, &sbt);
@@ -1033,12 +1033,12 @@ void render()
 																	cursorPos);
 		//gameOver(gl.xres, gl.yres, gameOverTexture);
 	}
-	if (gameState == WAVEMENU) {
+	if (gameState == GAMEOVERC) {
 		//waveMenu(gl.xres, gl.yres, WaveScreenTexture, GBolaTexture,
 		//															cursorPos);
 		glClearColor(0.053f, .174f, .227f, 0);
 		glClear(GL_COLOR_BUFFER_BIT);
-
+		//cout << "I'm here!" << endl;
 		for (int q = 0; q < gl.bgThingCount; q++) {
 			glPushMatrix();
 			glTranslatef(gl.xBGPos[q], gl.yBGVel[q], 0.0f);
@@ -1049,13 +1049,13 @@ void render()
 		drawCredits(gl.xres, gl.yres, GBolaTexture, salmonellaTexture,
 			salmonella2Texture, choloraTexture);
 	}
-	if (gameState == GAMEOVER) {
+	if (gameState == GAMEOVER || gameState == WAVEMENU) {
 		gameOver(gl.xres, gl.yres, gameOverTexture);
 	}
 	if ( gameState == CUT0 || gameState == CUT5)
 	{
 		cout << "in the if with " << gameState << endl;
-		if (gameState == CUT5) {
+		if (gameState == GAMEOVERC) {
 			drawCredits(gl.xres, gl.yres, GBolaTexture, salmonellaTexture,
 				salmonella2Texture, choloraTexture);
 		} else if (gameState == CUT0) {
@@ -1070,7 +1070,7 @@ void render()
 	if (gameState == WAVE1 || gameState == WAVE2
 					   || gameState == WAVE3 || gameState == WAVE4
 					   || gameState == WAVE5 || gameState == CUT1
-					   || gameState == CUT2 || gameState == CUT3 
+					   || gameState == CUT2 || gameState == CUT3
 					   || gameState == CUT4 || gameState == CUT5) {
 
 		glViewport(0, 0, gl.xres, gl.yres);
@@ -1143,7 +1143,7 @@ void render()
 					case 60 : glColor3f(1.0f, 0.5f, 0.5f); break;
 					case 50 : glColor3f(1.0f, 0.4f, 0.4f); break;
 					case 40 : glColor3f(1.0f, 0.3f, 0.3f); break;
-					case 30 : glColor3f(0.85f, 0.15f, 0.15f); break; 
+					case 30 : glColor3f(0.85f, 0.15f, 0.15f); break;
 					case 20 : glColor3f(0.75f, 0.075f, 0.075f); break;
 					case 10 : glColor3f(0.7f, 0.0f, 0.0f); break;
 				}

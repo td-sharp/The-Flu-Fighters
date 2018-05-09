@@ -133,7 +133,7 @@ int waves(Game *g, Gamestate gameState, int ship_lives)
 				wave_four(g);
 			}
 			cout << "NG " << g->nGbola << " NS: " << g->nSalmonella << " NC:  " << g->nCholora << endl;
-			if (g->nGbola == 0 && g->nSalmonella == 0 && 
+			if (g->nGbola == 0 && g->nSalmonella == 0 &&
 				g->nCholora == 0 && tw > 4.5){
 				cout << "in cut4\n";
 				gameState = CUT4;
@@ -141,7 +141,7 @@ int waves(Game *g, Gamestate gameState, int ship_lives)
 				if (g->c4 == NULL)
 					g->c4 = new State;
 			}
-		}else if( g->nGbola == 0 && g->nSalmonella == 0 && 
+		}else if( g->nGbola == 0 && g->nSalmonella == 0 &&
 				  g->nCholora == 0 && gameState == CUT4){
 			cout << "in else if" << endl;
 			struct timespec c4_t;
@@ -167,18 +167,18 @@ int waves(Game *g, Gamestate gameState, int ship_lives)
 				if (g->c5 == NULL)
 					g->c5 = new State;
 			}
-		}else if( g->nGbola == 0 && g->nSalmonella == 0 && 
+		}else if( g->nGbola == 0 && g->nSalmonella == 0 &&
 				  g->nCholora == 0 && gameState == CUT5){
 			struct timespec c5_t;
 			clock_gettime(CLOCK_REALTIME, &c5_t);
 			tw = timeDiff(&(g->c5->stateTimer), &c5_t);
 			wave_clear(gameState, g->c5);
-			gameState = GAMEOVER;
+			gameState = GAMEOVERC;
 			//if(tw > 4){
 			//	gameState = BOSS;
 			//	if (g->wb == NULL)
-			//		g->wb = new State;					
-			
+			//		g->wb = new State;
+
 		}else{
 			gameState = GAMEOVER;
 			//wave_start(gameState, gl);
@@ -192,7 +192,7 @@ void wave_start(Gamestate gameState, State *st)
 	clock_gettime(CLOCK_REALTIME, &ws);
 	double tw = timeDiff(&(st->stateTimer), &ws);
 	if (tw < 4){
-		if (gameState == WAVE1 || gameState == WAVE2 || gameState == WAVE3 || 
+		if (gameState == WAVE1 || gameState == WAVE2 || gameState == WAVE3 ||
 			gameState == WAVE4 || gameState == WAVE5){
 			if (tw < 0.5 || (tw >1.0 && tw  <  1.5) || (tw > 2.0 && tw < 3.5)){
 				drawPre(gameState);
@@ -321,7 +321,7 @@ void wave_four(Game *g)
 	}
 	while(CholoraEnemyCounter > 0)
 	{
-		cout << "chol" << endl;		
+		cout << "chol" << endl;
 		spawnCholora(g, cx);
 		CholoraEnemyCounter--;
 		cx += c_inc;
@@ -375,9 +375,9 @@ int check_ship_collisions(Game *game, int ship_lives)
         while (i < g->nSbullets)
         {
             S_Bullet *b = &(g->sbarr[i]);
-            if (b->pos[0] > game->ship.pos[0] - game->ship.radius && 
+            if (b->pos[0] > game->ship.pos[0] - game->ship.radius &&
             	b->pos[0] < game->ship.pos[0] + game->ship.radius &&
-            	b->pos[1] > game->ship.pos[1] - game->ship.radius && 
+            	b->pos[1] > game->ship.pos[1] - game->ship.radius &&
             	b->pos[1] < game->ship.pos[1] + game->ship.radius ){
             	ship_lives--;
                 memcpy(&(g->sbarr[i]), &(g->sbarr[g->nSbullets-1]),sizeof(S_Bullet));
@@ -386,12 +386,12 @@ int check_ship_collisions(Game *game, int ship_lives)
 
             i++;
         }
-        if ((game->ship.pos[0] - game->ship.radius > g->pos[0] - g->radius || 
+        if ((game->ship.pos[0] - game->ship.radius > g->pos[0] - g->radius ||
         	 game->ship.pos[0] + game->ship.radius > g->pos[0] - g->radius)&&
             (game->ship.pos[0] - game->ship.radius < g->pos[0] + g->radius ||
              game->ship.pos[0] + game->ship.radius < g->pos[0] + g->radius) &&
             (game->ship.pos[1] - game->ship.radius > g->pos[1] - g->radius ||
-             game->ship.pos[1] + game->ship.radius > g->pos[1] - g->radius) && 
+             game->ship.pos[1] + game->ship.radius > g->pos[1] - g->radius) &&
             (game->ship.pos[1] - game->ship.radius < g->pos[1] + g->radius ||
              game->ship.pos[1] + game->ship.radius < g->pos[1] + g->radius)){
         	ship_lives--;
@@ -416,9 +416,9 @@ int check_ship_collisions(Game *game, int ship_lives)
         while (i < s->nSbullets)
         {
             S_Bullet *b = &(s->sbarr[i]);
-            if (b->pos[0] > game->ship.pos[0] - game->ship.radius && 
+            if (b->pos[0] > game->ship.pos[0] - game->ship.radius &&
             	b->pos[0] < game->ship.pos[0] + game->ship.radius &&
-            	b->pos[1] > game->ship.pos[1] - game->ship.radius && 
+            	b->pos[1] > game->ship.pos[1] - game->ship.radius &&
             	b->pos[1] < game->ship.pos[1] + game->ship.radius ){
             	ship_lives--;
                 memcpy(&(s->sbarr[i]), &(s->sbarr[s->nSbullets-1]),sizeof(S_Bullet));
@@ -427,16 +427,16 @@ int check_ship_collisions(Game *game, int ship_lives)
 
             i++;
         }
-        if ((game->ship.pos[0] - game->ship.radius > s->pos[0] - s->xradius || 
+        if ((game->ship.pos[0] - game->ship.radius > s->pos[0] - s->xradius ||
         	 game->ship.pos[0] + game->ship.radius > s->pos[0] - s->xradius)&&
             (game->ship.pos[0] - game->ship.radius < s->pos[0] + s->xradius ||
              game->ship.pos[0] + game->ship.radius < s->pos[0] + s->xradius) &&
             (game->ship.pos[1] - game->ship.radius > s->pos[1] - s->yradius ||
-             game->ship.pos[1] + game->ship.radius > s->pos[1] - s->yradius) && 
+             game->ship.pos[1] + game->ship.radius > s->pos[1] - s->yradius) &&
             (game->ship.pos[1] - game->ship.radius < s->pos[1] + s->yradius ||
              game->ship.pos[1] + game->ship.radius < s->pos[1] + s->yradius)){
         	ship_lives--;
-        	
+
             Salmonella *saves = s->next;
             deleteSalmonella(game,s);
             s = saves;
@@ -448,7 +448,7 @@ int check_ship_collisions(Game *game, int ship_lives)
             break;
         s = s->next;
     }
-    
+
     Cholora *c;
 	c = game->chead;
 	while(c)
@@ -457,9 +457,9 @@ int check_ship_collisions(Game *game, int ship_lives)
         while (i < c->nSbullets)
         {
             S_Bullet *b = &(c->sbarr[i]);
-            if (b->pos[0] > game->ship.pos[0] - game->ship.radius && 
+            if (b->pos[0] > game->ship.pos[0] - game->ship.radius &&
             	b->pos[0] < game->ship.pos[0] + game->ship.radius &&
-            	b->pos[1] > game->ship.pos[1] - game->ship.radius && 
+            	b->pos[1] > game->ship.pos[1] - game->ship.radius &&
             	b->pos[1] < game->ship.pos[1] + game->ship.radius ){
             	ship_lives--;
                 memcpy(&(c->sbarr[i]), &(c->sbarr[c->nSbullets-1]),sizeof(S_Bullet));
@@ -468,12 +468,12 @@ int check_ship_collisions(Game *game, int ship_lives)
 
             i++;
         }
-        if ((game->ship.pos[0] - game->ship.radius > c->pos[0] - c->radius || 
+        if ((game->ship.pos[0] - game->ship.radius > c->pos[0] - c->radius ||
         	 game->ship.pos[0] + game->ship.radius > c->pos[0] - c->radius)&&
             (game->ship.pos[0] - game->ship.radius < c->pos[0] + c->radius ||
              game->ship.pos[0] + game->ship.radius < c->pos[0] + c->radius) &&
             (game->ship.pos[1] - game->ship.radius > c->pos[1] - c->radius ||
-             game->ship.pos[1] + game->ship.radius > c->pos[1] - c->radius) && 
+             game->ship.pos[1] + game->ship.radius > c->pos[1] - c->radius) &&
             (game->ship.pos[1] - game->ship.radius < c->pos[1] + c->radius ||
              game->ship.pos[1] + game->ship.radius < c->pos[1] + c->radius)){
         	ship_lives--;
@@ -489,7 +489,7 @@ int check_ship_collisions(Game *game, int ship_lives)
             break;
         c = c->next;
     }
-	
+
 	return ship_lives;
 
 }
