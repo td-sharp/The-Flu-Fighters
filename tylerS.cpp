@@ -468,6 +468,8 @@ void drawBlood()
 			glColor3f(0.0f, 1.0f, 0.0f);
 		} else if (flag == 3) {
 			glColor3f(1.0f, 0.0f, 0.4f);
+		} else if (flag == 4) {
+			glColor3f(0.0f, 1.0f, 1.0f);
 		}
 		glBegin(GL_QUADS);
             glVertex2i(px-w, py-h);

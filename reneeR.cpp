@@ -129,21 +129,16 @@ int waves(Game *g, Gamestate gameState, int ship_lives)
 			tw = timeDiff(&(g->w4->stateTimer), &w4_t);
 			wave_start(gameState, g->w4);
 		 	if (tw > 4){
-		 		cout << "CALLING wave4" << endl;
 				wave_four(g);
 			}
-			cout << "NG " << g->nGbola << " NS: " << g->nSalmonella << " NC:  " << g->nCholora << endl;
 			if (g->nGbola == 0 && g->nSalmonella == 0 &&
 				g->nCholora == 0 && tw > 4.5){
-				cout << "in cut4\n";
 				gameState = CUT4;
-				cout << "gameState: " << gameState << endl;
 				if (g->c4 == NULL)
 					g->c4 = new State;
 			}
 		}else if( g->nGbola == 0 && g->nSalmonella == 0 &&
 				  g->nCholora == 0 && gameState == CUT4){
-			cout << "in else if" << endl;
 			struct timespec c4_t;
 			clock_gettime(CLOCK_REALTIME, &c4_t);
 			tw = timeDiff(&(g->c4->stateTimer), &c4_t);
@@ -154,7 +149,6 @@ int waves(Game *g, Gamestate gameState, int ship_lives)
 					g->w5 = new State;
 			}
 		}else if (gameState == WAVE5){
-			cout << "in wave 5\n";
 			struct timespec w5_t;
 			clock_gettime(CLOCK_REALTIME, &w5_t);
 			tw = timeDiff(&(g->w5->stateTimer), &w5_t);
@@ -229,8 +223,6 @@ void wave_one(Game *g)
 
 	while(GbolaEnemyCounter > 0)
 	{
-		//cout << "gx: " << gx << endl;
-		//cout << "inc: " << inc << endl;
 		spawnGBola(g, gx);
 		GbolaEnemyCounter--;
 		gx += inc;
@@ -305,7 +297,6 @@ void wave_four(Game *g)
 
 	while(GbolaEnemyCounter > 0)
 	{
-		cout << "gb" << endl;
 		spawnGBola(g, gx);
 		GbolaEnemyCounter--;
 		gx += g_inc;
@@ -313,7 +304,6 @@ void wave_four(Game *g)
 	}
 	while(SalmonellaEnemyCounter > 0)
 	{
-		cout << "salm" << endl;
 		spawnSalmonella(g, sx);
 		SalmonellaEnemyCounter--;
 		sx += s_inc;
@@ -321,7 +311,6 @@ void wave_four(Game *g)
 	}
 	while(CholoraEnemyCounter > 0)
 	{
-		cout << "chol" << endl;
 		spawnCholora(g, cx);
 		CholoraEnemyCounter--;
 		cx += c_inc;
@@ -501,7 +490,6 @@ void spawnGBola(Game *g, float x) {
 		g->gbhead-> prev = gb;
 	g->gbhead = gb;
 	++g->nGbola;
-	cout << "x pos: " << x << endl;
 }
 
 void spawnSalmonella(Game *g, float x) {
@@ -514,7 +502,7 @@ void spawnSalmonella(Game *g, float x) {
 }
 
 void spawnCholora(Game *g, float x) {
-	Cholora *c = new Cholora(x, 850.0f, 0, 0);
+	Cholora *c = new Cholora(x, 850.0f);
 	c->next = g->chead;
 	if (g->chead != NULL)
 		g->chead-> prev = c;

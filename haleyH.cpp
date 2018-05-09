@@ -82,7 +82,7 @@ Salmonella::~Salmonella()
     delete [] sbarr;
 }
 
-Cholora::Cholora(float xpos, float ypos, float rotation, float acceleration)
+Cholora::Cholora(float xpos, float ypos)
 {
     radius = 35.0f;
     pos[0] = xpos;
@@ -242,8 +242,6 @@ void shootS(Salmonella *s, Game *g)
                 sb->color[1] = 1.0f;
                 sb->color[2] = 1.0f;
                 s->nSbullets++;
-                cout << "made a Salmonella Snot Bullet" << endl;
-                cout << "now there are " << s->nSbullets << " snots" << endl;
             }
         }
         s = s->next;    
@@ -391,7 +389,7 @@ void deleteCholora(Game *game, Cholora *c)
         }
     }
     for (int i=0; i<100; i++)
-        makeParticle(c->pos[0], c->pos[1], 1);
+        makeParticle(c->pos[0], c->pos[1], 2);
     delete c;
     c = NULL;
 }
@@ -421,8 +419,6 @@ void checkEnemyCollision(Game *game)
                     deleteGbola(game,g);
                     g = saveg;
                     game->nGbola--;
-                    cout << "nGbola in collision: " << game->nGbola << endl;
-
                 }
 
                 memcpy(&(game->barr[i]), 

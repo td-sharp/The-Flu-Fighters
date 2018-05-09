@@ -60,6 +60,6 @@ public:
     struct timespec sbulletTimer;
     struct timespec waitTimer;
 public:
-    Cholora(float, float, float, float);
+    Cholora(float, float);
     ~Cholora();
 };
