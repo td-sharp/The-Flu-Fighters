@@ -38,20 +38,19 @@ int waves(Game *g, Gamestate gameState, int ship_lives)
 {
 		double tw;
 
-		/*if(ship_lives == 0)
+		if(ship_lives == 0)
 		{
-			if (g->go == NULL){
-				g->go = new State;
-			}
+			//if (g->go == NULL){
+			//	g->go = new State;
+			//}
 			gameState = GAMEOVER;
-			struct timespec go_t;
-			clock_gettime(CLOCK_REALTIME, &go_t);
-			tw = timeDiff(&(g->go->stateTimer), &go_t);
-			wave_start(gameState, g->w1);
-			if(tw > 4)
-				gameState = GAMEOVERC;
+			//struct timespec go_t;
+			//clock_gettime(CLOCK_REALTIME, &go_t);
+			//tw = timeDiff(&(g->go->stateTimer), &go_t);
+			//wave_start(gameState, g->w1);
+			//if(tw > 4)
+			//	gameState = GAMEOVERC;
 		}
-		*/
 		if(gameState == WAVE1){
 			if (g->w1 == NULL){
 				g->w1 = new State;
@@ -181,7 +180,7 @@ int waves(Game *g, Gamestate gameState, int ship_lives)
 			//		g->wb = new State;					
 			
 		}else{
-			gameState = GAMEOVERC;
+			gameState = GAMEOVER;
 			//wave_start(gameState, gl);
 		}
 	return (int)gameState;
