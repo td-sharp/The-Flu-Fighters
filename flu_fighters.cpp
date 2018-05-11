@@ -1048,6 +1048,14 @@ void render()
 			salmonella2Texture, choloraTexture, shipTexture);
 	}
 	if (gameState == GAMEOVER) {
+		#ifdef USE_OPENAL_SOUND
+			static int flag = 1;
+			if (flag) {
+				stoptheme();
+				flag = 0;
+				PlayGameOver();
+			}
+		#endif
 		gameOver(gl.xres, gl.yres, gameOverTexture);
 	}
 	if ( gameState == CUT0 || gameState == CUT5)
