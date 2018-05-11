@@ -104,6 +104,11 @@ extern void stoptheme();
 extern void continuetheme();
 extern void PlayGameOver();
 extern void Player_Explosion();
+extern void GbolaSound();
+extern void SallySound();
+extern void CholoSound();
+extern void MenuSelectOption();
+extern void MenuSelectScroll();
 #endif
 
 //-----------------------------------------------------------------------------

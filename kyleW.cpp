@@ -66,16 +66,12 @@ extern void clean_sounds()
 
 extern void Laser_Gun_Shot()
 {
-    //ALuint alBuffer;
     alBuffer = alutCreateBufferFromFile("./Sounds/Laser_Gun_Shot.wav");
-
-    //ALuint alSource;
     alGenSources(1, &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
     alSourcef(alSource, AL_GAIN, 1.0f);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
-
     if (alGetError() != AL_NO_ERROR) {
         printf("Error, Sound Source is Incorrect\n");
         return;
@@ -85,16 +81,12 @@ extern void Laser_Gun_Shot()
 
 extern void SnotShot()
 {
-    //ALuint alBuffer;
     alBuffer = alutCreateBufferFromFile("./Sounds/SnotShot.wav");
-
-    //ALuint alSource;
     alGenSources(1, &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
     alSourcef(alSource, AL_GAIN, 1.0f);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
-
     if (alGetError() != AL_NO_ERROR) {
         printf("Error, Sound Source is Incorrect\n");
         return;
@@ -104,16 +96,12 @@ extern void SnotShot()
 
 extern void Enemy_Explosion()
 {
-    //ALuint alBuffer;
     alBuffer = alutCreateBufferFromFile("./Sounds/EnemyExplosion.wav");
-
-    //ALuint alSource;
     alGenSources(1, &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
     alSourcef(alSource, AL_GAIN, 1.0f);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
-
     if (alGetError() != AL_NO_ERROR) {
         printf("Error, Sound Source is Incorrect\n");
         return;
@@ -123,16 +111,12 @@ extern void Enemy_Explosion()
 
 extern void Player_Explosion()
 {
-    //ALuint alBuffer;
     alBuffer = alutCreateBufferFromFile("./Sounds/PlayerExplosion.wav");
-
-    //ALuint alSource;
     alGenSources(1, &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
     alSourcef(alSource, AL_GAIN, 1.0f);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
-
     if (alGetError() != AL_NO_ERROR) {
         printf("Error, Sound Source is Incorrect\n");
         return;
@@ -142,16 +126,12 @@ extern void Player_Explosion()
 
 extern void PowerUP_Sound()
 {
-    //ALuint alBuffer;
     alBuffer = alutCreateBufferFromFile("./Sounds/Power-UP.wav");
-
-    //ALuint alSource;
     alGenSources(1, &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
     alSourcef(alSource, AL_GAIN, 1.0f);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
-
     if (alGetError() != AL_NO_ERROR) {
         printf("Error, Sound Source is Incorrect\n");
         return;
@@ -162,16 +142,12 @@ extern void PowerUP_Sound()
 
 extern void Boss_Explosion()
 {
-    //ALuint alBuffer;
     alBuffer = alutCreateBufferFromFile("./Sounds/BossExplosion.wav");
-
-    //ALuint alSource;
     alGenSources(1, &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
     alSourcef(alSource, AL_GAIN, 1.0f);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
-
     if (alGetError() != AL_NO_ERROR) {
         printf("Error, Sound Source is Incorrect\n");
         return;
@@ -182,12 +158,10 @@ extern void Boss_Explosion()
 
 extern void PlayTheme()
 {
-    //ALuint alBuffer;
     alBuffer = alutCreateBufferFromFile("./Sounds/ThemeMusic.wav");
 
     alGenSources(1, &themeSource);
     alSourcei(themeSource, AL_BUFFER, alBuffer);
-
     alSourcef(themeSource, AL_GAIN, .30f);
     alSourcef(themeSource, AL_PITCH, 1.0f);
     alSourcei(themeSource, AL_LOOPING, AL_TRUE);
@@ -212,16 +186,87 @@ extern void continuetheme()
 
 extern void PlayGameOver()
 {
-    //ALuint alBuffer;
     alBuffer = alutCreateBufferFromFile("./Sounds/GameOver.wav");
-
-    //ALuint alSource;
     alGenSources(1, &alSource);
     alSourcei(alSource, AL_BUFFER, alBuffer);
     alSourcef(alSource, AL_GAIN, 1.0f);
     alSourcef(alSource, AL_PITCH, 1.0f);
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
+    if (alGetError() != AL_NO_ERROR) {
+        printf("Error, Sound Source is Incorrect\n");
+        return;
+    }
+    alSourcePlay(alSource);
+}
 
+extern void GbolaSound()
+{
+    alBuffer = alutCreateBufferFromFile("./Sounds/.wav");
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+    if (alGetError() != AL_NO_ERROR) {
+        printf("Error, Sound Source is Incorrect\n");
+        return;
+    }
+    alSourcePlay(alSource);
+}
+
+extern void SallySound()
+{
+    alBuffer = alutCreateBufferFromFile("./Sounds/.wav");
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+    if (alGetError() != AL_NO_ERROR) {
+        printf("Error, Sound Source is Incorrect\n");
+        return;
+    }
+    alSourcePlay(alSource);
+}
+
+extern void CholoSound()
+{
+    alBuffer = alutCreateBufferFromFile("./Sounds/.wav");
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+    if (alGetError() != AL_NO_ERROR) {
+        printf("Error, Sound Source is Incorrect\n");
+        return;
+    }
+    alSourcePlay(alSource);
+}
+
+extern void MenuSelectOption()
+{
+    alBuffer = alutCreateBufferFromFile("./Sounds/.wav");
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
+    if (alGetError() != AL_NO_ERROR) {
+        printf("Error, Sound Source is Incorrect\n");
+        return;
+    }
+    alSourcePlay(alSource);
+}
+
+extern void MenuSelectScroll()
+{
+    alBuffer = alutCreateBufferFromFile("./Sounds/.wav");
+    alGenSources(1, &alSource);
+    alSourcei(alSource, AL_BUFFER, alBuffer);
+    alSourcef(alSource, AL_GAIN, 1.0f);
+    alSourcef(alSource, AL_PITCH, 1.0f);
+    alSourcei(alSource, AL_LOOPING, AL_FALSE);
     if (alGetError() != AL_NO_ERROR) {
         printf("Error, Sound Source is Incorrect\n");
         return;
