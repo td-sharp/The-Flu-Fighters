@@ -205,9 +205,9 @@ void wave_clear(Gamestate gameState, State *s)
 	if (tw < 4){
 		if (gameState == CUT1 || gameState == CUT2 || gameState == CUT3 ||
 			gameState == CUT4 || gameState == CUT5) {
-			if (tw < 0.5 || (tw >1.0 && tw  <  1.5) || (tw > 2.0 && tw < 2.5)){
-				drawPost();
-			}
+			//if (tw < 0.5 || (tw >1.0 && tw  <  1.5) || (tw > 2.0 && tw < 2.5)){
+			drawPost();
+			//}
 		}
 		clock_gettime(CLOCK_REALTIME, &wc);
 		tw = timeDiff(&(s->stateTimer), &wc);

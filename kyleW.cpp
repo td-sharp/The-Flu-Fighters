@@ -39,9 +39,9 @@ extern bool audio_on;
 #ifdef USE_OPENAL_SOUND
 ALuint alSource;
 ALuint themeSource;
-ALuint alBuffer; 
+ALuint alBuffer;
 
-extern void initial_sounds() 
+extern void initial_sounds()
 {
     alutInit(0, NULL);
     if ( alGetError() != AL_NO_ERROR ) {
@@ -199,13 +199,13 @@ extern void PlayTheme()
     alSourcePlay(themeSource);
 }
 
-extern void stoptheme() 
+extern void stoptheme()
 {
     alSourcePause(themeSource);
     return;
 }
 
-extern void continuetheme() 
+extern void continuetheme()
 {
     alSourcePlay(themeSource);
 }

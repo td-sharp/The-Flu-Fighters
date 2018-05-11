@@ -31,7 +31,7 @@ using namespace std;
 
 S_Bullet::S_Bullet() {}
 
-Gbola::Gbola(float xpos, float ypos) 
+Gbola::Gbola(float xpos, float ypos)
 {
     radius = 35.0f;
     pos[0] = xpos;
@@ -47,9 +47,9 @@ Gbola::Gbola(float xpos, float ypos)
     next = NULL;
     nSbullets = 0;
     clock_gettime(CLOCK_REALTIME, &sbulletTimer);
-    sbarr = new S_Bullet[3];    
+    sbarr = new S_Bullet[3];
 
-}   
+}
 
 Gbola::~Gbola()
 {
@@ -74,7 +74,7 @@ Salmonella::Salmonella(float xpos, float ypos)
     next = NULL;
     nSbullets = 0;
     clock_gettime(CLOCK_REALTIME, &sbulletTimer);
-    sbarr = new S_Bullet[3];    
+    sbarr = new S_Bullet[3];
 }
 
 Salmonella::~Salmonella()
@@ -101,7 +101,7 @@ Cholora::Cholora(float xpos, float ypos)
     next = NULL;
     nSbullets = 0;
     clock_gettime(CLOCK_REALTIME, &sbulletTimer);
-    sbarr = new S_Bullet[4];    
+    sbarr = new S_Bullet[4];
 
 }
 
@@ -123,7 +123,7 @@ void moveGbola(Gbola *g)
                 g->vel[0] = -g->vel[0];
             }
             else if (g->pos[0] > xres-40)
-            {   
+            {
                 g->pos[0] = xres-40;
                 g->vel[0] = -g->vel[0];
             }
@@ -138,14 +138,14 @@ void moveGbola(Gbola *g)
                 g->vel[0] = -g->vel[0];
             }
             else if (g->pos[0] > xres-40)
-            {   
+            {
                 g->pos[0] = xres-40;
                 g->vel[0] = -g->vel[0];
             }
             ispos = true;
         }
 
-        g = g->next;                 
+        g = g->next;
     }
 }
 
@@ -186,7 +186,7 @@ void moveSalmonella(Salmonella *s)
 {
 
     while(s)
-    {   
+    {
         s->pos[0]+= s->vel[0];
         if (s->pos[0] < 20)
         {
@@ -194,11 +194,11 @@ void moveSalmonella(Salmonella *s)
             s->vel[0] = -s->vel[0];
         }
         else if (s->pos[0] > xres-20)
-        {   
+        {
             s->pos[0] = xres-20;
             s->vel[0] = -s->vel[0];
         }
-            
+
         s->pos[1]-= s->vel[1];
         if (s->pos[1] < 300)
         {
@@ -211,8 +211,8 @@ void moveSalmonella(Salmonella *s)
             s->vel[1] = -s->vel[1];
         }
 
-        s = s->next;                 
-    } 
+        s = s->next;
+    }
 }
 
 void shootS(Salmonella *s, Game *g)
@@ -237,25 +237,25 @@ void shootS(Salmonella *s, Game *g)
                 float direction = atan2(ydist, xdist);
                 float speed = 3.0f;
                 sb->vel[0] = speed * cos(direction);
-                sb->vel[1] = speed * sin(direction);                
+                sb->vel[1] = speed * sin(direction);
                 sb->color[0] = 1.0f;
                 sb->color[1] = 1.0f;
                 sb->color[2] = 1.0f;
                 s->nSbullets++;
             }
         }
-        s = s->next;    
+        s = s->next;
     }
 }
 
 void moveCholora(Cholora *c)
-{	
+{
     while(c)
-    {   
+    {
         struct timespec ct;
         clock_gettime(CLOCK_REALTIME, &ct);
         if (timeDiff(&c->waitTimer, &ct) > 1.0)
-        { 
+        {
             if (abs(c->pos[0] - c->xdest) < 5 && abs(c->pos[1] == c->ydest) < 5)
             {
                 c->xdest = (float)(rand() % 550) + 20.0f;
@@ -263,7 +263,7 @@ void moveCholora(Cholora *c)
                 clock_gettime(CLOCK_REALTIME, &c->waitTimer);
                 shootC(c);
             }
-            else 
+            else
             {
                 float xdist = (c->xdest - c->pos[0]);
                 float ydist = (c->ydest - c->pos[1]);
@@ -273,12 +273,12 @@ void moveCholora(Cholora *c)
                 c->vel[0] = speedx * cos(direction);
                 c->vel[1] = speedy * sin(direction);
                 c->pos[0] += c->vel[0];
-                c->pos[1] += c->vel[1];   
+                c->pos[1] += c->vel[1];
             }
         }
 
         c = c->next;
-    } 
+    }
 }
 
 void shootC(Cholora *c)
@@ -305,7 +305,7 @@ void shootC(Cholora *c)
             //cout << "now there are " << gb->nSbullets << " snots" << endl;
         }
     }
-    
+
 }
 
 void deleteGbola(Game *game, Gbola *g)
@@ -389,7 +389,7 @@ void deleteCholora(Game *game, Cholora *c)
         }
     }
     for (int i=0; i<100; i++)
-        makeParticle(c->pos[0], c->pos[1], 2);
+        makeParticle(c->pos[0], c->pos[1], 4);
     delete c;
     c = NULL;
 }
@@ -421,7 +421,7 @@ void checkEnemyCollision(Game *game)
                     game->nGbola--;
                 }
 
-                memcpy(&(game->barr[i]), 
+                memcpy(&(game->barr[i]),
                         &(game->barr[game->nbullets-1]),sizeof(Bullet));
                 game->nbullets--;
 
@@ -437,8 +437,8 @@ void checkEnemyCollision(Game *game)
         g = g->next;
     }
 
-    Salmonella *s;  
-    s = game->shead;    
+    Salmonella *s;
+    s = game->shead;
 
     while(s)
     {
@@ -462,7 +462,7 @@ void checkEnemyCollision(Game *game)
                     game->nSalmonella--;
                 }
 
-                memcpy(&(game->barr[i]), 
+                memcpy(&(game->barr[i]),
                         &(game->barr[game->nbullets-1]), sizeof(Bullet));
                 game->nbullets--;
                 if (s == NULL)
@@ -499,7 +499,7 @@ void checkEnemyCollision(Game *game)
                     game->nCholora--;
                 }
 
-                memcpy(&(game->barr[i]), 
+                memcpy(&(game->barr[i]),
                         &(game->barr[game->nbullets-1]), sizeof(Bullet));
                 game->nbullets--;
                 if (c == NULL)

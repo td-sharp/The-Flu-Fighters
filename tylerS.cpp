@@ -156,7 +156,7 @@ void drawPost()
     ggprint16(&r, 16, 0xFB6AD0, "WAVE COMPLETE!");
 }
 
-void drawOverlay(int xres, int yres, int lives, int shipTexture)
+void drawOverlay(int lives, int shipTexture)
 {
 	/*
     glColor3f(1.0f, 1.0f, 1.0f);
@@ -353,8 +353,8 @@ void makeParticle(float x, float y, int fl)
 
 float fakeTime = 0;
 float yVel = 2.0f;
-void drawCredits(int xres, int yres, int GBolaTexture, int salmonellaTexture,
-	int salmonella2Texture, int choloraTexture)
+void drawCredits(int xres, int GBolaTexture, int salmonellaTexture,
+	int salmonella2Texture, int choloraTexture, int shipTexture)
 {
 	if ((int) yVel % 100 == 0 ) {
 		fakeTime += 1;
@@ -368,75 +368,81 @@ void drawCredits(int xres, int yres, int GBolaTexture, int salmonellaTexture,
 
 	Rect s;
     s.bot = yVel - 500;
-    s.left = xres/2 - 70;
+    s.left = xres/2 -40;
     s.center = 0;
     ggprint16(&s, 16, 0xFB6AD0, "Starring:");
 
 	Rect g;
     g.bot = yVel - 700;
-    g.left = xres/2 - 200;
+    g.left = xres/2 - 150;
     g.center = 0;
     ggprint16(&g, 16, 0xFB6AD0, "\"The G\" G-Bola");
 
 	glPushMatrix();
-	glTranslatef(xres/2 + 10, yVel - 700, 0);
+	glTranslatef(xres/2 + 50, yVel - 700, 0);
 
 	drawGBola(GBolaTexture, fakeTime);
 
 	Rect sa;
     sa.bot = yVel - 1000;
-    sa.left = xres/2 - 200;
+    sa.left = xres/2 - 170;
     sa.center = 0;
     ggprint16(&sa, 16, 0xFB6AD0, "\"Sassy\" Salmonella");
 
 	glPushMatrix();
-	glTranslatef(xres/2 + 10, yVel - 1000, 0);
+	glTranslatef(xres/2 + 50, yVel - 1000, 0);
 
 	drawSalmonella(salmonellaTexture, salmonella2Texture, fakeTime);
 
 	Rect c;
     c.bot = yVel - 1300;
-    c.left = xres/2 - 200;
+    c.left = xres/2 - 130;
     c.center = 0;
     ggprint16(&c, 16, 0xFB6AD0, "Cholo-ra");
 
 	glPushMatrix();
-	glTranslatef(xres/2 + 10, yVel - 1300, 0);
+	glTranslatef(xres/2 + 50, yVel - 1300, 0);
 
 	drawCholora(choloraTexture, fakeTime);
 
+	Rect sh;
+    sh.bot = yVel - 1600;
+    sh.left = xres/2 - 170;
+    sh.center = 0;
+    ggprint16(&sh, 16, 0xFB6AD0, "The Flu Fighter");
+
+	glPushMatrix();
+
+	drawShip(xres/2 + 50, yVel - 1600, 0, shipTexture, 3);
+
 	Rect h;
-    h.bot = yVel - 1700;
-    h.left = 100;
+    h.bot = yVel - 1900;
+    h.left = 190;
     h.center = 0;
     ggprint16(&h, 16, 0xFB6AD0,
 		"Haley Hamer: Enemies");
 
 	Rect re;
-    re.bot = yVel - 1900;
-    re.left = 100;
+    re.bot = yVel - 2100;
+    re.left = 180;
     re.center = 0;
     ggprint16(&re, 16, 0xFB6AD0,
 		"Renee Romero: Waves");
 
 	Rect t;
-    t.bot = yVel - 2100;
-    t.left = 100;
+    t.bot = yVel - 2300;
+    t.left = 185;
     t.center = 0;
     ggprint16(&t, 16, 0xFB6AD0,
 		"Tyler Sharp: Graphics");
 
 	Rect k;
-    k.bot = yVel - 2300;
-    k.left = 100;
+    k.bot = yVel - 2500;
+    k.left = 200;
     k.center = 0;
     ggprint16(&k, 16, 0xFB6AD0,
-		"Kyle Wertz: Boss, Sound, and Powerups");
+		"Kyle Werts: Sound");
 	yVel += 2.0;
-
-	//if ((yVel - 2300) > 900) {
-	//	exit(0);
-	//}
 }
 
 void moveParticle(int xres, int yres)
@@ -461,15 +467,15 @@ void drawBlood()
 		float py = particle[i].s.center[1];
         glPushMatrix();
 		if (flag == 0) {
-        	glColor3f(0.016f, 0.019f, 0.94f);
+        	glColor3f(0.016f, 0.019f, 0.94f); //gbola
 		} else if (flag == 1) {
-			glColor3f(0.94f, 0.019f, 0.016f);
+			glColor3f(0.94f, 0.019f, 0.016f); //salmonella
 		} else if (flag == 2) {
-			glColor3f(0.0f, 1.0f, 0.0f);
+			glColor3f(0.0f, 1.0f, 0.0f); //snot
 		} else if (flag == 3) {
-			glColor3f(1.0f, 0.0f, 0.4f);
+			glColor3f(1.0f, 0.0f, 0.4f); //ship
 		} else if (flag == 4) {
-			glColor3f(0.0f, 1.0f, 1.0f);
+			glColor3f(0.0f, 1.0f, 1.0f); // cholora
 		}
 		glBegin(GL_QUADS);
             glVertex2i(px-w, py-h);
@@ -502,7 +508,7 @@ void drawSnot(float posA, float posB, int snotTexture)
 }
 
 void drawBackgroundThing(int backgroundThingTexture,
-	int backgroundThing2Texture, int xres, float yBGVel, float size)
+	int backgroundThing2Texture, float size)
 {
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);

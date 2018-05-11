@@ -46,7 +46,7 @@ const float TIMESLICE = 1.0f;
 const float GRAVITY = -0.2f;
 #define PI 3.141592653589793
 #define ALPHA 1
-const int MAX_BULLETS = 11;
+const int MAX_BULLETS = 3;
 const Flt MINIMUM_ASTEROID_SIZE = 60.0;
 
 //-----------------------------------------------------------------------------
@@ -83,10 +83,10 @@ extern void drawGBola(int, float);
 extern void drawCholora(int, float);
 extern void drawPowerUp(int);
 extern void drawSnot(float, float,int);
-extern void drawOverlay(int, int, int, int);
+extern void drawOverlay(int, int);
 extern void drawTheBoss();
 extern void drawSalmonella(int, int, float);
-extern void drawBackgroundThing(int, int, int, float, float);
+extern void drawBackgroundThing(int, int, float);
 int cursorPos = 1;
 //-----------------------------------------------------------------------------
 // Add Kyle CPP
@@ -267,9 +267,7 @@ Game::Game()
 	c3 = NULL;
 	c4 = NULL;
 	c5 = NULL;
-
 	clock_gettime(CLOCK_REALTIME, &bulletTimer);
-
 }
 
 Game::~Game() {
@@ -773,7 +771,7 @@ void physics()
 		Bullet *b = &g.barr[i];
 		//How long has bullet been alive?
 		double ts = timeDiff(&b->time, &bt);
-		if (ts > 2.5) {
+		if (ts > 1.5) {
 			//time to delete the bullet.
 			memcpy(&g.barr[i], &g.barr[g.nbullets-1],
 				sizeof(Bullet));
@@ -969,7 +967,7 @@ void physics()
 		struct timespec bt;
 		clock_gettime(CLOCK_REALTIME, &bt);
 		double ts = timeDiff(&g.bulletTimer, &bt);
-		if (ts > 0.5) {
+		if (ts > 0.2) {
 			timeCopy(&g.bulletTimer, &bt);
 			if (g.nbullets < MAX_BULLETS) {
 				//shoot a bullet...
@@ -1033,7 +1031,7 @@ void render()
 																	cursorPos);
 		//gameOver(gl.xres, gl.yres, gameOverTexture);
 	}
-	if (gameState == GAMEOVERC) {
+	if (gameState == GAMEOVERC || gameState == WAVEMENU) {
 		//waveMenu(gl.xres, gl.yres, WaveScreenTexture, GBolaTexture,
 		//															cursorPos);
 		glClearColor(0.053f, .174f, .227f, 0);
@@ -1043,28 +1041,28 @@ void render()
 			glPushMatrix();
 			glTranslatef(gl.xBGPos[q], gl.yBGVel[q], 0.0f);
 			drawBackgroundThing(backgroundThingTexture, backgroundThing2Texture,
-				 gl.xBGPos[q], gl.yBGVel[q], gl.size[q]);
+				 gl.size[q]);
 			gl.yBGVel[q] -= 10/gl.size[q];
 		}
-		drawCredits(gl.xres, gl.yres, GBolaTexture, salmonellaTexture,
-			salmonella2Texture, choloraTexture);
+		drawCredits(gl.xres, GBolaTexture, salmonellaTexture,
+			salmonella2Texture, choloraTexture, shipTexture);
 	}
-	if (gameState == GAMEOVER || gameState == WAVEMENU) {
+	if (gameState == GAMEOVER) {
 		gameOver(gl.xres, gl.yres, gameOverTexture);
 	}
 	if ( gameState == CUT0 || gameState == CUT5)
 	{
-		cout << "in the if with " << gameState << endl;
+		//cout << "in the if with " << gameState << endl;
 		if (gameState == GAMEOVERC) {
-			drawCredits(gl.xres, gl.yres, GBolaTexture, salmonellaTexture,
-				salmonella2Texture, choloraTexture);
+			drawCredits(gl.xres, GBolaTexture, salmonellaTexture,
+				salmonella2Texture, choloraTexture, shipTexture);
 		} else if (gameState == CUT0) {
-			cout << "gamestate when cut0: " << gameState << endl;
+			//cout << "gamestate when cut0: " << gameState << endl;
 			clock_gettime(CLOCK_REALTIME, &gl.fthymeStart);
 			gl.thyme = 0.0;
 
 			gameState = WAVE1;
-			cout << "gameState after changing: " << gameState << endl;
+			//cout << "gameState after changing: " << gameState << endl;
 		}
 	}
 	if (gameState == WAVE1 || gameState == WAVE2
@@ -1082,7 +1080,7 @@ void render()
 			glPushMatrix();
 			glTranslatef(gl.xBGPos[q], gl.yBGVel[q], 0.0f);
 			drawBackgroundThing(backgroundThingTexture, backgroundThing2Texture,
-				 gl.xBGPos[q], gl.yBGVel[q], gl.size[q]);
+				 gl.size[q]);
 			gl.yBGVel[q] -= 10/gl.size[q];
 		}
 
@@ -1091,10 +1089,7 @@ void render()
 															shipTexture, lives);
 		gameState = (Gamestate)waves(&g, gameState, lives);
 
-		drawBlood();
-
-		//HERE'S CHOLORA
-		//drawCholora(choloraTexture, gl.thyme);
+		drawBlood(); //BLOOOOOD! MUAHAHAHAHAHAHA!
 
 		{
 			Gbola *gb = g.gbhead;
@@ -1205,7 +1200,7 @@ void render()
 			{
 				drawSnot(cb->pos[0], cb->pos[1], snotTexture);
 				++cb;
-				cout << "in here" << endl;
+				//cout << "in here" << endl;
 			}
 
 			c = c->next;
@@ -1217,7 +1212,7 @@ void render()
         r.center = 0;
         ggprint16(&r, 16, 0xFB6AD0, "TIME: %f", gl.thyme);
 
-		drawOverlay(gl.xres, gl.yres, lives, shipTexture);
+		drawOverlay(lives, shipTexture);
 		//cout << "made it to updating time " << endl;
 		clock_gettime(CLOCK_REALTIME, &gl.fthymeEnd);
 	    gl.thyme = timeDiff(&gl.fthymeStart, &gl.fthymeEnd);
